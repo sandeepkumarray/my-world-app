@@ -1,0 +1,38 @@
+export class Groups {
+
+		public procedureName? : string;
+		public id? : string;
+		public Tags? : string;
+		public Universe? : string;
+		public Other_Names? : string;
+		public Description? : string;
+		public Name? : string;
+		public Subgroups? : string;
+		public Supergroups? : string;
+		public Sistergroups? : string;
+		public Organization_structure? : string;
+		public Leaders? : string;
+		public Creatures? : string;
+		public Members? : string;
+		public Offices? : string;
+		public Locations? : string;
+		public Headquarters? : string;
+		public Motivations? : string;
+		public Traditions? : string;
+		public Risks? : string;
+		public Obstacles? : string;
+		public Goals? : string;
+		public Clients? : string;
+		public Allies? : string;
+		public Enemies? : string;
+		public Rivals? : string;
+		public Suppliers? : string;
+		public Inventory? : string;
+		public Equipment? : string;
+		public Key_items? : string;
+		public Notes? : string;
+		public Private_notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

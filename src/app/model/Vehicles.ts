@@ -1,0 +1,34 @@
+export class Vehicles {
+
+		public procedureName? : string;
+		public id? : string;
+		public Universe? : string;
+		public Type_of_vehicle? : string;
+		public Alternate_names? : string;
+		public Tags? : string;
+		public Name? : string;
+		public Description? : string;
+		public Dimensions? : string;
+		public Size? : string;
+		public Doors? : string;
+		public Materials? : string;
+		public Designer? : string;
+		public Windows? : string;
+		public Colors? : string;
+		public Distance? : string;
+		public Features? : string;
+		public Safety? : string;
+		public Fuel? : string;
+		public Speed? : string;
+		public Variants? : string;
+		public Manufacturer? : string;
+		public Costs? : string;
+		public Weight? : string;
+		public Country? : string;
+		public Owner? : string;
+		public Notes? : string;
+		public Private_Notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

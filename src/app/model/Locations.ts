@@ -1,0 +1,34 @@
+export class Locations {
+
+		public procedureName? : string;
+		public id? : string;
+		public Description? : string;
+		public Universe? : string;
+		public Tags? : string;
+		public Name? : string;
+		public Type? : string;
+		public Leaders? : string;
+		public Language? : string;
+		public Population? : string;
+		public Currency? : string;
+		public Motto? : string;
+		public Sports? : string;
+		public Laws? : string;
+		public Spoken_Languages? : string;
+		public Largest_cities? : string;
+		public Notable_cities? : string;
+		public Capital_cities? : string;
+		public Landmarks? : string;
+		public Area? : string;
+		public Crops? : string;
+		public Located_at? : string;
+		public Climate? : string;
+		public Notable_Wars? : string;
+		public Founding_Story? : string;
+		public Established_Year? : string;
+		public Notes? : string;
+		public Private_Notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

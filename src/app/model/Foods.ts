@@ -1,0 +1,44 @@
+export class Foods {
+
+		public procedureName? : string;
+		public id? : string;
+		public Type_of_food? : string;
+		public Other_Names? : string;
+		public Universe? : string;
+		public Tags? : string;
+		public Name? : string;
+		public Description? : string;
+		public Color? : string;
+		public Size? : string;
+		public Variations? : string;
+		public Smell? : string;
+		public Ingredients? : string;
+		public Preparation? : string;
+		public Cooking_method? : string;
+		public Spices? : string;
+		public Yield? : string;
+		public Shelf_life? : string;
+		public Rarity? : string;
+		public Sold_by? : string;
+		public Cost? : string;
+		public Flavor? : string;
+		public Meal? : string;
+		public Serving? : string;
+		public Utensils_needed? : string;
+		public Texture? : string;
+		public Scent? : string;
+		public Side_effects? : string;
+		public Nutrition? : string;
+		public Conditions? : string;
+		public Reputation? : string;
+		public Place_of_origin? : string;
+		public Origin_story? : string;
+		public Traditions? : string;
+		public Symbolisms? : string;
+		public Related_foods? : string;
+		public Notes? : string;
+		public Private_Notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

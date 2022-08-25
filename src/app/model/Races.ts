@@ -1,0 +1,34 @@
+export class Races {
+
+		public procedureName? : string;
+		public id? : string;
+		public Other_Names? : string;
+		public Universe? : string;
+		public Tags? : string;
+		public Description? : string;
+		public Name? : string;
+		public General_weight? : string;
+		public Notable_features? : string;
+		public Physical_variance? : string;
+		public Typical_clothing? : string;
+		public Body_shape? : string;
+		public Skin_colors? : string;
+		public General_height? : string;
+		public Weaknesses? : string;
+		public Conditions? : string;
+		public Strengths? : string;
+		public Favorite_foods? : string;
+		public Famous_figures? : string;
+		public Traditions? : string;
+		public Beliefs? : string;
+		public Governments? : string;
+		public Technologies? : string;
+		public Occupations? : string;
+		public Economics? : string;
+		public Notable_events? : string;
+		public Notes? : string;
+		public Private_notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

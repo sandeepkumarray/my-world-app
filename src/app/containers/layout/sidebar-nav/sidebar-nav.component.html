@@ -1,0 +1,27 @@
+<ul role="nav" class="sidebar-nav">
+    <ng-template ngFor let-navitem [ngForOf]="navItems">
+        <li *ngIf="!isHasChild(navitem)"
+            [ngClass]="{'nav-title': isTitle(navitem), 'nav-item': !(isTitle(navitem) || isDivider(navitem)), 'nav-divider': isDivider(navitem)}"
+        >
+            <span *ngIf="isTitle(navitem)">{{navitem.name}}</span>
+            <span *ngIf="isDivider(navitem)"></span>
+            <a class="nav-link" *ngIf="!(isTitle(navitem) || isDivider(navitem))" routerLink="{{navitem.url}}"
+               routerLinkActive="active">
+                <!-- <i class="nav-icon" [ngClass]="navitem.icon"></i> -->
+                <span [innerHtml]="navitem.icon"></span>
+                 {{navitem.name}}
+            </a>
+        </li>
+        <li *ngIf="isHasChild(navitem)" appNavDropdown routerLinkActive="open" class="nav-item nav-dropdown open">
+            <a appNavDropdownToggle class="nav-link nav-dropdown-toggle" role="button"><i class="nav-icon" [ngClass]="navitem.icon"></i> {{navitem.name}}</a>
+            <ul class="nav-dropdown-items">
+                <li class="nav-item" *ngFor="let cnavitem of navitem.children">
+                    <a class="nav-link" *ngIf="!(isTitle(cnavitem) || isDivider(cnavitem))" routerLink="{{cnavitem.url}}"
+                       routerLinkActive="active">
+                        <i class="nav-icon" [ngClass]="cnavitem.icon"></i> {{cnavitem.name}}
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ng-template>
+</ul>

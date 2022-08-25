@@ -1,0 +1,16 @@
+/* You can add global styles to this file, and also import other style files */
+@import "variables";
+
+@import "~@coreui/coreui/scss/coreui";
+
+@import "~@coreui/chartjs/scss/coreui-chartjs";
+
+@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+
+@import "layout";
+
+@import "fixes";
+
+@import "examples";
+
+@import "custom";

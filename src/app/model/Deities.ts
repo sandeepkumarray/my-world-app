@@ -1,0 +1,42 @@
+export class Deities {
+
+		public procedureName? : string;
+		public id? : string;
+		public Tags? : string;
+		public Name? : string;
+		public Description? : string;
+		public Other_Names? : string;
+		public Universe? : string;
+		public Height? : string;
+		public Physical_Description? : string;
+		public Weight? : string;
+		public Children? : string;
+		public Parents? : string;
+		public Partners? : string;
+		public Siblings? : string;
+		public Floras? : string;
+		public Relics? : string;
+		public Religions? : string;
+		public Creatures? : string;
+		public Elements? : string;
+		public Symbols? : string;
+		public Abilities? : string;
+		public Conditions? : string;
+		public Strengths? : string;
+		public Weaknesses? : string;
+		public Human_Interaction? : string;
+		public Related_towns? : string;
+		public Related_races? : string;
+		public Related_landmarks? : string;
+		public Prayers? : string;
+		public Rituals? : string;
+		public Traditions? : string;
+		public Family_History? : string;
+		public Notable_Events? : string;
+		public Life_Story? : string;
+		public Private_Notes? : string;
+		public Notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

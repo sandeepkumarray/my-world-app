@@ -1,0 +1,38 @@
+export class Sports {
+
+		public procedureName? : string;
+		public id? : string;
+		public Tags? : string;
+		public Universe? : string;
+		public Nicknames? : string;
+		public Description? : string;
+		public Name? : string;
+		public How_to_win? : string;
+		public Penalties? : string;
+		public Scoring? : string;
+		public Number_of_players? : string;
+		public Equipment? : string;
+		public Play_area? : string;
+		public Most_important_muscles? : string;
+		public Common_injuries? : string;
+		public Strategies? : string;
+		public Positions? : string;
+		public Game_time? : string;
+		public Rules? : string;
+		public Traditions? : string;
+		public Teams? : string;
+		public Countries? : string;
+		public Players? : string;
+		public Popularity? : string;
+		public Merchandise? : string;
+		public Uniforms? : string;
+		public Famous_games? : string;
+		public Evolution? : string;
+		public Creators? : string;
+		public Origin_story? : string;
+		public Private_Notes? : string;
+		public Notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

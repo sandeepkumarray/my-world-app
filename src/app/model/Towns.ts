@@ -1,0 +1,34 @@
+export class Towns {
+
+		public procedureName? : string;
+		public id? : string;
+		public Universe? : string;
+		public Tags? : string;
+		public Name? : string;
+		public Description? : string;
+		public Other_names? : string;
+		public Country? : string;
+		public Groups? : string;
+		public Citizens? : string;
+		public Buildings? : string;
+		public Neighborhoods? : string;
+		public Busy_areas? : string;
+		public Landmarks? : string;
+		public Laws? : string;
+		public Languages? : string;
+		public Flora? : string;
+		public Creatures? : string;
+		public Politics? : string;
+		public Sports? : string;
+		public Established_year? : string;
+		public Founding_story? : string;
+		public Food_sources? : string;
+		public Waste? : string;
+		public Energy_sources? : string;
+		public Recycling? : string;
+		public Notes? : string;
+		public Private_Notes? : string;
+		public created_at? : string;
+		public updated_at? : string;
+		public user_id? : string;
+}

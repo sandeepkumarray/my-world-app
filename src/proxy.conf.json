@@ -1,0 +1,8 @@
+{
+    "/api_content.php": {
+        "target": "http://localhost/code_drops/my-world-app/php_includes",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    }
+}

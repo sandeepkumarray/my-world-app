@@ -1,0 +1,51 @@
+<c-row>
+  <c-col sm="8">
+    <c-row>
+      <c-col sm="6" xl="3" *ngFor="let dItem of DashboardItems">
+        <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="#/{{dItem.Controller}}">
+          <c-card class="text-white "
+            style="width: 200px;height: 200px;background: linear-gradient( rgb(122 122 122), rgb(122 122 122 / 50%) ),  url('assets/img/cards/{{dItem.ItemKey}}.png');background-size: cover;">
+            <c-card-body>
+              <c-row>
+                <c-col>
+                  <h2>{{dItem.Header}}</h2>
+                  <span class="fs-6 fw-normal">
+                    Count : {{dItem.CountString}}
+                  </span>
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+        </a>
+      </c-col>
+    </c-row>
+  </c-col>
+  <c-col sm="4">
+    <h5>PICK UP WHERE YOU LEFT OFF</h5>
+    <a style="text-decoration: none;width: inherit;" *ngFor="let dItem of DashboardRecentList" href="#/{{dItem.content_type}}/{{dItem.id}}">
+      <c-card class="text-white text-center" [style.background]="dItem.primary_color">
+        <c-card-body class="d-md-flex justify-content-lg-start">
+          <span [innerHTML]="dItem.icon"></span>
+          <div>
+            <h3>&nbsp; {{dItem.name}}</h3>
+            <p class="text-sm-left">{{(dItem.timeSince)}}</p>
+        </div>
+        </c-card-body>
+      </c-card>
+    </a>
+    <h5>CREATE SOMETHING NEW</h5>
+    <a style="text-decoration: none;width: inherit;" *ngFor="let dItem of DashboardCreateItemList" href="#/create/{{dItem.Controller}}">
+      <c-card class="text-white text-center" [style.background]="dItem.primary_color">
+        <c-card-body class="d-md-flex justify-content-lg-start">
+          <span [innerHTML]="dItem.icon"></span>
+          <div>
+            <h3><i class="fas fa-plus"></i> New {{dItem.Controller}}</h3>
+            <footer>
+              <p class="text-sm-center">{{dItem.CountString}}</p>
+          </footer>
+        </div>
+        </c-card-body>
+      </c-card>
+    </a>
+  </c-col>
+</c-row>
