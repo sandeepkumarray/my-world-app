@@ -49,6 +49,10 @@ export class ContentService {
 	constructor(private http: HttpClient,private router: Router) {
 
 	}
+	getContentDetailsFromTypeID(contentType: any,id: any): Observable<BaseModel> {
+		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getContentDetailsFromTypeID&contentType=` + contentType + `&id=` + id;
+		return this.http.get<BaseModel>(apiURL);
+	}
 
 	saveData(model: BaseModel) {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
@@ -148,7 +152,7 @@ export class ContentService {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		characters.procedureName = "addCharacters";
+		characters.procedureName = "addCharacter";
 		
 		var jsonData = characters;
 		

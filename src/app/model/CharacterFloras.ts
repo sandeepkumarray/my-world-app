@@ -1,9 +1,9 @@
-export class CharacterFloras {
+import { BaseModel } from "./BaseModel";
+export class CharacterFloras extends BaseModel {
 
-		public procedureName? : string;
-		public user_id? : string;
-		public character_id? : string;
-		public flora_id? : string;
-		public created_at? : string;
-		public updated_at? : string;
+		public user_id!: number;
+		public character_id!: number;
+		public flora_id!: number;
+		public created_at!: Date;
+		public updated_at!: Date;
 }

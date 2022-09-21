@@ -59,7 +59,6 @@ export class LoginComponent implements OnInit {
             let user = response.data as Users;
             this.myworldService.getObjectStorageKeys(1, 1).subscribe({
               next: response => {
-                console.log(response);
                 this.myworldService.getUserContentBucket(user.id).subscribe({
                   next: res => {
                     response.bucketName = res.bucket_Name;
@@ -73,6 +72,14 @@ export class LoginComponent implements OnInit {
               next: (res) => {
                 res.map(cnfg => {
                   this.authService.setValue(cnfg.key, cnfg.value);
+                });
+              }
+            });
+
+            this.myworldService.getAllContentTypes().subscribe({
+              next: (res) => {
+                res.map(cnfg => {
+                  this.authService.setValue(cnfg.content_type, cnfg);
                 });
               }
             });

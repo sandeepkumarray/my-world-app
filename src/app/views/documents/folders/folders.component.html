@@ -1,0 +1,127 @@
+<!-- this folder -->
+<c-row>
+    <c-col lg="12">
+        <div class="d-flex">
+            <a style="cursor:pointer;" (click)="back()">
+                <i class="material-icons left tooltipped" data-tooltip="Go up a folder: back to Documents"
+                    translate="no">arrow_upward</i>
+            </a>
+            <a style="cursor:pointer;" data-tooltip="Click to edit this folder" [cModalToggle]="editFolderModal.id">
+                <i class="material-icons large left text-lighten-1 teal-text" translate="no">folder</i>
+            </a>
+            <span class="text-value-xl">&nbsp; {{viewModel.title}}</span>
+        </div>
+        <button cButton color="warning" style="margin-left:10px;float: right;" (click)="addFolder()">
+            <svg cIcon class="" name="cilPlus" size="xl"></svg> Add New Folder
+        </button>
+    </c-col>
+</c-row>
+
+<c-row class="justify-content-md-center" *ngIf="viewModel.folders.length > 0">
+
+    <!-- Folder -->
+    <c-col lg="12">
+        <h2>All Folders <span class="text-muted">{{viewModel.folders.length}}</span></h2>
+
+        <c-row>
+            <c-col sm="3" *ngFor="let folder of viewModel.folders">
+                <a href="#/folders/{{folder.id}}" style="text-decoration:none;" target="_blank">
+                    <c-card color="success" class="text-white success"
+                        style="height:100px; width:200px; padding-bottom:10px">
+                        <c-card-body>
+                            <div>
+                                <div class="text-value-lg">{{folder.title}}</div>
+                                <div>{{folder.timeSince}}</div>
+                            </div>
+                        </c-card-body>
+                    </c-card>
+                </a>
+            </c-col>
+        </c-row>
+    </c-col>
+
+
+</c-row>
+
+<c-row class="justify-content-md-center" *ngIf="viewModel.documents.length <= 0">
+    <c-col lg="5">
+        <c-card>
+            <c-card-header class="text-center">
+                <h2>You haven't created any documents in this folder yet!</h2>
+            </c-card-header>
+            <c-card-body class="text-center">
+                <div>
+                    You can create an unlimited number of documents with no limits on length. Enjoy!
+                </div>
+                <button type="button" class="btn btn-square btn-success" style="margin-left:10px;"
+                    (click)="createDocument()" id="btnAddDocument" name="btnAddDocument">
+                    CREATE YOUR FIRST DOCUMENT
+                </button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+<c-row class="justify-content-md-center" *ngIf="viewModel.documents.length > 0">
+    <app-grid-documents [documents]="viewModel.documents" [folders]="viewModel.folders" [folderId]="viewModel.id!">
+    </app-grid-documents>
+</c-row>
+
+
+<c-modal #editFolderModal [scrollable]="true" alignment="center" size="lg" id="editFolderModal">
+    <c-modal-body>
+        <c-modal-content style="border: 0px;">
+            <c-row>
+                <c-col md="8">
+                    <div style="margin: 1rem;">
+                        <i class="material-icons left text-lighten-1 teal-text" translate="no">folder</i>
+                        <span class="text-value-xl">&nbsp; Editing {{viewModel.title}}</span>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <label cLabel>Folder Name</label>
+                        <input cFormControl [(ngModel)]="viewModel.title" placeholder="" type="text"
+                            (blur)="onBlur($event, 'title')" />
+                    </div>
+                    <div style="margin: 1rem;">
+                        <label cLabel>Parent Folder</label>
+                        <select cSelect style="border: 0px;" [(ngModel)]="viewModel.parent_folder_id"
+                            (change)="folderChanged($event)">
+                            <option *ngFor="let folder of foldersModal" [value]="folder.id">
+                                {{folder.title}}
+                            </option>
+                        </select>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <span class="text-value">&nbsp; More Actions</span>
+                    </div>
+                    <div style="margin: 1rem;">
+                        <a color="success" variant="outline"  [cModalToggle]="alertModal.id"
+                            style="cursor: pointer; color: red;padding:0;">
+                            Delete Folder
+                        </a>
+                    </div>
+                </c-col>
+            </c-row>
+        </c-modal-content>
+    </c-modal-body>
+    <c-modal-footer>
+        <button [cModalToggle]="editFolderModal.id" cButton color="secondary">
+            Close
+        </button>
+    </c-modal-footer>
+</c-modal>
+
+
+<c-modal #alertModal alignment="center" id="alertModal">
+    <c-modal-body style="background:red;">
+        <h2>All documents in this folder will be removed.</h2>
+        <h3>Are you sure to delete the folder?</h3>
+        <div class="d-md-flex justify-content-md-end">
+            <button [cModalToggle]="alertModal.id" cButton color="primary" style="margin: 20px" (click)="deleteFolder('YES')">
+                Yes
+            </button> <button [cModalToggle]="alertModal.id" cButton color="secondary" style="margin: 20px" (click)="deleteFolder('NO')">
+                No
+            </button>
+        </div>
+    </c-modal-body>
+</c-modal>

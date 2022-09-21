@@ -10,6 +10,40 @@ require "logWriter.php";
 $response = new dbResponse;
 $log = new logWriter;
 
+function getContentDetailsFromTypeID(){
+    $contentType = $_GET['contentType'];
+    $id = $_GET['id'];
+
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT id, Name as content_name FROM $contentType Where id = '$id'";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
+            }
+
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+
+}
+
 function saveData($data){
     global $response;
     global $log;
@@ -48,6 +82,7 @@ function saveData($data){
 
 }
 
+
 function getAllBuildings(){
     $user_id = $_GET['user_id']; 
     global $response;
@@ -80,8 +115,10 @@ function getAllBuildings(){
 }
 
 function getBuildings(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
@@ -118,35 +155,35 @@ function addBuilding($data){
 
     $log->info("Started save function.");
 
-	$Address = trim($data->Address);
-	$Affiliation = trim($data->Affiliation);
-	$Alternate_names = trim($data->Alternate_names);
-	$Architect = trim($data->Architect);
-	$Architectural_style = trim($data->Architectural_style);
-	$Capacity = trim($data->Capacity);
-	$Constructed_year = trim($data->Constructed_year);
-	$Construction_cost = trim($data->Construction_cost);
+	$Name = trim($data->Name);
+	$Universe = trim($data->Universe);
 	$Description = trim($data->Description);
-	$Developer = trim($data->Developer);
-	$Dimensions = trim($data->Dimensions);
+	$Type_of_building = trim($data->Type_of_building);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Capacity = trim($data->Capacity);
+	$Price = trim($data->Price);
+	$Owner = trim($data->Owner);
+	$Tenants = trim($data->Tenants);
+	$Affiliation = trim($data->Affiliation);
 	$Facade = trim($data->Facade);
 	$Floor_count = trim($data->Floor_count);
-	$Name = trim($data->Name);
-	$Notable_events = trim($data->Notable_events);
-	$Notes = trim($data->Notes);
-	$Owner = trim($data->Owner);
+	$Dimensions = trim($data->Dimensions);
+	$Architectural_style = trim($data->Architectural_style);
 	$Permits = trim($data->Permits);
-	$Price = trim($data->Price);
-	$Private_Notes = trim($data->Private_Notes);
 	$Purpose = trim($data->Purpose);
-	$Tags = trim($data->Tags);
-	$Tenants = trim($data->Tenants);
-	$Type_of_building = trim($data->Type_of_building);
-	$Universe = trim($data->Universe);
+	$Address = trim($data->Address);
+	$Architect = trim($data->Architect);
+	$Developer = trim($data->Developer);
+	$Notable_events = trim($data->Notable_events);
+	$Constructed_year = trim($data->Constructed_year);
+	$Construction_cost = trim($data->Construction_cost);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO buildings(Address,Affiliation,Alternate_names,Architect,Architectural_style,Capacity,Constructed_year,Construction_cost,Description,Developer,Dimensions,Facade,Floor_count,Name,Notable_events,Notes,Owner,Permits,Price,Private_Notes,Purpose,Tags,Tenants,Type_of_building,Universe) 
-VALUES('$Address','$Affiliation','$Alternate_names','$Architect','$Architectural_style','$Capacity','$Constructed_year','$Construction_cost','$Description','$Developer','$Dimensions','$Facade','$Floor_count','$Name','$Notable_events','$Notes','$Owner','$Permits','$Price','$Private_Notes','$Purpose','$Tags','$Tenants','$Type_of_building','$Universe')"; 
+    $sql = "INSERT INTO buildings(Name,Universe,Description,Type_of_building,Alternate_names,Tags,Capacity,Price,Owner,Tenants,Affiliation,Facade,Floor_count,Dimensions,Architectural_style,Permits,Purpose,Address,Architect,Developer,Notable_events,Constructed_year,Construction_cost,Notes,Private_Notes) 
+VALUES('$Name','$Universe','$Description','$Type_of_building','$Alternate_names','$Tags','$Capacity','$Price','$Owner','$Tenants','$Affiliation','$Facade','$Floor_count','$Dimensions','$Architectural_style','$Permits','$Purpose','$Address','$Architect','$Developer','$Notable_events','$Constructed_year','$Construction_cost','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -217,35 +254,35 @@ function updateBuilding($data){
 
     $log->info("Started update function.");
 
-	$Address = trim($data->Address);
-	$Affiliation = trim($data->Affiliation);
-	$Alternate_names = trim($data->Alternate_names);
-	$Architect = trim($data->Architect);
-	$Architectural_style = trim($data->Architectural_style);
-	$Capacity = trim($data->Capacity);
-	$Constructed_year = trim($data->Constructed_year);
-	$Construction_cost = trim($data->Construction_cost);
+	$Name = trim($data->Name);
+	$Universe = trim($data->Universe);
 	$Description = trim($data->Description);
-	$Developer = trim($data->Developer);
-	$Dimensions = trim($data->Dimensions);
+	$Type_of_building = trim($data->Type_of_building);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Capacity = trim($data->Capacity);
+	$Price = trim($data->Price);
+	$Owner = trim($data->Owner);
+	$Tenants = trim($data->Tenants);
+	$Affiliation = trim($data->Affiliation);
 	$Facade = trim($data->Facade);
 	$Floor_count = trim($data->Floor_count);
-	$Name = trim($data->Name);
-	$Notable_events = trim($data->Notable_events);
-	$Notes = trim($data->Notes);
-	$Owner = trim($data->Owner);
+	$Dimensions = trim($data->Dimensions);
+	$Architectural_style = trim($data->Architectural_style);
 	$Permits = trim($data->Permits);
-	$Price = trim($data->Price);
-	$Private_Notes = trim($data->Private_Notes);
 	$Purpose = trim($data->Purpose);
-	$Tags = trim($data->Tags);
-	$Tenants = trim($data->Tenants);
-	$Type_of_building = trim($data->Type_of_building);
-	$Universe = trim($data->Universe);
+	$Address = trim($data->Address);
+	$Architect = trim($data->Architect);
+	$Developer = trim($data->Developer);
+	$Notable_events = trim($data->Notable_events);
+	$Constructed_year = trim($data->Constructed_year);
+	$Construction_cost = trim($data->Construction_cost);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE buildings SET 
-Address = '$Address',Affiliation = '$Affiliation',Alternate_names = '$Alternate_names',Architect = '$Architect',Architectural_style = '$Architectural_style',Capacity = '$Capacity',Constructed_year = '$Constructed_year',Construction_cost = '$Construction_cost',Description = '$Description',Developer = '$Developer',Dimensions = '$Dimensions',Facade = '$Facade',Floor_count = '$Floor_count',Name = '$Name',Notable_events = '$Notable_events',Notes = '$Notes',Owner = '$Owner',Permits = '$Permits',Price = '$Price',Private_Notes = '$Private_Notes',Purpose = '$Purpose',Tags = '$Tags',Tenants = '$Tenants',Type_of_building = '$Type_of_building',Universe = '$Universe'    WHERE id = $id"; 
+Name = '$Name',Universe = '$Universe',Description = '$Description',Type_of_building = '$Type_of_building',Alternate_names = '$Alternate_names',Tags = '$Tags',Capacity = '$Capacity',Price = '$Price',Owner = '$Owner',Tenants = '$Tenants',Affiliation = '$Affiliation',Facade = '$Facade',Floor_count = '$Floor_count',Dimensions = '$Dimensions',Architectural_style = '$Architectural_style',Permits = '$Permits',Purpose = '$Purpose',Address = '$Address',Architect = '$Architect',Developer = '$Developer',Notable_events = '$Notable_events',Constructed_year = '$Constructed_year',Construction_cost = '$Construction_cost',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -304,13 +341,15 @@ function getAllCharacters(){
 }
 
 function getCharacters(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM characters Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM characters Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -318,8 +357,8 @@ function getCharacters(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -342,50 +381,50 @@ function addCharacter($data){
 
     $log->info("Started save function.");
 
+	$Name = trim($data->Name);
+	$Role = trim($data->Role);
+	$Gender = trim($data->Gender);
 	$Age = trim($data->Age);
-	$Aliases = trim($data->Aliases);
-	$Background = trim($data->Background);
+	$Height = trim($data->Height);
+	$Weight = trim($data->Weight);
+	$Haircolor = trim($data->Haircolor);
+	$Hairstyle = trim($data->Hairstyle);
+	$Facialhair = trim($data->Facialhair);
+	$Eyecolor = trim($data->Eyecolor);
+	$Race = trim($data->Race);
+	$Skintone = trim($data->Skintone);
+	$Bodytype = trim($data->Bodytype);
+	$Identmarks = trim($data->Identmarks);
+	$Religion = trim($data->Religion);
+	$Politics = trim($data->Politics);
+	$Prejudices = trim($data->Prejudices);
+	$Occupation = trim($data->Occupation);
+	$Pets = trim($data->Pets);
+	$Mannerisms = trim($data->Mannerisms);
 	$Birthday = trim($data->Birthday);
 	$Birthplace = trim($data->Birthplace);
-	$Bodytype = trim($data->Bodytype);
 	$Education = trim($data->Education);
-	$Eyecolor = trim($data->Eyecolor);
-	$Facialhair = trim($data->Facialhair);
-	$Fave_animal = trim($data->Fave_animal);
+	$Background = trim($data->Background);
 	$Fave_color = trim($data->Fave_color);
 	$Fave_food = trim($data->Fave_food);
 	$Fave_possession = trim($data->Fave_possession);
 	$Fave_weapon = trim($data->Fave_weapon);
-	$Favorite = trim($data->Favorite);
-	$Flaws = trim($data->Flaws);
-	$Gender = trim($data->Gender);
-	$Haircolor = trim($data->Haircolor);
-	$Hairstyle = trim($data->Hairstyle);
-	$Height = trim($data->Height);
-	$Hobbies = trim($data->Hobbies);
-	$Identmarks = trim($data->Identmarks);
-	$Mannerisms = trim($data->Mannerisms);
-	$Motivations = trim($data->Motivations);
-	$Name = trim($data->Name);
+	$Fave_animal = trim($data->Fave_animal);
 	$Notes = trim($data->Notes);
-	$Occupation = trim($data->Occupation);
-	$Personality_type = trim($data->Personality_type);
-	$Pets = trim($data->Pets);
-	$Politics = trim($data->Politics);
-	$Prejudices = trim($data->Prejudices);
-	$Privacy = trim($data->Privacy);
 	$Private_notes = trim($data->Private_notes);
-	$Race = trim($data->Race);
-	$Religion = trim($data->Religion);
-	$Role = trim($data->Role);
-	$Skintone = trim($data->Skintone);
-	$Talents = trim($data->Talents);
 	$Universe = trim($data->Universe);
-	$Weight = trim($data->Weight);
+	$Privacy = trim($data->Privacy);
+	$Aliases = trim($data->Aliases);
+	$Motivations = trim($data->Motivations);
+	$Flaws = trim($data->Flaws);
+	$Talents = trim($data->Talents);
+	$Hobbies = trim($data->Hobbies);
+	$Personality_type = trim($data->Personality_type);
+	$Favorite = trim($data->Favorite);
 
 
-    $sql = "INSERT INTO characters(Age,Aliases,Background,Birthday,Birthplace,Bodytype,Education,Eyecolor,Facialhair,Fave_animal,Fave_color,Fave_food,Fave_possession,Fave_weapon,Favorite,Flaws,Gender,Haircolor,Hairstyle,Height,Hobbies,Identmarks,Mannerisms,Motivations,Name,Notes,Occupation,Personality_type,Pets,Politics,Prejudices,Privacy,Private_notes,Race,Religion,Role,Skintone,Talents,Universe,Weight) 
-VALUES('$Age','$Aliases','$Background','$Birthday','$Birthplace','$Bodytype','$Education','$Eyecolor','$Facialhair','$Fave_animal','$Fave_color','$Fave_food','$Fave_possession','$Fave_weapon','$Favorite','$Flaws','$Gender','$Haircolor','$Hairstyle','$Height','$Hobbies','$Identmarks','$Mannerisms','$Motivations','$Name','$Notes','$Occupation','$Personality_type','$Pets','$Politics','$Prejudices','$Privacy','$Private_notes','$Race','$Religion','$Role','$Skintone','$Talents','$Universe','$Weight')"; 
+    $sql = "INSERT INTO characters(Name,Role,Gender,Age,Height,Weight,Haircolor,Hairstyle,Facialhair,Eyecolor,Race,Skintone,Bodytype,Identmarks,Religion,Politics,Prejudices,Occupation,Pets,Mannerisms,Birthday,Birthplace,Education,Background,Fave_color,Fave_food,Fave_possession,Fave_weapon,Fave_animal,Notes,Private_notes,Universe,Privacy,Aliases,Motivations,Flaws,Talents,Hobbies,Personality_type,Favorite) 
+VALUES('$Name','$Role','$Gender','$Age','$Height','$Weight','$Haircolor','$Hairstyle','$Facialhair','$Eyecolor','$Race','$Skintone','$Bodytype','$Identmarks','$Religion','$Politics','$Prejudices','$Occupation','$Pets','$Mannerisms','$Birthday','$Birthplace','$Education','$Background','$Fave_color','$Fave_food','$Fave_possession','$Fave_weapon','$Fave_animal','$Notes','$Private_notes','$Universe','$Privacy','$Aliases','$Motivations','$Flaws','$Talents','$Hobbies','$Personality_type','$Favorite')"; 
 
 
     $log->info("sql".$sql."");
@@ -456,50 +495,50 @@ function updateCharacter($data){
 
     $log->info("Started update function.");
 
+	$Name = trim($data->Name);
+	$Role = trim($data->Role);
+	$Gender = trim($data->Gender);
 	$Age = trim($data->Age);
-	$Aliases = trim($data->Aliases);
-	$Background = trim($data->Background);
+	$Height = trim($data->Height);
+	$Weight = trim($data->Weight);
+	$Haircolor = trim($data->Haircolor);
+	$Hairstyle = trim($data->Hairstyle);
+	$Facialhair = trim($data->Facialhair);
+	$Eyecolor = trim($data->Eyecolor);
+	$Race = trim($data->Race);
+	$Skintone = trim($data->Skintone);
+	$Bodytype = trim($data->Bodytype);
+	$Identmarks = trim($data->Identmarks);
+	$Religion = trim($data->Religion);
+	$Politics = trim($data->Politics);
+	$Prejudices = trim($data->Prejudices);
+	$Occupation = trim($data->Occupation);
+	$Pets = trim($data->Pets);
+	$Mannerisms = trim($data->Mannerisms);
 	$Birthday = trim($data->Birthday);
 	$Birthplace = trim($data->Birthplace);
-	$Bodytype = trim($data->Bodytype);
 	$Education = trim($data->Education);
-	$Eyecolor = trim($data->Eyecolor);
-	$Facialhair = trim($data->Facialhair);
-	$Fave_animal = trim($data->Fave_animal);
+	$Background = trim($data->Background);
 	$Fave_color = trim($data->Fave_color);
 	$Fave_food = trim($data->Fave_food);
 	$Fave_possession = trim($data->Fave_possession);
 	$Fave_weapon = trim($data->Fave_weapon);
-	$Favorite = trim($data->Favorite);
-	$Flaws = trim($data->Flaws);
-	$Gender = trim($data->Gender);
-	$Haircolor = trim($data->Haircolor);
-	$Hairstyle = trim($data->Hairstyle);
-	$Height = trim($data->Height);
-	$Hobbies = trim($data->Hobbies);
-	$Identmarks = trim($data->Identmarks);
-	$Mannerisms = trim($data->Mannerisms);
-	$Motivations = trim($data->Motivations);
-	$Name = trim($data->Name);
+	$Fave_animal = trim($data->Fave_animal);
 	$Notes = trim($data->Notes);
-	$Occupation = trim($data->Occupation);
-	$Personality_type = trim($data->Personality_type);
-	$Pets = trim($data->Pets);
-	$Politics = trim($data->Politics);
-	$Prejudices = trim($data->Prejudices);
-	$Privacy = trim($data->Privacy);
 	$Private_notes = trim($data->Private_notes);
-	$Race = trim($data->Race);
-	$Religion = trim($data->Religion);
-	$Role = trim($data->Role);
-	$Skintone = trim($data->Skintone);
-	$Talents = trim($data->Talents);
 	$Universe = trim($data->Universe);
-	$Weight = trim($data->Weight);
+	$Privacy = trim($data->Privacy);
+	$Aliases = trim($data->Aliases);
+	$Motivations = trim($data->Motivations);
+	$Flaws = trim($data->Flaws);
+	$Talents = trim($data->Talents);
+	$Hobbies = trim($data->Hobbies);
+	$Personality_type = trim($data->Personality_type);
+	$Favorite = trim($data->Favorite);
 
 
     $sql = "UPDATE characters SET 
-Age = '$Age',Aliases = '$Aliases',Background = '$Background',Birthday = '$Birthday',Birthplace = '$Birthplace',Bodytype = '$Bodytype',Education = '$Education',Eyecolor = '$Eyecolor',Facialhair = '$Facialhair',Fave_animal = '$Fave_animal',Fave_color = '$Fave_color',Fave_food = '$Fave_food',Fave_possession = '$Fave_possession',Fave_weapon = '$Fave_weapon',Favorite = '$Favorite',Flaws = '$Flaws',Gender = '$Gender',Haircolor = '$Haircolor',Hairstyle = '$Hairstyle',Height = '$Height',Hobbies = '$Hobbies',Identmarks = '$Identmarks',Mannerisms = '$Mannerisms',Motivations = '$Motivations',Name = '$Name',Notes = '$Notes',Occupation = '$Occupation',Personality_type = '$Personality_type',Pets = '$Pets',Politics = '$Politics',Prejudices = '$Prejudices',Privacy = '$Privacy',Private_notes = '$Private_notes',Race = '$Race',Religion = '$Religion',Role = '$Role',Skintone = '$Skintone',Talents = '$Talents',Universe = '$Universe',Weight = '$Weight'    WHERE id = $id"; 
+Name = '$Name',Role = '$Role',Gender = '$Gender',Age = '$Age',Height = '$Height',Weight = '$Weight',Haircolor = '$Haircolor',Hairstyle = '$Hairstyle',Facialhair = '$Facialhair',Eyecolor = '$Eyecolor',Race = '$Race',Skintone = '$Skintone',Bodytype = '$Bodytype',Identmarks = '$Identmarks',Religion = '$Religion',Politics = '$Politics',Prejudices = '$Prejudices',Occupation = '$Occupation',Pets = '$Pets',Mannerisms = '$Mannerisms',Birthday = '$Birthday',Birthplace = '$Birthplace',Education = '$Education',Background = '$Background',Fave_color = '$Fave_color',Fave_food = '$Fave_food',Fave_possession = '$Fave_possession',Fave_weapon = '$Fave_weapon',Fave_animal = '$Fave_animal',Notes = '$Notes',Private_notes = '$Private_notes',Universe = '$Universe',Privacy = '$Privacy',Aliases = '$Aliases',Motivations = '$Motivations',Flaws = '$Flaws',Talents = '$Talents',Hobbies = '$Hobbies',Personality_type = '$Personality_type',Favorite = '$Favorite'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -558,13 +597,15 @@ function getAllConditions(){
 }
 
 function getConditions(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM conditions Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM conditions Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -572,8 +613,8 @@ function getConditions(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -596,39 +637,39 @@ function addCondition($data){
 
     $log->info("Started save function.");
 
-	$Alternate_names = trim($data->Alternate_names);
-	$Description = trim($data->Description);
-	$Diagnostic_method = trim($data->Diagnostic_method);
-	$Duration = trim($data->Duration);
-	$Environmental_factors = trim($data->Environmental_factors);
-	$Epidemiology = trim($data->Epidemiology);
-	$Evolution = trim($data->Evolution);
-	$Genetic_factors = trim($data->Genetic_factors);
-	$Immunization = trim($data->Immunization);
-	$Lifestyle_factors = trim($data->Lifestyle_factors);
-	$Medication = trim($data->Medication);
-	$Mental_effects = trim($data->Mental_effects);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Origin = trim($data->Origin);
-	$Prevention = trim($data->Prevention);
-	$Private_Notes = trim($data->Private_Notes);
-	$Prognosis = trim($data->Prognosis);
-	$Rarity = trim($data->Rarity);
-	$Specialty_Field = trim($data->Specialty_Field);
-	$Symbolism = trim($data->Symbolism);
-	$Symptoms = trim($data->Symptoms);
 	$Tags = trim($data->Tags);
-	$Transmission = trim($data->Transmission);
-	$Treatment = trim($data->Treatment);
-	$Type_of_condition = trim($data->Type_of_condition);
+	$Name = trim($data->Name);
 	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Type_of_condition = trim($data->Type_of_condition);
+	$Alternate_names = trim($data->Alternate_names);
+	$Transmission = trim($data->Transmission);
+	$Genetic_factors = trim($data->Genetic_factors);
+	$Environmental_factors = trim($data->Environmental_factors);
+	$Lifestyle_factors = trim($data->Lifestyle_factors);
+	$Epidemiology = trim($data->Epidemiology);
+	$Duration = trim($data->Duration);
 	$Variations = trim($data->Variations);
+	$Prognosis = trim($data->Prognosis);
+	$Symptoms = trim($data->Symptoms);
+	$Mental_effects = trim($data->Mental_effects);
 	$Visual_effects = trim($data->Visual_effects);
+	$Prevention = trim($data->Prevention);
+	$Treatment = trim($data->Treatment);
+	$Medication = trim($data->Medication);
+	$Immunization = trim($data->Immunization);
+	$Diagnostic_method = trim($data->Diagnostic_method);
+	$Symbolism = trim($data->Symbolism);
+	$Specialty_Field = trim($data->Specialty_Field);
+	$Rarity = trim($data->Rarity);
+	$Evolution = trim($data->Evolution);
+	$Origin = trim($data->Origin);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO conditions(Alternate_names,Description,Diagnostic_method,Duration,Environmental_factors,Epidemiology,Evolution,Genetic_factors,Immunization,Lifestyle_factors,Medication,Mental_effects,Name,Notes,Origin,Prevention,Private_Notes,Prognosis,Rarity,Specialty_Field,Symbolism,Symptoms,Tags,Transmission,Treatment,Type_of_condition,Universe,Variations,Visual_effects) 
-VALUES('$Alternate_names','$Description','$Diagnostic_method','$Duration','$Environmental_factors','$Epidemiology','$Evolution','$Genetic_factors','$Immunization','$Lifestyle_factors','$Medication','$Mental_effects','$Name','$Notes','$Origin','$Prevention','$Private_Notes','$Prognosis','$Rarity','$Specialty_Field','$Symbolism','$Symptoms','$Tags','$Transmission','$Treatment','$Type_of_condition','$Universe','$Variations','$Visual_effects')"; 
+    $sql = "INSERT INTO conditions(Tags,Name,Universe,Description,Type_of_condition,Alternate_names,Transmission,Genetic_factors,Environmental_factors,Lifestyle_factors,Epidemiology,Duration,Variations,Prognosis,Symptoms,Mental_effects,Visual_effects,Prevention,Treatment,Medication,Immunization,Diagnostic_method,Symbolism,Specialty_Field,Rarity,Evolution,Origin,Private_Notes,Notes) 
+VALUES('$Tags','$Name','$Universe','$Description','$Type_of_condition','$Alternate_names','$Transmission','$Genetic_factors','$Environmental_factors','$Lifestyle_factors','$Epidemiology','$Duration','$Variations','$Prognosis','$Symptoms','$Mental_effects','$Visual_effects','$Prevention','$Treatment','$Medication','$Immunization','$Diagnostic_method','$Symbolism','$Specialty_Field','$Rarity','$Evolution','$Origin','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -699,39 +740,223 @@ function updateCondition($data){
 
     $log->info("Started update function.");
 
-	$Alternate_names = trim($data->Alternate_names);
-	$Description = trim($data->Description);
-	$Diagnostic_method = trim($data->Diagnostic_method);
-	$Duration = trim($data->Duration);
-	$Environmental_factors = trim($data->Environmental_factors);
-	$Epidemiology = trim($data->Epidemiology);
-	$Evolution = trim($data->Evolution);
-	$Genetic_factors = trim($data->Genetic_factors);
-	$Immunization = trim($data->Immunization);
-	$Lifestyle_factors = trim($data->Lifestyle_factors);
-	$Medication = trim($data->Medication);
-	$Mental_effects = trim($data->Mental_effects);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Origin = trim($data->Origin);
-	$Prevention = trim($data->Prevention);
-	$Private_Notes = trim($data->Private_Notes);
-	$Prognosis = trim($data->Prognosis);
-	$Rarity = trim($data->Rarity);
-	$Specialty_Field = trim($data->Specialty_Field);
-	$Symbolism = trim($data->Symbolism);
-	$Symptoms = trim($data->Symptoms);
 	$Tags = trim($data->Tags);
-	$Transmission = trim($data->Transmission);
-	$Treatment = trim($data->Treatment);
-	$Type_of_condition = trim($data->Type_of_condition);
+	$Name = trim($data->Name);
 	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Type_of_condition = trim($data->Type_of_condition);
+	$Alternate_names = trim($data->Alternate_names);
+	$Transmission = trim($data->Transmission);
+	$Genetic_factors = trim($data->Genetic_factors);
+	$Environmental_factors = trim($data->Environmental_factors);
+	$Lifestyle_factors = trim($data->Lifestyle_factors);
+	$Epidemiology = trim($data->Epidemiology);
+	$Duration = trim($data->Duration);
 	$Variations = trim($data->Variations);
+	$Prognosis = trim($data->Prognosis);
+	$Symptoms = trim($data->Symptoms);
+	$Mental_effects = trim($data->Mental_effects);
 	$Visual_effects = trim($data->Visual_effects);
+	$Prevention = trim($data->Prevention);
+	$Treatment = trim($data->Treatment);
+	$Medication = trim($data->Medication);
+	$Immunization = trim($data->Immunization);
+	$Diagnostic_method = trim($data->Diagnostic_method);
+	$Symbolism = trim($data->Symbolism);
+	$Specialty_Field = trim($data->Specialty_Field);
+	$Rarity = trim($data->Rarity);
+	$Evolution = trim($data->Evolution);
+	$Origin = trim($data->Origin);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE conditions SET 
-Alternate_names = '$Alternate_names',Description = '$Description',Diagnostic_method = '$Diagnostic_method',Duration = '$Duration',Environmental_factors = '$Environmental_factors',Epidemiology = '$Epidemiology',Evolution = '$Evolution',Genetic_factors = '$Genetic_factors',Immunization = '$Immunization',Lifestyle_factors = '$Lifestyle_factors',Medication = '$Medication',Mental_effects = '$Mental_effects',Name = '$Name',Notes = '$Notes',Origin = '$Origin',Prevention = '$Prevention',Private_Notes = '$Private_Notes',Prognosis = '$Prognosis',Rarity = '$Rarity',Specialty_Field = '$Specialty_Field',Symbolism = '$Symbolism',Symptoms = '$Symptoms',Tags = '$Tags',Transmission = '$Transmission',Treatment = '$Treatment',Type_of_condition = '$Type_of_condition',Universe = '$Universe',Variations = '$Variations',Visual_effects = '$Visual_effects'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Universe = '$Universe',Description = '$Description',Type_of_condition = '$Type_of_condition',Alternate_names = '$Alternate_names',Transmission = '$Transmission',Genetic_factors = '$Genetic_factors',Environmental_factors = '$Environmental_factors',Lifestyle_factors = '$Lifestyle_factors',Epidemiology = '$Epidemiology',Duration = '$Duration',Variations = '$Variations',Prognosis = '$Prognosis',Symptoms = '$Symptoms',Mental_effects = '$Mental_effects',Visual_effects = '$Visual_effects',Prevention = '$Prevention',Treatment = '$Treatment',Medication = '$Medication',Immunization = '$Immunization',Diagnostic_method = '$Diagnostic_method',Symbolism = '$Symbolism',Specialty_Field = '$Specialty_Field',Rarity = '$Rarity',Evolution = '$Evolution',Origin = '$Origin',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
+
+    $log->info("sql".$sql."");
+                
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Updated successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed update function.");
+}
+
+function getAllContentBlobObject(){
+    $user_id = $_GET['user_id']; 
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT * FROM content_blob_object ";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $myArray[] = $row;
+            }
+
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
+
+function getContentBlobObject(){
+
+
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT * FROM content_blob_object ";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
+            }
+
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
+
+function addContentBlobObject($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started save function.");
+
+	$object_id = trim($data->object_id);
+	$object_name = trim($data->object_name);
+	$object_type = trim($data->object_type);
+	$object_size = trim($data->object_size);
+	$object_blob = trim($data->object_blob);
+
+
+    $sql = "INSERT INTO content_blob_object(object_id,object_name,object_type,object_size,object_blob) 
+VALUES('$object_id','$object_name','$object_type','$object_size','$object_blob')"; 
+
+
+    $log->info("sql".$sql."");
+                
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Updated successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed update function.");
+}
+
+function deleteContentBlobObject($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started delete function.");
+
+    $id = trim($data->id);
+
+    $sql = "DELETE FROM content_blob_object WHERE id = $id; ";
+
+    $log->info("sql".$sql."");
+
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Deleted successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);            
+    $log->info("Completed delete function.");
+}
+
+function updateContentBlobObject($data){
+    global $response;
+    global $log;
+    global $link;
+    $id = $_GET['id']; 
+
+    $log->info("Started update function.");
+
+	$object_id = trim($data->object_id);
+	$object_name = trim($data->object_name);
+	$object_type = trim($data->object_type);
+	$object_size = trim($data->object_size);
+	$object_blob = trim($data->object_blob);
+
+
+    $sql = "UPDATE content_blob_object SET 
+object_id = '$object_id',object_name = '$object_name',object_type = '$object_type',object_size = '$object_size',object_blob = '$object_blob'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -790,8 +1015,9 @@ function getAllContentChangeEvents(){
 }
 
 function getContentChangeEvents(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+
+
     global $response;
     global $log;
     global $link;
@@ -804,8 +1030,8 @@ function getContentChangeEvents(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -828,14 +1054,14 @@ function addContentchangeevent($data){
 
     $log->info("Started save function.");
 
-	$action = trim($data->action);
 	$changed_fields = trim($data->changed_fields);
 	$content_id = trim($data->content_id);
 	$content_type = trim($data->content_type);
+	$action = trim($data->action);
 
 
-    $sql = "INSERT INTO content_change_events(action,changed_fields,content_id,content_type) 
-VALUES('$action','$changed_fields','$content_id','$content_type')"; 
+    $sql = "INSERT INTO content_change_events(changed_fields,content_id,content_type,action) 
+VALUES('$changed_fields','$content_id','$content_type','$action')"; 
 
 
     $log->info("sql".$sql."");
@@ -906,14 +1132,14 @@ function updateContentchangeevent($data){
 
     $log->info("Started update function.");
 
-	$action = trim($data->action);
 	$changed_fields = trim($data->changed_fields);
 	$content_id = trim($data->content_id);
 	$content_type = trim($data->content_type);
+	$action = trim($data->action);
 
 
     $sql = "UPDATE content_change_events SET 
-action = '$action',changed_fields = '$changed_fields',content_id = '$content_id',content_type = '$content_type'    WHERE id = $id"; 
+changed_fields = '$changed_fields',content_id = '$content_id',content_type = '$content_type',action = '$action'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -972,13 +1198,15 @@ function getAllContinents(){
 }
 
 function getContinents(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM continents Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM continents Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -986,8 +1214,8 @@ function getContinents(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -1010,51 +1238,51 @@ function addContinent($data){
 
     $log->info("Started save function.");
 
-	$Architecture = trim($data->Architecture);
-	$Area = trim($data->Area);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
+	$Other_Names = trim($data->Other_Names);
+	$Local_name = trim($data->Local_name);
+	$Regional_disadvantages = trim($data->Regional_disadvantages);
+	$Regional_advantages = trim($data->Regional_advantages);
+	$Landmarks = trim($data->Landmarks);
 	$Bodies_of_water = trim($data->Bodies_of_water);
+	$Mineralogy = trim($data->Mineralogy);
+	$Topography = trim($data->Topography);
+	$Population = trim($data->Population);
+	$Shape = trim($data->Shape);
+	$Area = trim($data->Area);
+	$Popular_foods = trim($data->Popular_foods);
+	$Governments = trim($data->Governments);
+	$Traditions = trim($data->Traditions);
+	$Languages = trim($data->Languages);
 	$Countries = trim($data->Countries);
+	$Reputation = trim($data->Reputation);
+	$Architecture = trim($data->Architecture);
+	$Tourism = trim($data->Tourism);
+	$Economy = trim($data->Economy);
+	$Politics = trim($data->Politics);
+	$Demonym = trim($data->Demonym);
+	$Floras = trim($data->Floras);
 	$Creatures = trim($data->Creatures);
 	$Crops = trim($data->Crops);
-	$Demonym = trim($data->Demonym);
-	$Description = trim($data->Description);
-	$Discovery = trim($data->Discovery);
-	$Economy = trim($data->Economy);
-	$Floras = trim($data->Floras);
-	$Formation = trim($data->Formation);
-	$Governments = trim($data->Governments);
-	$Humidity = trim($data->Humidity);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Local_name = trim($data->Local_name);
-	$Mineralogy = trim($data->Mineralogy);
-	$Name = trim($data->Name);
 	$Natural_disasters = trim($data->Natural_disasters);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Politics = trim($data->Politics);
-	$Popular_foods = trim($data->Popular_foods);
-	$Population = trim($data->Population);
-	$Precipitation = trim($data->Precipitation);
-	$Private_Notes = trim($data->Private_Notes);
-	$Regional_advantages = trim($data->Regional_advantages);
-	$Regional_disadvantages = trim($data->Regional_disadvantages);
-	$Reputation = trim($data->Reputation);
-	$Ruins = trim($data->Ruins);
-	$Seasons = trim($data->Seasons);
-	$Shape = trim($data->Shape);
-	$Tags = trim($data->Tags);
-	$Temperature = trim($data->Temperature);
-	$Topography = trim($data->Topography);
-	$Tourism = trim($data->Tourism);
-	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
-	$Wars = trim($data->Wars);
 	$Winds = trim($data->Winds);
+	$Precipitation = trim($data->Precipitation);
+	$Humidity = trim($data->Humidity);
+	$Seasons = trim($data->Seasons);
+	$Temperature = trim($data->Temperature);
+	$Ruins = trim($data->Ruins);
+	$Wars = trim($data->Wars);
+	$Discovery = trim($data->Discovery);
+	$Formation = trim($data->Formation);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO continents(Architecture,Area,Bodies_of_water,Countries,Creatures,Crops,Demonym,Description,Discovery,Economy,Floras,Formation,Governments,Humidity,Landmarks,Languages,Local_name,Mineralogy,Name,Natural_disasters,Notes,Other_Names,Politics,Popular_foods,Population,Precipitation,Private_Notes,Regional_advantages,Regional_disadvantages,Reputation,Ruins,Seasons,Shape,Tags,Temperature,Topography,Tourism,Traditions,Universe,Wars,Winds) 
-VALUES('$Architecture','$Area','$Bodies_of_water','$Countries','$Creatures','$Crops','$Demonym','$Description','$Discovery','$Economy','$Floras','$Formation','$Governments','$Humidity','$Landmarks','$Languages','$Local_name','$Mineralogy','$Name','$Natural_disasters','$Notes','$Other_Names','$Politics','$Popular_foods','$Population','$Precipitation','$Private_Notes','$Regional_advantages','$Regional_disadvantages','$Reputation','$Ruins','$Seasons','$Shape','$Tags','$Temperature','$Topography','$Tourism','$Traditions','$Universe','$Wars','$Winds')"; 
+    $sql = "INSERT INTO continents(Tags,Universe,Description,Name,Other_Names,Local_name,Regional_disadvantages,Regional_advantages,Landmarks,Bodies_of_water,Mineralogy,Topography,Population,Shape,Area,Popular_foods,Governments,Traditions,Languages,Countries,Reputation,Architecture,Tourism,Economy,Politics,Demonym,Floras,Creatures,Crops,Natural_disasters,Winds,Precipitation,Humidity,Seasons,Temperature,Ruins,Wars,Discovery,Formation,Private_Notes,Notes) 
+VALUES('$Tags','$Universe','$Description','$Name','$Other_Names','$Local_name','$Regional_disadvantages','$Regional_advantages','$Landmarks','$Bodies_of_water','$Mineralogy','$Topography','$Population','$Shape','$Area','$Popular_foods','$Governments','$Traditions','$Languages','$Countries','$Reputation','$Architecture','$Tourism','$Economy','$Politics','$Demonym','$Floras','$Creatures','$Crops','$Natural_disasters','$Winds','$Precipitation','$Humidity','$Seasons','$Temperature','$Ruins','$Wars','$Discovery','$Formation','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -1125,51 +1353,51 @@ function updateContinent($data){
 
     $log->info("Started update function.");
 
-	$Architecture = trim($data->Architecture);
-	$Area = trim($data->Area);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
+	$Other_Names = trim($data->Other_Names);
+	$Local_name = trim($data->Local_name);
+	$Regional_disadvantages = trim($data->Regional_disadvantages);
+	$Regional_advantages = trim($data->Regional_advantages);
+	$Landmarks = trim($data->Landmarks);
 	$Bodies_of_water = trim($data->Bodies_of_water);
+	$Mineralogy = trim($data->Mineralogy);
+	$Topography = trim($data->Topography);
+	$Population = trim($data->Population);
+	$Shape = trim($data->Shape);
+	$Area = trim($data->Area);
+	$Popular_foods = trim($data->Popular_foods);
+	$Governments = trim($data->Governments);
+	$Traditions = trim($data->Traditions);
+	$Languages = trim($data->Languages);
 	$Countries = trim($data->Countries);
+	$Reputation = trim($data->Reputation);
+	$Architecture = trim($data->Architecture);
+	$Tourism = trim($data->Tourism);
+	$Economy = trim($data->Economy);
+	$Politics = trim($data->Politics);
+	$Demonym = trim($data->Demonym);
+	$Floras = trim($data->Floras);
 	$Creatures = trim($data->Creatures);
 	$Crops = trim($data->Crops);
-	$Demonym = trim($data->Demonym);
-	$Description = trim($data->Description);
-	$Discovery = trim($data->Discovery);
-	$Economy = trim($data->Economy);
-	$Floras = trim($data->Floras);
-	$Formation = trim($data->Formation);
-	$Governments = trim($data->Governments);
-	$Humidity = trim($data->Humidity);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Local_name = trim($data->Local_name);
-	$Mineralogy = trim($data->Mineralogy);
-	$Name = trim($data->Name);
 	$Natural_disasters = trim($data->Natural_disasters);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Politics = trim($data->Politics);
-	$Popular_foods = trim($data->Popular_foods);
-	$Population = trim($data->Population);
-	$Precipitation = trim($data->Precipitation);
-	$Private_Notes = trim($data->Private_Notes);
-	$Regional_advantages = trim($data->Regional_advantages);
-	$Regional_disadvantages = trim($data->Regional_disadvantages);
-	$Reputation = trim($data->Reputation);
-	$Ruins = trim($data->Ruins);
-	$Seasons = trim($data->Seasons);
-	$Shape = trim($data->Shape);
-	$Tags = trim($data->Tags);
-	$Temperature = trim($data->Temperature);
-	$Topography = trim($data->Topography);
-	$Tourism = trim($data->Tourism);
-	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
-	$Wars = trim($data->Wars);
 	$Winds = trim($data->Winds);
+	$Precipitation = trim($data->Precipitation);
+	$Humidity = trim($data->Humidity);
+	$Seasons = trim($data->Seasons);
+	$Temperature = trim($data->Temperature);
+	$Ruins = trim($data->Ruins);
+	$Wars = trim($data->Wars);
+	$Discovery = trim($data->Discovery);
+	$Formation = trim($data->Formation);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE continents SET 
-Architecture = '$Architecture',Area = '$Area',Bodies_of_water = '$Bodies_of_water',Countries = '$Countries',Creatures = '$Creatures',Crops = '$Crops',Demonym = '$Demonym',Description = '$Description',Discovery = '$Discovery',Economy = '$Economy',Floras = '$Floras',Formation = '$Formation',Governments = '$Governments',Humidity = '$Humidity',Landmarks = '$Landmarks',Languages = '$Languages',Local_name = '$Local_name',Mineralogy = '$Mineralogy',Name = '$Name',Natural_disasters = '$Natural_disasters',Notes = '$Notes',Other_Names = '$Other_Names',Politics = '$Politics',Popular_foods = '$Popular_foods',Population = '$Population',Precipitation = '$Precipitation',Private_Notes = '$Private_Notes',Regional_advantages = '$Regional_advantages',Regional_disadvantages = '$Regional_disadvantages',Reputation = '$Reputation',Ruins = '$Ruins',Seasons = '$Seasons',Shape = '$Shape',Tags = '$Tags',Temperature = '$Temperature',Topography = '$Topography',Tourism = '$Tourism',Traditions = '$Traditions',Universe = '$Universe',Wars = '$Wars',Winds = '$Winds'    WHERE id = $id"; 
+Tags = '$Tags',Universe = '$Universe',Description = '$Description',Name = '$Name',Other_Names = '$Other_Names',Local_name = '$Local_name',Regional_disadvantages = '$Regional_disadvantages',Regional_advantages = '$Regional_advantages',Landmarks = '$Landmarks',Bodies_of_water = '$Bodies_of_water',Mineralogy = '$Mineralogy',Topography = '$Topography',Population = '$Population',Shape = '$Shape',Area = '$Area',Popular_foods = '$Popular_foods',Governments = '$Governments',Traditions = '$Traditions',Languages = '$Languages',Countries = '$Countries',Reputation = '$Reputation',Architecture = '$Architecture',Tourism = '$Tourism',Economy = '$Economy',Politics = '$Politics',Demonym = '$Demonym',Floras = '$Floras',Creatures = '$Creatures',Crops = '$Crops',Natural_disasters = '$Natural_disasters',Winds = '$Winds',Precipitation = '$Precipitation',Humidity = '$Humidity',Seasons = '$Seasons',Temperature = '$Temperature',Ruins = '$Ruins',Wars = '$Wars',Discovery = '$Discovery',Formation = '$Formation',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -1228,13 +1456,15 @@ function getAllCountries(){
 }
 
 function getCountries(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM countries Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM countries Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -1242,8 +1472,8 @@ function getCountries(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -1266,41 +1496,41 @@ function addCountrie($data){
 
     $log->info("Started save function.");
 
-	$Architecture = trim($data->Architecture);
-	$Area = trim($data->Area);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Other_Names = trim($data->Other_Names);
+	$Universe = trim($data->Universe);
+	$Landmarks = trim($data->Landmarks);
+	$Locations = trim($data->Locations);
+	$Towns = trim($data->Towns);
 	$Bordering_countries = trim($data->Bordering_countries);
+	$Education = trim($data->Education);
+	$Governments = trim($data->Governments);
+	$Religions = trim($data->Religions);
+	$Languages = trim($data->Languages);
+	$Sports = trim($data->Sports);
+	$Architecture = trim($data->Architecture);
+	$Music = trim($data->Music);
+	$Pop_culture = trim($data->Pop_culture);
+	$Laws = trim($data->Laws);
+	$Currency = trim($data->Currency);
+	$Social_hierarchy = trim($data->Social_hierarchy);
+	$Population = trim($data->Population);
+	$Area = trim($data->Area);
+	$Crops = trim($data->Crops);
 	$Climate = trim($data->Climate);
 	$Creatures = trim($data->Creatures);
-	$Crops = trim($data->Crops);
-	$Currency = trim($data->Currency);
-	$Description = trim($data->Description);
-	$Education = trim($data->Education);
-	$Established_year = trim($data->Established_year);
 	$Flora = trim($data->Flora);
-	$Founding_story = trim($data->Founding_story);
-	$Governments = trim($data->Governments);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Laws = trim($data->Laws);
-	$Locations = trim($data->Locations);
-	$Music = trim($data->Music);
-	$Name = trim($data->Name);
+	$Established_year = trim($data->Established_year);
 	$Notable_wars = trim($data->Notable_wars);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Pop_culture = trim($data->Pop_culture);
-	$Population = trim($data->Population);
+	$Founding_story = trim($data->Founding_story);
 	$Private_Notes = trim($data->Private_Notes);
-	$Religions = trim($data->Religions);
-	$Social_hierarchy = trim($data->Social_hierarchy);
-	$Sports = trim($data->Sports);
-	$Tags = trim($data->Tags);
-	$Towns = trim($data->Towns);
-	$Universe = trim($data->Universe);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO countries(Architecture,Area,Bordering_countries,Climate,Creatures,Crops,Currency,Description,Education,Established_year,Flora,Founding_story,Governments,Landmarks,Languages,Laws,Locations,Music,Name,Notable_wars,Notes,Other_Names,Pop_culture,Population,Private_Notes,Religions,Social_hierarchy,Sports,Tags,Towns,Universe) 
-VALUES('$Architecture','$Area','$Bordering_countries','$Climate','$Creatures','$Crops','$Currency','$Description','$Education','$Established_year','$Flora','$Founding_story','$Governments','$Landmarks','$Languages','$Laws','$Locations','$Music','$Name','$Notable_wars','$Notes','$Other_Names','$Pop_culture','$Population','$Private_Notes','$Religions','$Social_hierarchy','$Sports','$Tags','$Towns','$Universe')"; 
+    $sql = "INSERT INTO countries(Tags,Name,Description,Other_Names,Universe,Landmarks,Locations,Towns,Bordering_countries,Education,Governments,Religions,Languages,Sports,Architecture,Music,Pop_culture,Laws,Currency,Social_hierarchy,Population,Area,Crops,Climate,Creatures,Flora,Established_year,Notable_wars,Founding_story,Private_Notes,Notes) 
+VALUES('$Tags','$Name','$Description','$Other_Names','$Universe','$Landmarks','$Locations','$Towns','$Bordering_countries','$Education','$Governments','$Religions','$Languages','$Sports','$Architecture','$Music','$Pop_culture','$Laws','$Currency','$Social_hierarchy','$Population','$Area','$Crops','$Climate','$Creatures','$Flora','$Established_year','$Notable_wars','$Founding_story','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -1371,41 +1601,41 @@ function updateCountrie($data){
 
     $log->info("Started update function.");
 
-	$Architecture = trim($data->Architecture);
-	$Area = trim($data->Area);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Other_Names = trim($data->Other_Names);
+	$Universe = trim($data->Universe);
+	$Landmarks = trim($data->Landmarks);
+	$Locations = trim($data->Locations);
+	$Towns = trim($data->Towns);
 	$Bordering_countries = trim($data->Bordering_countries);
+	$Education = trim($data->Education);
+	$Governments = trim($data->Governments);
+	$Religions = trim($data->Religions);
+	$Languages = trim($data->Languages);
+	$Sports = trim($data->Sports);
+	$Architecture = trim($data->Architecture);
+	$Music = trim($data->Music);
+	$Pop_culture = trim($data->Pop_culture);
+	$Laws = trim($data->Laws);
+	$Currency = trim($data->Currency);
+	$Social_hierarchy = trim($data->Social_hierarchy);
+	$Population = trim($data->Population);
+	$Area = trim($data->Area);
+	$Crops = trim($data->Crops);
 	$Climate = trim($data->Climate);
 	$Creatures = trim($data->Creatures);
-	$Crops = trim($data->Crops);
-	$Currency = trim($data->Currency);
-	$Description = trim($data->Description);
-	$Education = trim($data->Education);
-	$Established_year = trim($data->Established_year);
 	$Flora = trim($data->Flora);
-	$Founding_story = trim($data->Founding_story);
-	$Governments = trim($data->Governments);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Laws = trim($data->Laws);
-	$Locations = trim($data->Locations);
-	$Music = trim($data->Music);
-	$Name = trim($data->Name);
+	$Established_year = trim($data->Established_year);
 	$Notable_wars = trim($data->Notable_wars);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Pop_culture = trim($data->Pop_culture);
-	$Population = trim($data->Population);
+	$Founding_story = trim($data->Founding_story);
 	$Private_Notes = trim($data->Private_Notes);
-	$Religions = trim($data->Religions);
-	$Social_hierarchy = trim($data->Social_hierarchy);
-	$Sports = trim($data->Sports);
-	$Tags = trim($data->Tags);
-	$Towns = trim($data->Towns);
-	$Universe = trim($data->Universe);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE countries SET 
-Architecture = '$Architecture',Area = '$Area',Bordering_countries = '$Bordering_countries',Climate = '$Climate',Creatures = '$Creatures',Crops = '$Crops',Currency = '$Currency',Description = '$Description',Education = '$Education',Established_year = '$Established_year',Flora = '$Flora',Founding_story = '$Founding_story',Governments = '$Governments',Landmarks = '$Landmarks',Languages = '$Languages',Laws = '$Laws',Locations = '$Locations',Music = '$Music',Name = '$Name',Notable_wars = '$Notable_wars',Notes = '$Notes',Other_Names = '$Other_Names',Pop_culture = '$Pop_culture',Population = '$Population',Private_Notes = '$Private_Notes',Religions = '$Religions',Social_hierarchy = '$Social_hierarchy',Sports = '$Sports',Tags = '$Tags',Towns = '$Towns',Universe = '$Universe'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Description = '$Description',Other_Names = '$Other_Names',Universe = '$Universe',Landmarks = '$Landmarks',Locations = '$Locations',Towns = '$Towns',Bordering_countries = '$Bordering_countries',Education = '$Education',Governments = '$Governments',Religions = '$Religions',Languages = '$Languages',Sports = '$Sports',Architecture = '$Architecture',Music = '$Music',Pop_culture = '$Pop_culture',Laws = '$Laws',Currency = '$Currency',Social_hierarchy = '$Social_hierarchy',Population = '$Population',Area = '$Area',Crops = '$Crops',Climate = '$Climate',Creatures = '$Creatures',Flora = '$Flora',Established_year = '$Established_year',Notable_wars = '$Notable_wars',Founding_story = '$Founding_story',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -1464,13 +1694,15 @@ function getAllCreatures(){
 }
 
 function getCreatures(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM creatures Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM creatures Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -1478,8 +1710,8 @@ function getCreatures(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -1502,66 +1734,66 @@ function addCreature($data){
 
     $log->info("Started save function.");
 
-	$Aggressiveness = trim($data->Aggressiveness);
-	$Ancestors = trim($data->Ancestors);
-	$Class = trim($data->Class);
-	$Color = trim($data->Color);
-	$Competitors = trim($data->Competitors);
-	$Conditions = trim($data->Conditions);
-	$Description = trim($data->Description);
-	$Evolutionary_drive = trim($data->Evolutionary_drive);
-	$Family = trim($data->Family);
-	$Food_sources = trim($data->Food_sources);
-	$Genus = trim($data->Genus);
-	$Habitats = trim($data->Habitats);
-	$Height = trim($data->Height);
-	$Herding_patterns = trim($data->Herding_patterns);
-	$Materials = trim($data->Materials);
-	$Mating_ritual = trim($data->Mating_ritual);
-	$Maximum_speed = trim($data->Maximum_speed);
-	$Method_of_attack = trim($data->Method_of_attack);
-	$Methods_of_defense = trim($data->Methods_of_defense);
-	$Migratory_patterns = trim($data->Migratory_patterns);
-	$Mortality_rate = trim($data->Mortality_rate);
-	$Name = trim($data->Name);
-	$Notable_features = trim($data->Notable_features);
-	$Notes = trim($data->Notes);
-	$Offspring_care = trim($data->Offspring_care);
-	$Order = trim($data->Order);
-	$Parental_instincts = trim($data->Parental_instincts);
-	$Phylum = trim($data->Phylum);
-	$Predators = trim($data->Predators);
-	$Predictions = trim($data->Predictions);
-	$Preferred_habitat = trim($data->Preferred_habitat);
-	$Prey = trim($data->Prey);
-	$Private_notes = trim($data->Private_notes);
-	$Related_creatures = trim($data->Related_creatures);
-	$Reproduction = trim($data->Reproduction);
-	$Reproduction_age = trim($data->Reproduction_age);
-	$Reproduction_frequency = trim($data->Reproduction_frequency);
-	$Requirements = trim($data->Requirements);
-	$Shape = trim($data->Shape);
-	$Similar_creatures = trim($data->Similar_creatures);
-	$Size = trim($data->Size);
-	$Sounds = trim($data->Sounds);
-	$Species = trim($data->Species);
-	$Spoils = trim($data->Spoils);
-	$Strengths = trim($data->Strengths);
-	$Strongest_sense = trim($data->Strongest_sense);
-	$Symbolisms = trim($data->Symbolisms);
-	$Tags = trim($data->Tags);
-	$Tradeoffs = trim($data->Tradeoffs);
 	$Type_of_creature = trim($data->Type_of_creature);
 	$Universe = trim($data->Universe);
-	$Variations = trim($data->Variations);
-	$Vestigial_features = trim($data->Vestigial_features);
-	$Weakest_sense = trim($data->Weakest_sense);
-	$Weaknesses = trim($data->Weaknesses);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
 	$Weight = trim($data->Weight);
+	$Notable_features = trim($data->Notable_features);
+	$Materials = trim($data->Materials);
+	$Vestigial_features = trim($data->Vestigial_features);
+	$Color = trim($data->Color);
+	$Shape = trim($data->Shape);
+	$Size = trim($data->Size);
+	$Height = trim($data->Height);
+	$Strongest_sense = trim($data->Strongest_sense);
+	$Aggressiveness = trim($data->Aggressiveness);
+	$Method_of_attack = trim($data->Method_of_attack);
+	$Methods_of_defense = trim($data->Methods_of_defense);
+	$Maximum_speed = trim($data->Maximum_speed);
+	$Strengths = trim($data->Strengths);
+	$Weaknesses = trim($data->Weaknesses);
+	$Sounds = trim($data->Sounds);
+	$Spoils = trim($data->Spoils);
+	$Conditions = trim($data->Conditions);
+	$Weakest_sense = trim($data->Weakest_sense);
+	$Herding_patterns = trim($data->Herding_patterns);
+	$Prey = trim($data->Prey);
+	$Predators = trim($data->Predators);
+	$Competitors = trim($data->Competitors);
+	$Migratory_patterns = trim($data->Migratory_patterns);
+	$Food_sources = trim($data->Food_sources);
+	$Habitats = trim($data->Habitats);
+	$Preferred_habitat = trim($data->Preferred_habitat);
+	$Similar_creatures = trim($data->Similar_creatures);
+	$Symbolisms = trim($data->Symbolisms);
+	$Related_creatures = trim($data->Related_creatures);
+	$Ancestors = trim($data->Ancestors);
+	$Evolutionary_drive = trim($data->Evolutionary_drive);
+	$Tradeoffs = trim($data->Tradeoffs);
+	$Predictions = trim($data->Predictions);
+	$Mortality_rate = trim($data->Mortality_rate);
+	$Offspring_care = trim($data->Offspring_care);
+	$Reproduction_age = trim($data->Reproduction_age);
+	$Requirements = trim($data->Requirements);
+	$Mating_ritual = trim($data->Mating_ritual);
+	$Reproduction = trim($data->Reproduction);
+	$Reproduction_frequency = trim($data->Reproduction_frequency);
+	$Parental_instincts = trim($data->Parental_instincts);
+	$Variations = trim($data->Variations);
+	$Phylum = trim($data->Phylum);
+	$Class = trim($data->Class);
+	$Order = trim($data->Order);
+	$Family = trim($data->Family);
+	$Genus = trim($data->Genus);
+	$Species = trim($data->Species);
+	$Private_notes = trim($data->Private_notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO creatures(Aggressiveness,Ancestors,Class,Color,Competitors,Conditions,Description,Evolutionary_drive,Family,Food_sources,Genus,Habitats,Height,Herding_patterns,Materials,Mating_ritual,Maximum_speed,Method_of_attack,Methods_of_defense,Migratory_patterns,Mortality_rate,Name,Notable_features,Notes,Offspring_care,Order,Parental_instincts,Phylum,Predators,Predictions,Preferred_habitat,Prey,Private_notes,Related_creatures,Reproduction,Reproduction_age,Reproduction_frequency,Requirements,Shape,Similar_creatures,Size,Sounds,Species,Spoils,Strengths,Strongest_sense,Symbolisms,Tags,Tradeoffs,Type_of_creature,Universe,Variations,Vestigial_features,Weakest_sense,Weaknesses,Weight) 
-VALUES('$Aggressiveness','$Ancestors','$Class','$Color','$Competitors','$Conditions','$Description','$Evolutionary_drive','$Family','$Food_sources','$Genus','$Habitats','$Height','$Herding_patterns','$Materials','$Mating_ritual','$Maximum_speed','$Method_of_attack','$Methods_of_defense','$Migratory_patterns','$Mortality_rate','$Name','$Notable_features','$Notes','$Offspring_care','$Order','$Parental_instincts','$Phylum','$Predators','$Predictions','$Preferred_habitat','$Prey','$Private_notes','$Related_creatures','$Reproduction','$Reproduction_age','$Reproduction_frequency','$Requirements','$Shape','$Similar_creatures','$Size','$Sounds','$Species','$Spoils','$Strengths','$Strongest_sense','$Symbolisms','$Tags','$Tradeoffs','$Type_of_creature','$Universe','$Variations','$Vestigial_features','$Weakest_sense','$Weaknesses','$Weight')"; 
+    $sql = "INSERT INTO creatures(Type_of_creature,Universe,Tags,Name,Description,Weight,Notable_features,Materials,Vestigial_features,Color,Shape,Size,Height,Strongest_sense,Aggressiveness,Method_of_attack,Methods_of_defense,Maximum_speed,Strengths,Weaknesses,Sounds,Spoils,Conditions,Weakest_sense,Herding_patterns,Prey,Predators,Competitors,Migratory_patterns,Food_sources,Habitats,Preferred_habitat,Similar_creatures,Symbolisms,Related_creatures,Ancestors,Evolutionary_drive,Tradeoffs,Predictions,Mortality_rate,Offspring_care,Reproduction_age,Requirements,Mating_ritual,Reproduction,Reproduction_frequency,Parental_instincts,Variations,Phylum,Class,Order,Family,Genus,Species,Private_notes,Notes) 
+VALUES('$Type_of_creature','$Universe','$Tags','$Name','$Description','$Weight','$Notable_features','$Materials','$Vestigial_features','$Color','$Shape','$Size','$Height','$Strongest_sense','$Aggressiveness','$Method_of_attack','$Methods_of_defense','$Maximum_speed','$Strengths','$Weaknesses','$Sounds','$Spoils','$Conditions','$Weakest_sense','$Herding_patterns','$Prey','$Predators','$Competitors','$Migratory_patterns','$Food_sources','$Habitats','$Preferred_habitat','$Similar_creatures','$Symbolisms','$Related_creatures','$Ancestors','$Evolutionary_drive','$Tradeoffs','$Predictions','$Mortality_rate','$Offspring_care','$Reproduction_age','$Requirements','$Mating_ritual','$Reproduction','$Reproduction_frequency','$Parental_instincts','$Variations','$Phylum','$Class','$Order','$Family','$Genus','$Species','$Private_notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -1632,66 +1864,66 @@ function updateCreature($data){
 
     $log->info("Started update function.");
 
-	$Aggressiveness = trim($data->Aggressiveness);
-	$Ancestors = trim($data->Ancestors);
-	$Class = trim($data->Class);
-	$Color = trim($data->Color);
-	$Competitors = trim($data->Competitors);
-	$Conditions = trim($data->Conditions);
-	$Description = trim($data->Description);
-	$Evolutionary_drive = trim($data->Evolutionary_drive);
-	$Family = trim($data->Family);
-	$Food_sources = trim($data->Food_sources);
-	$Genus = trim($data->Genus);
-	$Habitats = trim($data->Habitats);
-	$Height = trim($data->Height);
-	$Herding_patterns = trim($data->Herding_patterns);
-	$Materials = trim($data->Materials);
-	$Mating_ritual = trim($data->Mating_ritual);
-	$Maximum_speed = trim($data->Maximum_speed);
-	$Method_of_attack = trim($data->Method_of_attack);
-	$Methods_of_defense = trim($data->Methods_of_defense);
-	$Migratory_patterns = trim($data->Migratory_patterns);
-	$Mortality_rate = trim($data->Mortality_rate);
-	$Name = trim($data->Name);
-	$Notable_features = trim($data->Notable_features);
-	$Notes = trim($data->Notes);
-	$Offspring_care = trim($data->Offspring_care);
-	$Order = trim($data->Order);
-	$Parental_instincts = trim($data->Parental_instincts);
-	$Phylum = trim($data->Phylum);
-	$Predators = trim($data->Predators);
-	$Predictions = trim($data->Predictions);
-	$Preferred_habitat = trim($data->Preferred_habitat);
-	$Prey = trim($data->Prey);
-	$Private_notes = trim($data->Private_notes);
-	$Related_creatures = trim($data->Related_creatures);
-	$Reproduction = trim($data->Reproduction);
-	$Reproduction_age = trim($data->Reproduction_age);
-	$Reproduction_frequency = trim($data->Reproduction_frequency);
-	$Requirements = trim($data->Requirements);
-	$Shape = trim($data->Shape);
-	$Similar_creatures = trim($data->Similar_creatures);
-	$Size = trim($data->Size);
-	$Sounds = trim($data->Sounds);
-	$Species = trim($data->Species);
-	$Spoils = trim($data->Spoils);
-	$Strengths = trim($data->Strengths);
-	$Strongest_sense = trim($data->Strongest_sense);
-	$Symbolisms = trim($data->Symbolisms);
-	$Tags = trim($data->Tags);
-	$Tradeoffs = trim($data->Tradeoffs);
 	$Type_of_creature = trim($data->Type_of_creature);
 	$Universe = trim($data->Universe);
-	$Variations = trim($data->Variations);
-	$Vestigial_features = trim($data->Vestigial_features);
-	$Weakest_sense = trim($data->Weakest_sense);
-	$Weaknesses = trim($data->Weaknesses);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
 	$Weight = trim($data->Weight);
+	$Notable_features = trim($data->Notable_features);
+	$Materials = trim($data->Materials);
+	$Vestigial_features = trim($data->Vestigial_features);
+	$Color = trim($data->Color);
+	$Shape = trim($data->Shape);
+	$Size = trim($data->Size);
+	$Height = trim($data->Height);
+	$Strongest_sense = trim($data->Strongest_sense);
+	$Aggressiveness = trim($data->Aggressiveness);
+	$Method_of_attack = trim($data->Method_of_attack);
+	$Methods_of_defense = trim($data->Methods_of_defense);
+	$Maximum_speed = trim($data->Maximum_speed);
+	$Strengths = trim($data->Strengths);
+	$Weaknesses = trim($data->Weaknesses);
+	$Sounds = trim($data->Sounds);
+	$Spoils = trim($data->Spoils);
+	$Conditions = trim($data->Conditions);
+	$Weakest_sense = trim($data->Weakest_sense);
+	$Herding_patterns = trim($data->Herding_patterns);
+	$Prey = trim($data->Prey);
+	$Predators = trim($data->Predators);
+	$Competitors = trim($data->Competitors);
+	$Migratory_patterns = trim($data->Migratory_patterns);
+	$Food_sources = trim($data->Food_sources);
+	$Habitats = trim($data->Habitats);
+	$Preferred_habitat = trim($data->Preferred_habitat);
+	$Similar_creatures = trim($data->Similar_creatures);
+	$Symbolisms = trim($data->Symbolisms);
+	$Related_creatures = trim($data->Related_creatures);
+	$Ancestors = trim($data->Ancestors);
+	$Evolutionary_drive = trim($data->Evolutionary_drive);
+	$Tradeoffs = trim($data->Tradeoffs);
+	$Predictions = trim($data->Predictions);
+	$Mortality_rate = trim($data->Mortality_rate);
+	$Offspring_care = trim($data->Offspring_care);
+	$Reproduction_age = trim($data->Reproduction_age);
+	$Requirements = trim($data->Requirements);
+	$Mating_ritual = trim($data->Mating_ritual);
+	$Reproduction = trim($data->Reproduction);
+	$Reproduction_frequency = trim($data->Reproduction_frequency);
+	$Parental_instincts = trim($data->Parental_instincts);
+	$Variations = trim($data->Variations);
+	$Phylum = trim($data->Phylum);
+	$Class = trim($data->Class);
+	$Order = trim($data->Order);
+	$Family = trim($data->Family);
+	$Genus = trim($data->Genus);
+	$Species = trim($data->Species);
+	$Private_notes = trim($data->Private_notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE creatures SET 
-Aggressiveness = '$Aggressiveness',Ancestors = '$Ancestors',Class = '$Class',Color = '$Color',Competitors = '$Competitors',Conditions = '$Conditions',Description = '$Description',Evolutionary_drive = '$Evolutionary_drive',Family = '$Family',Food_sources = '$Food_sources',Genus = '$Genus',Habitats = '$Habitats',Height = '$Height',Herding_patterns = '$Herding_patterns',Materials = '$Materials',Mating_ritual = '$Mating_ritual',Maximum_speed = '$Maximum_speed',Method_of_attack = '$Method_of_attack',Methods_of_defense = '$Methods_of_defense',Migratory_patterns = '$Migratory_patterns',Mortality_rate = '$Mortality_rate',Name = '$Name',Notable_features = '$Notable_features',Notes = '$Notes',Offspring_care = '$Offspring_care',Order = '$Order',Parental_instincts = '$Parental_instincts',Phylum = '$Phylum',Predators = '$Predators',Predictions = '$Predictions',Preferred_habitat = '$Preferred_habitat',Prey = '$Prey',Private_notes = '$Private_notes',Related_creatures = '$Related_creatures',Reproduction = '$Reproduction',Reproduction_age = '$Reproduction_age',Reproduction_frequency = '$Reproduction_frequency',Requirements = '$Requirements',Shape = '$Shape',Similar_creatures = '$Similar_creatures',Size = '$Size',Sounds = '$Sounds',Species = '$Species',Spoils = '$Spoils',Strengths = '$Strengths',Strongest_sense = '$Strongest_sense',Symbolisms = '$Symbolisms',Tags = '$Tags',Tradeoffs = '$Tradeoffs',Type_of_creature = '$Type_of_creature',Universe = '$Universe',Variations = '$Variations',Vestigial_features = '$Vestigial_features',Weakest_sense = '$Weakest_sense',Weaknesses = '$Weaknesses',Weight = '$Weight'    WHERE id = $id"; 
+Type_of_creature = '$Type_of_creature',Universe = '$Universe',Tags = '$Tags',Name = '$Name',Description = '$Description',Weight = '$Weight',Notable_features = '$Notable_features',Materials = '$Materials',Vestigial_features = '$Vestigial_features',Color = '$Color',Shape = '$Shape',Size = '$Size',Height = '$Height',Strongest_sense = '$Strongest_sense',Aggressiveness = '$Aggressiveness',Method_of_attack = '$Method_of_attack',Methods_of_defense = '$Methods_of_defense',Maximum_speed = '$Maximum_speed',Strengths = '$Strengths',Weaknesses = '$Weaknesses',Sounds = '$Sounds',Spoils = '$Spoils',Conditions = '$Conditions',Weakest_sense = '$Weakest_sense',Herding_patterns = '$Herding_patterns',Prey = '$Prey',Predators = '$Predators',Competitors = '$Competitors',Migratory_patterns = '$Migratory_patterns',Food_sources = '$Food_sources',Habitats = '$Habitats',Preferred_habitat = '$Preferred_habitat',Similar_creatures = '$Similar_creatures',Symbolisms = '$Symbolisms',Related_creatures = '$Related_creatures',Ancestors = '$Ancestors',Evolutionary_drive = '$Evolutionary_drive',Tradeoffs = '$Tradeoffs',Predictions = '$Predictions',Mortality_rate = '$Mortality_rate',Offspring_care = '$Offspring_care',Reproduction_age = '$Reproduction_age',Requirements = '$Requirements',Mating_ritual = '$Mating_ritual',Reproduction = '$Reproduction',Reproduction_frequency = '$Reproduction_frequency',Parental_instincts = '$Parental_instincts',Variations = '$Variations',Phylum = '$Phylum',Class = '$Class',Order = '$Order',Family = '$Family',Genus = '$Genus',Species = '$Species',Private_notes = '$Private_notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -1750,13 +1982,15 @@ function getAllDeities(){
 }
 
 function getDeities(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM deities Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM deities Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -1764,8 +1998,8 @@ function getDeities(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -1788,44 +2022,44 @@ function addDeitie($data){
 
     $log->info("Started save function.");
 
-	$Abilities = trim($data->Abilities);
-	$Children = trim($data->Children);
-	$Conditions = trim($data->Conditions);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Elements = trim($data->Elements);
-	$Family_History = trim($data->Family_History);
-	$Floras = trim($data->Floras);
-	$Height = trim($data->Height);
-	$Human_Interaction = trim($data->Human_Interaction);
-	$Life_Story = trim($data->Life_Story);
+	$Tags = trim($data->Tags);
 	$Name = trim($data->Name);
-	$Notable_Events = trim($data->Notable_Events);
-	$Notes = trim($data->Notes);
+	$Description = trim($data->Description);
 	$Other_Names = trim($data->Other_Names);
+	$Universe = trim($data->Universe);
+	$Height = trim($data->Height);
+	$Physical_Description = trim($data->Physical_Description);
+	$Weight = trim($data->Weight);
+	$Children = trim($data->Children);
 	$Parents = trim($data->Parents);
 	$Partners = trim($data->Partners);
-	$Physical_Description = trim($data->Physical_Description);
-	$Prayers = trim($data->Prayers);
-	$Private_Notes = trim($data->Private_Notes);
-	$Related_landmarks = trim($data->Related_landmarks);
-	$Related_races = trim($data->Related_races);
-	$Related_towns = trim($data->Related_towns);
+	$Siblings = trim($data->Siblings);
+	$Floras = trim($data->Floras);
 	$Relics = trim($data->Relics);
 	$Religions = trim($data->Religions);
-	$Rituals = trim($data->Rituals);
-	$Siblings = trim($data->Siblings);
-	$Strengths = trim($data->Strengths);
+	$Creatures = trim($data->Creatures);
+	$Elements = trim($data->Elements);
 	$Symbols = trim($data->Symbols);
-	$Tags = trim($data->Tags);
-	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
+	$Abilities = trim($data->Abilities);
+	$Conditions = trim($data->Conditions);
+	$Strengths = trim($data->Strengths);
 	$Weaknesses = trim($data->Weaknesses);
-	$Weight = trim($data->Weight);
+	$Human_Interaction = trim($data->Human_Interaction);
+	$Related_towns = trim($data->Related_towns);
+	$Related_races = trim($data->Related_races);
+	$Related_landmarks = trim($data->Related_landmarks);
+	$Prayers = trim($data->Prayers);
+	$Rituals = trim($data->Rituals);
+	$Traditions = trim($data->Traditions);
+	$Family_History = trim($data->Family_History);
+	$Notable_Events = trim($data->Notable_Events);
+	$Life_Story = trim($data->Life_Story);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO deities(Abilities,Children,Conditions,Creatures,Description,Elements,Family_History,Floras,Height,Human_Interaction,Life_Story,Name,Notable_Events,Notes,Other_Names,Parents,Partners,Physical_Description,Prayers,Private_Notes,Related_landmarks,Related_races,Related_towns,Relics,Religions,Rituals,Siblings,Strengths,Symbols,Tags,Traditions,Universe,Weaknesses,Weight) 
-VALUES('$Abilities','$Children','$Conditions','$Creatures','$Description','$Elements','$Family_History','$Floras','$Height','$Human_Interaction','$Life_Story','$Name','$Notable_Events','$Notes','$Other_Names','$Parents','$Partners','$Physical_Description','$Prayers','$Private_Notes','$Related_landmarks','$Related_races','$Related_towns','$Relics','$Religions','$Rituals','$Siblings','$Strengths','$Symbols','$Tags','$Traditions','$Universe','$Weaknesses','$Weight')"; 
+    $sql = "INSERT INTO deities(Tags,Name,Description,Other_Names,Universe,Height,Physical_Description,Weight,Children,Parents,Partners,Siblings,Floras,Relics,Religions,Creatures,Elements,Symbols,Abilities,Conditions,Strengths,Weaknesses,Human_Interaction,Related_towns,Related_races,Related_landmarks,Prayers,Rituals,Traditions,Family_History,Notable_Events,Life_Story,Private_Notes,Notes) 
+VALUES('$Tags','$Name','$Description','$Other_Names','$Universe','$Height','$Physical_Description','$Weight','$Children','$Parents','$Partners','$Siblings','$Floras','$Relics','$Religions','$Creatures','$Elements','$Symbols','$Abilities','$Conditions','$Strengths','$Weaknesses','$Human_Interaction','$Related_towns','$Related_races','$Related_landmarks','$Prayers','$Rituals','$Traditions','$Family_History','$Notable_Events','$Life_Story','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -1896,44 +2130,44 @@ function updateDeitie($data){
 
     $log->info("Started update function.");
 
-	$Abilities = trim($data->Abilities);
-	$Children = trim($data->Children);
-	$Conditions = trim($data->Conditions);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Elements = trim($data->Elements);
-	$Family_History = trim($data->Family_History);
-	$Floras = trim($data->Floras);
-	$Height = trim($data->Height);
-	$Human_Interaction = trim($data->Human_Interaction);
-	$Life_Story = trim($data->Life_Story);
+	$Tags = trim($data->Tags);
 	$Name = trim($data->Name);
-	$Notable_Events = trim($data->Notable_Events);
-	$Notes = trim($data->Notes);
+	$Description = trim($data->Description);
 	$Other_Names = trim($data->Other_Names);
+	$Universe = trim($data->Universe);
+	$Height = trim($data->Height);
+	$Physical_Description = trim($data->Physical_Description);
+	$Weight = trim($data->Weight);
+	$Children = trim($data->Children);
 	$Parents = trim($data->Parents);
 	$Partners = trim($data->Partners);
-	$Physical_Description = trim($data->Physical_Description);
-	$Prayers = trim($data->Prayers);
-	$Private_Notes = trim($data->Private_Notes);
-	$Related_landmarks = trim($data->Related_landmarks);
-	$Related_races = trim($data->Related_races);
-	$Related_towns = trim($data->Related_towns);
+	$Siblings = trim($data->Siblings);
+	$Floras = trim($data->Floras);
 	$Relics = trim($data->Relics);
 	$Religions = trim($data->Religions);
-	$Rituals = trim($data->Rituals);
-	$Siblings = trim($data->Siblings);
-	$Strengths = trim($data->Strengths);
+	$Creatures = trim($data->Creatures);
+	$Elements = trim($data->Elements);
 	$Symbols = trim($data->Symbols);
-	$Tags = trim($data->Tags);
-	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
+	$Abilities = trim($data->Abilities);
+	$Conditions = trim($data->Conditions);
+	$Strengths = trim($data->Strengths);
 	$Weaknesses = trim($data->Weaknesses);
-	$Weight = trim($data->Weight);
+	$Human_Interaction = trim($data->Human_Interaction);
+	$Related_towns = trim($data->Related_towns);
+	$Related_races = trim($data->Related_races);
+	$Related_landmarks = trim($data->Related_landmarks);
+	$Prayers = trim($data->Prayers);
+	$Rituals = trim($data->Rituals);
+	$Traditions = trim($data->Traditions);
+	$Family_History = trim($data->Family_History);
+	$Notable_Events = trim($data->Notable_Events);
+	$Life_Story = trim($data->Life_Story);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE deities SET 
-Abilities = '$Abilities',Children = '$Children',Conditions = '$Conditions',Creatures = '$Creatures',Description = '$Description',Elements = '$Elements',Family_History = '$Family_History',Floras = '$Floras',Height = '$Height',Human_Interaction = '$Human_Interaction',Life_Story = '$Life_Story',Name = '$Name',Notable_Events = '$Notable_Events',Notes = '$Notes',Other_Names = '$Other_Names',Parents = '$Parents',Partners = '$Partners',Physical_Description = '$Physical_Description',Prayers = '$Prayers',Private_Notes = '$Private_Notes',Related_landmarks = '$Related_landmarks',Related_races = '$Related_races',Related_towns = '$Related_towns',Relics = '$Relics',Religions = '$Religions',Rituals = '$Rituals',Siblings = '$Siblings',Strengths = '$Strengths',Symbols = '$Symbols',Tags = '$Tags',Traditions = '$Traditions',Universe = '$Universe',Weaknesses = '$Weaknesses',Weight = '$Weight'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Description = '$Description',Other_Names = '$Other_Names',Universe = '$Universe',Height = '$Height',Physical_Description = '$Physical_Description',Weight = '$Weight',Children = '$Children',Parents = '$Parents',Partners = '$Partners',Siblings = '$Siblings',Floras = '$Floras',Relics = '$Relics',Religions = '$Religions',Creatures = '$Creatures',Elements = '$Elements',Symbols = '$Symbols',Abilities = '$Abilities',Conditions = '$Conditions',Strengths = '$Strengths',Weaknesses = '$Weaknesses',Human_Interaction = '$Human_Interaction',Related_towns = '$Related_towns',Related_races = '$Related_races',Related_landmarks = '$Related_landmarks',Prayers = '$Prayers',Rituals = '$Rituals',Traditions = '$Traditions',Family_History = '$Family_History',Notable_Events = '$Notable_Events',Life_Story = '$Life_Story',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -1992,13 +2226,15 @@ function getAllFloras(){
 }
 
 function getFloras(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM floras Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM floras Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -2006,8 +2242,8 @@ function getFloras(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -2030,36 +2266,36 @@ function addFlora($data){
 
     $log->info("Started save function.");
 
-	$Berries = trim($data->Berries);
-	$Colorings = trim($data->Colorings);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
+	$Name = trim($data->Name);
+	$Other_Names = trim($data->Other_Names);
 	$Description = trim($data->Description);
-	$Eaten_by = trim($data->Eaten_by);
-	$Family = trim($data->Family);
-	$Fruits = trim($data->Fruits);
+	$Order = trim($data->Order);
+	$Related_flora = trim($data->Related_flora);
 	$Genus = trim($data->Genus);
-	$Locations = trim($data->Locations);
+	$Family = trim($data->Family);
+	$Size = trim($data->Size);
+	$Smell = trim($data->Smell);
+	$Taste = trim($data->Taste);
+	$Colorings = trim($data->Colorings);
+	$Fruits = trim($data->Fruits);
 	$Magical_effects = trim($data->Magical_effects);
 	$Material_uses = trim($data->Material_uses);
 	$Medicinal_purposes = trim($data->Medicinal_purposes);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
+	$Berries = trim($data->Berries);
 	$Nuts = trim($data->Nuts);
-	$Order = trim($data->Order);
-	$Other_Names = trim($data->Other_Names);
-	$Private_Notes = trim($data->Private_Notes);
-	$Related_flora = trim($data->Related_flora);
-	$Reproduction = trim($data->Reproduction);
-	$Seasonality = trim($data->Seasonality);
 	$Seeds = trim($data->Seeds);
-	$Size = trim($data->Size);
-	$Smell = trim($data->Smell);
-	$Tags = trim($data->Tags);
-	$Taste = trim($data->Taste);
-	$Universe = trim($data->Universe);
+	$Seasonality = trim($data->Seasonality);
+	$Locations = trim($data->Locations);
+	$Reproduction = trim($data->Reproduction);
+	$Eaten_by = trim($data->Eaten_by);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO floras(Berries,Colorings,Description,Eaten_by,Family,Fruits,Genus,Locations,Magical_effects,Material_uses,Medicinal_purposes,Name,Notes,Nuts,Order,Other_Names,Private_Notes,Related_flora,Reproduction,Seasonality,Seeds,Size,Smell,Tags,Taste,Universe) 
-VALUES('$Berries','$Colorings','$Description','$Eaten_by','$Family','$Fruits','$Genus','$Locations','$Magical_effects','$Material_uses','$Medicinal_purposes','$Name','$Notes','$Nuts','$Order','$Other_Names','$Private_Notes','$Related_flora','$Reproduction','$Seasonality','$Seeds','$Size','$Smell','$Tags','$Taste','$Universe')"; 
+    $sql = "INSERT INTO floras(Tags,Universe,Name,Other_Names,Description,Order,Related_flora,Genus,Family,Size,Smell,Taste,Colorings,Fruits,Magical_effects,Material_uses,Medicinal_purposes,Berries,Nuts,Seeds,Seasonality,Locations,Reproduction,Eaten_by,Notes,Private_Notes) 
+VALUES('$Tags','$Universe','$Name','$Other_Names','$Description','$Order','$Related_flora','$Genus','$Family','$Size','$Smell','$Taste','$Colorings','$Fruits','$Magical_effects','$Material_uses','$Medicinal_purposes','$Berries','$Nuts','$Seeds','$Seasonality','$Locations','$Reproduction','$Eaten_by','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -2130,36 +2366,36 @@ function updateFlora($data){
 
     $log->info("Started update function.");
 
-	$Berries = trim($data->Berries);
-	$Colorings = trim($data->Colorings);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
+	$Name = trim($data->Name);
+	$Other_Names = trim($data->Other_Names);
 	$Description = trim($data->Description);
-	$Eaten_by = trim($data->Eaten_by);
-	$Family = trim($data->Family);
-	$Fruits = trim($data->Fruits);
+	$Order = trim($data->Order);
+	$Related_flora = trim($data->Related_flora);
 	$Genus = trim($data->Genus);
-	$Locations = trim($data->Locations);
+	$Family = trim($data->Family);
+	$Size = trim($data->Size);
+	$Smell = trim($data->Smell);
+	$Taste = trim($data->Taste);
+	$Colorings = trim($data->Colorings);
+	$Fruits = trim($data->Fruits);
 	$Magical_effects = trim($data->Magical_effects);
 	$Material_uses = trim($data->Material_uses);
 	$Medicinal_purposes = trim($data->Medicinal_purposes);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
+	$Berries = trim($data->Berries);
 	$Nuts = trim($data->Nuts);
-	$Order = trim($data->Order);
-	$Other_Names = trim($data->Other_Names);
-	$Private_Notes = trim($data->Private_Notes);
-	$Related_flora = trim($data->Related_flora);
-	$Reproduction = trim($data->Reproduction);
-	$Seasonality = trim($data->Seasonality);
 	$Seeds = trim($data->Seeds);
-	$Size = trim($data->Size);
-	$Smell = trim($data->Smell);
-	$Tags = trim($data->Tags);
-	$Taste = trim($data->Taste);
-	$Universe = trim($data->Universe);
+	$Seasonality = trim($data->Seasonality);
+	$Locations = trim($data->Locations);
+	$Reproduction = trim($data->Reproduction);
+	$Eaten_by = trim($data->Eaten_by);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE floras SET 
-Berries = '$Berries',Colorings = '$Colorings',Description = '$Description',Eaten_by = '$Eaten_by',Family = '$Family',Fruits = '$Fruits',Genus = '$Genus',Locations = '$Locations',Magical_effects = '$Magical_effects',Material_uses = '$Material_uses',Medicinal_purposes = '$Medicinal_purposes',Name = '$Name',Notes = '$Notes',Nuts = '$Nuts',Order = '$Order',Other_Names = '$Other_Names',Private_Notes = '$Private_Notes',Related_flora = '$Related_flora',Reproduction = '$Reproduction',Seasonality = '$Seasonality',Seeds = '$Seeds',Size = '$Size',Smell = '$Smell',Tags = '$Tags',Taste = '$Taste',Universe = '$Universe'    WHERE id = $id"; 
+Tags = '$Tags',Universe = '$Universe',Name = '$Name',Other_Names = '$Other_Names',Description = '$Description',Order = '$Order',Related_flora = '$Related_flora',Genus = '$Genus',Family = '$Family',Size = '$Size',Smell = '$Smell',Taste = '$Taste',Colorings = '$Colorings',Fruits = '$Fruits',Magical_effects = '$Magical_effects',Material_uses = '$Material_uses',Medicinal_purposes = '$Medicinal_purposes',Berries = '$Berries',Nuts = '$Nuts',Seeds = '$Seeds',Seasonality = '$Seasonality',Locations = '$Locations',Reproduction = '$Reproduction',Eaten_by = '$Eaten_by',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -2218,13 +2454,15 @@ function getAllFoods(){
 }
 
 function getFoods(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM foods Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM foods Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -2232,8 +2470,8 @@ function getFoods(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -2256,46 +2494,46 @@ function addFood($data){
 
     $log->info("Started save function.");
 
-	$Color = trim($data->Color);
-	$Conditions = trim($data->Conditions);
-	$Cooking_method = trim($data->Cooking_method);
-	$Cost = trim($data->Cost);
-	$Description = trim($data->Description);
-	$Flavor = trim($data->Flavor);
-	$Ingredients = trim($data->Ingredients);
-	$Meal = trim($data->Meal);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Nutrition = trim($data->Nutrition);
-	$Origin_story = trim($data->Origin_story);
-	$Other_Names = trim($data->Other_Names);
-	$Place_of_origin = trim($data->Place_of_origin);
-	$Preparation = trim($data->Preparation);
-	$Private_Notes = trim($data->Private_Notes);
-	$Rarity = trim($data->Rarity);
-	$Related_foods = trim($data->Related_foods);
-	$Reputation = trim($data->Reputation);
-	$Scent = trim($data->Scent);
-	$Serving = trim($data->Serving);
-	$Shelf_life = trim($data->Shelf_life);
-	$Side_effects = trim($data->Side_effects);
-	$Size = trim($data->Size);
-	$Smell = trim($data->Smell);
-	$Sold_by = trim($data->Sold_by);
-	$Spices = trim($data->Spices);
-	$Symbolisms = trim($data->Symbolisms);
-	$Tags = trim($data->Tags);
-	$Texture = trim($data->Texture);
-	$Traditions = trim($data->Traditions);
 	$Type_of_food = trim($data->Type_of_food);
+	$Other_Names = trim($data->Other_Names);
 	$Universe = trim($data->Universe);
-	$Utensils_needed = trim($data->Utensils_needed);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Color = trim($data->Color);
+	$Size = trim($data->Size);
 	$Variations = trim($data->Variations);
+	$Smell = trim($data->Smell);
+	$Ingredients = trim($data->Ingredients);
+	$Preparation = trim($data->Preparation);
+	$Cooking_method = trim($data->Cooking_method);
+	$Spices = trim($data->Spices);
 	$Yield = trim($data->Yield);
+	$Shelf_life = trim($data->Shelf_life);
+	$Rarity = trim($data->Rarity);
+	$Sold_by = trim($data->Sold_by);
+	$Cost = trim($data->Cost);
+	$Flavor = trim($data->Flavor);
+	$Meal = trim($data->Meal);
+	$Serving = trim($data->Serving);
+	$Utensils_needed = trim($data->Utensils_needed);
+	$Texture = trim($data->Texture);
+	$Scent = trim($data->Scent);
+	$Side_effects = trim($data->Side_effects);
+	$Nutrition = trim($data->Nutrition);
+	$Conditions = trim($data->Conditions);
+	$Reputation = trim($data->Reputation);
+	$Place_of_origin = trim($data->Place_of_origin);
+	$Origin_story = trim($data->Origin_story);
+	$Traditions = trim($data->Traditions);
+	$Symbolisms = trim($data->Symbolisms);
+	$Related_foods = trim($data->Related_foods);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO foods(Color,Conditions,Cooking_method,Cost,Description,Flavor,Ingredients,Meal,Name,Notes,Nutrition,Origin_story,Other_Names,Place_of_origin,Preparation,Private_Notes,Rarity,Related_foods,Reputation,Scent,Serving,Shelf_life,Side_effects,Size,Smell,Sold_by,Spices,Symbolisms,Tags,Texture,Traditions,Type_of_food,Universe,Utensils_needed,Variations,Yield) 
-VALUES('$Color','$Conditions','$Cooking_method','$Cost','$Description','$Flavor','$Ingredients','$Meal','$Name','$Notes','$Nutrition','$Origin_story','$Other_Names','$Place_of_origin','$Preparation','$Private_Notes','$Rarity','$Related_foods','$Reputation','$Scent','$Serving','$Shelf_life','$Side_effects','$Size','$Smell','$Sold_by','$Spices','$Symbolisms','$Tags','$Texture','$Traditions','$Type_of_food','$Universe','$Utensils_needed','$Variations','$Yield')"; 
+    $sql = "INSERT INTO foods(Type_of_food,Other_Names,Universe,Tags,Name,Description,Color,Size,Variations,Smell,Ingredients,Preparation,Cooking_method,Spices,Yield,Shelf_life,Rarity,Sold_by,Cost,Flavor,Meal,Serving,Utensils_needed,Texture,Scent,Side_effects,Nutrition,Conditions,Reputation,Place_of_origin,Origin_story,Traditions,Symbolisms,Related_foods,Notes,Private_Notes) 
+VALUES('$Type_of_food','$Other_Names','$Universe','$Tags','$Name','$Description','$Color','$Size','$Variations','$Smell','$Ingredients','$Preparation','$Cooking_method','$Spices','$Yield','$Shelf_life','$Rarity','$Sold_by','$Cost','$Flavor','$Meal','$Serving','$Utensils_needed','$Texture','$Scent','$Side_effects','$Nutrition','$Conditions','$Reputation','$Place_of_origin','$Origin_story','$Traditions','$Symbolisms','$Related_foods','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -2366,46 +2604,46 @@ function updateFood($data){
 
     $log->info("Started update function.");
 
-	$Color = trim($data->Color);
-	$Conditions = trim($data->Conditions);
-	$Cooking_method = trim($data->Cooking_method);
-	$Cost = trim($data->Cost);
-	$Description = trim($data->Description);
-	$Flavor = trim($data->Flavor);
-	$Ingredients = trim($data->Ingredients);
-	$Meal = trim($data->Meal);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Nutrition = trim($data->Nutrition);
-	$Origin_story = trim($data->Origin_story);
-	$Other_Names = trim($data->Other_Names);
-	$Place_of_origin = trim($data->Place_of_origin);
-	$Preparation = trim($data->Preparation);
-	$Private_Notes = trim($data->Private_Notes);
-	$Rarity = trim($data->Rarity);
-	$Related_foods = trim($data->Related_foods);
-	$Reputation = trim($data->Reputation);
-	$Scent = trim($data->Scent);
-	$Serving = trim($data->Serving);
-	$Shelf_life = trim($data->Shelf_life);
-	$Side_effects = trim($data->Side_effects);
-	$Size = trim($data->Size);
-	$Smell = trim($data->Smell);
-	$Sold_by = trim($data->Sold_by);
-	$Spices = trim($data->Spices);
-	$Symbolisms = trim($data->Symbolisms);
-	$Tags = trim($data->Tags);
-	$Texture = trim($data->Texture);
-	$Traditions = trim($data->Traditions);
 	$Type_of_food = trim($data->Type_of_food);
+	$Other_Names = trim($data->Other_Names);
 	$Universe = trim($data->Universe);
-	$Utensils_needed = trim($data->Utensils_needed);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Color = trim($data->Color);
+	$Size = trim($data->Size);
 	$Variations = trim($data->Variations);
+	$Smell = trim($data->Smell);
+	$Ingredients = trim($data->Ingredients);
+	$Preparation = trim($data->Preparation);
+	$Cooking_method = trim($data->Cooking_method);
+	$Spices = trim($data->Spices);
 	$Yield = trim($data->Yield);
+	$Shelf_life = trim($data->Shelf_life);
+	$Rarity = trim($data->Rarity);
+	$Sold_by = trim($data->Sold_by);
+	$Cost = trim($data->Cost);
+	$Flavor = trim($data->Flavor);
+	$Meal = trim($data->Meal);
+	$Serving = trim($data->Serving);
+	$Utensils_needed = trim($data->Utensils_needed);
+	$Texture = trim($data->Texture);
+	$Scent = trim($data->Scent);
+	$Side_effects = trim($data->Side_effects);
+	$Nutrition = trim($data->Nutrition);
+	$Conditions = trim($data->Conditions);
+	$Reputation = trim($data->Reputation);
+	$Place_of_origin = trim($data->Place_of_origin);
+	$Origin_story = trim($data->Origin_story);
+	$Traditions = trim($data->Traditions);
+	$Symbolisms = trim($data->Symbolisms);
+	$Related_foods = trim($data->Related_foods);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE foods SET 
-Color = '$Color',Conditions = '$Conditions',Cooking_method = '$Cooking_method',Cost = '$Cost',Description = '$Description',Flavor = '$Flavor',Ingredients = '$Ingredients',Meal = '$Meal',Name = '$Name',Notes = '$Notes',Nutrition = '$Nutrition',Origin_story = '$Origin_story',Other_Names = '$Other_Names',Place_of_origin = '$Place_of_origin',Preparation = '$Preparation',Private_Notes = '$Private_Notes',Rarity = '$Rarity',Related_foods = '$Related_foods',Reputation = '$Reputation',Scent = '$Scent',Serving = '$Serving',Shelf_life = '$Shelf_life',Side_effects = '$Side_effects',Size = '$Size',Smell = '$Smell',Sold_by = '$Sold_by',Spices = '$Spices',Symbolisms = '$Symbolisms',Tags = '$Tags',Texture = '$Texture',Traditions = '$Traditions',Type_of_food = '$Type_of_food',Universe = '$Universe',Utensils_needed = '$Utensils_needed',Variations = '$Variations',Yield = '$Yield'    WHERE id = $id"; 
+Type_of_food = '$Type_of_food',Other_Names = '$Other_Names',Universe = '$Universe',Tags = '$Tags',Name = '$Name',Description = '$Description',Color = '$Color',Size = '$Size',Variations = '$Variations',Smell = '$Smell',Ingredients = '$Ingredients',Preparation = '$Preparation',Cooking_method = '$Cooking_method',Spices = '$Spices',Yield = '$Yield',Shelf_life = '$Shelf_life',Rarity = '$Rarity',Sold_by = '$Sold_by',Cost = '$Cost',Flavor = '$Flavor',Meal = '$Meal',Serving = '$Serving',Utensils_needed = '$Utensils_needed',Texture = '$Texture',Scent = '$Scent',Side_effects = '$Side_effects',Nutrition = '$Nutrition',Conditions = '$Conditions',Reputation = '$Reputation',Place_of_origin = '$Place_of_origin',Origin_story = '$Origin_story',Traditions = '$Traditions',Symbolisms = '$Symbolisms',Related_foods = '$Related_foods',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -2464,13 +2702,15 @@ function getAllGovernments(){
 }
 
 function getGovernments(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM governments Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM governments Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -2478,8 +2718,8 @@ function getGovernments(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -2502,48 +2742,48 @@ function addGovernment($data){
 
     $log->info("Started save function.");
 
-	$Airforce = trim($data->Airforce);
-	$Approval_Ratings = trim($data->Approval_Ratings);
-	$Checks_And_Balances = trim($data->Checks_And_Balances);
-	$Civilian_Life = trim($data->Civilian_Life);
-	$Creatures = trim($data->Creatures);
-	$Criminal_System = trim($data->Criminal_System);
-	$Description = trim($data->Description);
-	$Electoral_Process = trim($data->Electoral_Process);
-	$Flag_Design_Story = trim($data->Flag_Design_Story);
-	$Founding_Story = trim($data->Founding_Story);
-	$Geocultural = trim($data->Geocultural);
-	$Groups = trim($data->Groups);
-	$Holidays = trim($data->Holidays);
-	$Immigration = trim($data->Immigration);
-	$International_Relations = trim($data->International_Relations);
-	$Items = trim($data->Items);
-	$Jobs = trim($data->Jobs);
-	$Laws = trim($data->Laws);
-	$Leaders = trim($data->Leaders);
-	$Military = trim($data->Military);
 	$Name = trim($data->Name);
-	$Navy = trim($data->Navy);
-	$Notable_Wars = trim($data->Notable_Wars);
-	$Notes = trim($data->Notes);
-	$Political_figures = trim($data->Political_figures);
-	$Power_Source = trim($data->Power_Source);
-	$Power_Structure = trim($data->Power_Structure);
-	$Privacy_Ideologies = trim($data->Privacy_Ideologies);
-	$Private_Notes = trim($data->Private_Notes);
-	$Socioeconomical = trim($data->Socioeconomical);
-	$Sociopolitical = trim($data->Sociopolitical);
-	$Space_Program = trim($data->Space_Program);
-	$Tags = trim($data->Tags);
-	$Technologies = trim($data->Technologies);
-	$Term_Lengths = trim($data->Term_Lengths);
-	$Type_Of_Government = trim($data->Type_Of_Government);
+	$Description = trim($data->Description);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Checks_And_Balances = trim($data->Checks_And_Balances);
+	$Jobs = trim($data->Jobs);
+	$Type_Of_Government = trim($data->Type_Of_Government);
+	$Power_Structure = trim($data->Power_Structure);
+	$Power_Source = trim($data->Power_Source);
+	$Privacy_Ideologies = trim($data->Privacy_Ideologies);
+	$Sociopolitical = trim($data->Sociopolitical);
+	$Socioeconomical = trim($data->Socioeconomical);
+	$Geocultural = trim($data->Geocultural);
+	$Laws = trim($data->Laws);
+	$Immigration = trim($data->Immigration);
+	$Term_Lengths = trim($data->Term_Lengths);
+	$Electoral_Process = trim($data->Electoral_Process);
+	$Criminal_System = trim($data->Criminal_System);
+	$International_Relations = trim($data->International_Relations);
+	$Civilian_Life = trim($data->Civilian_Life);
+	$Approval_Ratings = trim($data->Approval_Ratings);
+	$Space_Program = trim($data->Space_Program);
+	$Leaders = trim($data->Leaders);
+	$Groups = trim($data->Groups);
+	$Political_figures = trim($data->Political_figures);
+	$Military = trim($data->Military);
+	$Navy = trim($data->Navy);
+	$Airforce = trim($data->Airforce);
+	$Notable_Wars = trim($data->Notable_Wars);
+	$Founding_Story = trim($data->Founding_Story);
+	$Flag_Design_Story = trim($data->Flag_Design_Story);
+	$Holidays = trim($data->Holidays);
 	$Vehicles = trim($data->Vehicles);
+	$Items = trim($data->Items);
+	$Technologies = trim($data->Technologies);
+	$Creatures = trim($data->Creatures);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO governments(Airforce,Approval_Ratings,Checks_And_Balances,Civilian_Life,Creatures,Criminal_System,Description,Electoral_Process,Flag_Design_Story,Founding_Story,Geocultural,Groups,Holidays,Immigration,International_Relations,Items,Jobs,Laws,Leaders,Military,Name,Navy,Notable_Wars,Notes,Political_figures,Power_Source,Power_Structure,Privacy_Ideologies,Private_Notes,Socioeconomical,Sociopolitical,Space_Program,Tags,Technologies,Term_Lengths,Type_Of_Government,Universe,Vehicles) 
-VALUES('$Airforce','$Approval_Ratings','$Checks_And_Balances','$Civilian_Life','$Creatures','$Criminal_System','$Description','$Electoral_Process','$Flag_Design_Story','$Founding_Story','$Geocultural','$Groups','$Holidays','$Immigration','$International_Relations','$Items','$Jobs','$Laws','$Leaders','$Military','$Name','$Navy','$Notable_Wars','$Notes','$Political_figures','$Power_Source','$Power_Structure','$Privacy_Ideologies','$Private_Notes','$Socioeconomical','$Sociopolitical','$Space_Program','$Tags','$Technologies','$Term_Lengths','$Type_Of_Government','$Universe','$Vehicles')"; 
+    $sql = "INSERT INTO governments(Name,Description,Universe,Tags,Checks_And_Balances,Jobs,Type_Of_Government,Power_Structure,Power_Source,Privacy_Ideologies,Sociopolitical,Socioeconomical,Geocultural,Laws,Immigration,Term_Lengths,Electoral_Process,Criminal_System,International_Relations,Civilian_Life,Approval_Ratings,Space_Program,Leaders,Groups,Political_figures,Military,Navy,Airforce,Notable_Wars,Founding_Story,Flag_Design_Story,Holidays,Vehicles,Items,Technologies,Creatures,Notes,Private_Notes) 
+VALUES('$Name','$Description','$Universe','$Tags','$Checks_And_Balances','$Jobs','$Type_Of_Government','$Power_Structure','$Power_Source','$Privacy_Ideologies','$Sociopolitical','$Socioeconomical','$Geocultural','$Laws','$Immigration','$Term_Lengths','$Electoral_Process','$Criminal_System','$International_Relations','$Civilian_Life','$Approval_Ratings','$Space_Program','$Leaders','$Groups','$Political_figures','$Military','$Navy','$Airforce','$Notable_Wars','$Founding_Story','$Flag_Design_Story','$Holidays','$Vehicles','$Items','$Technologies','$Creatures','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -2614,48 +2854,48 @@ function updateGovernment($data){
 
     $log->info("Started update function.");
 
-	$Airforce = trim($data->Airforce);
-	$Approval_Ratings = trim($data->Approval_Ratings);
-	$Checks_And_Balances = trim($data->Checks_And_Balances);
-	$Civilian_Life = trim($data->Civilian_Life);
-	$Creatures = trim($data->Creatures);
-	$Criminal_System = trim($data->Criminal_System);
-	$Description = trim($data->Description);
-	$Electoral_Process = trim($data->Electoral_Process);
-	$Flag_Design_Story = trim($data->Flag_Design_Story);
-	$Founding_Story = trim($data->Founding_Story);
-	$Geocultural = trim($data->Geocultural);
-	$Groups = trim($data->Groups);
-	$Holidays = trim($data->Holidays);
-	$Immigration = trim($data->Immigration);
-	$International_Relations = trim($data->International_Relations);
-	$Items = trim($data->Items);
-	$Jobs = trim($data->Jobs);
-	$Laws = trim($data->Laws);
-	$Leaders = trim($data->Leaders);
-	$Military = trim($data->Military);
 	$Name = trim($data->Name);
-	$Navy = trim($data->Navy);
-	$Notable_Wars = trim($data->Notable_Wars);
-	$Notes = trim($data->Notes);
-	$Political_figures = trim($data->Political_figures);
-	$Power_Source = trim($data->Power_Source);
-	$Power_Structure = trim($data->Power_Structure);
-	$Privacy_Ideologies = trim($data->Privacy_Ideologies);
-	$Private_Notes = trim($data->Private_Notes);
-	$Socioeconomical = trim($data->Socioeconomical);
-	$Sociopolitical = trim($data->Sociopolitical);
-	$Space_Program = trim($data->Space_Program);
-	$Tags = trim($data->Tags);
-	$Technologies = trim($data->Technologies);
-	$Term_Lengths = trim($data->Term_Lengths);
-	$Type_Of_Government = trim($data->Type_Of_Government);
+	$Description = trim($data->Description);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Checks_And_Balances = trim($data->Checks_And_Balances);
+	$Jobs = trim($data->Jobs);
+	$Type_Of_Government = trim($data->Type_Of_Government);
+	$Power_Structure = trim($data->Power_Structure);
+	$Power_Source = trim($data->Power_Source);
+	$Privacy_Ideologies = trim($data->Privacy_Ideologies);
+	$Sociopolitical = trim($data->Sociopolitical);
+	$Socioeconomical = trim($data->Socioeconomical);
+	$Geocultural = trim($data->Geocultural);
+	$Laws = trim($data->Laws);
+	$Immigration = trim($data->Immigration);
+	$Term_Lengths = trim($data->Term_Lengths);
+	$Electoral_Process = trim($data->Electoral_Process);
+	$Criminal_System = trim($data->Criminal_System);
+	$International_Relations = trim($data->International_Relations);
+	$Civilian_Life = trim($data->Civilian_Life);
+	$Approval_Ratings = trim($data->Approval_Ratings);
+	$Space_Program = trim($data->Space_Program);
+	$Leaders = trim($data->Leaders);
+	$Groups = trim($data->Groups);
+	$Political_figures = trim($data->Political_figures);
+	$Military = trim($data->Military);
+	$Navy = trim($data->Navy);
+	$Airforce = trim($data->Airforce);
+	$Notable_Wars = trim($data->Notable_Wars);
+	$Founding_Story = trim($data->Founding_Story);
+	$Flag_Design_Story = trim($data->Flag_Design_Story);
+	$Holidays = trim($data->Holidays);
 	$Vehicles = trim($data->Vehicles);
+	$Items = trim($data->Items);
+	$Technologies = trim($data->Technologies);
+	$Creatures = trim($data->Creatures);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE governments SET 
-Airforce = '$Airforce',Approval_Ratings = '$Approval_Ratings',Checks_And_Balances = '$Checks_And_Balances',Civilian_Life = '$Civilian_Life',Creatures = '$Creatures',Criminal_System = '$Criminal_System',Description = '$Description',Electoral_Process = '$Electoral_Process',Flag_Design_Story = '$Flag_Design_Story',Founding_Story = '$Founding_Story',Geocultural = '$Geocultural',Groups = '$Groups',Holidays = '$Holidays',Immigration = '$Immigration',International_Relations = '$International_Relations',Items = '$Items',Jobs = '$Jobs',Laws = '$Laws',Leaders = '$Leaders',Military = '$Military',Name = '$Name',Navy = '$Navy',Notable_Wars = '$Notable_Wars',Notes = '$Notes',Political_figures = '$Political_figures',Power_Source = '$Power_Source',Power_Structure = '$Power_Structure',Privacy_Ideologies = '$Privacy_Ideologies',Private_Notes = '$Private_Notes',Socioeconomical = '$Socioeconomical',Sociopolitical = '$Sociopolitical',Space_Program = '$Space_Program',Tags = '$Tags',Technologies = '$Technologies',Term_Lengths = '$Term_Lengths',Type_Of_Government = '$Type_Of_Government',Universe = '$Universe',Vehicles = '$Vehicles'    WHERE id = $id"; 
+Name = '$Name',Description = '$Description',Universe = '$Universe',Tags = '$Tags',Checks_And_Balances = '$Checks_And_Balances',Jobs = '$Jobs',Type_Of_Government = '$Type_Of_Government',Power_Structure = '$Power_Structure',Power_Source = '$Power_Source',Privacy_Ideologies = '$Privacy_Ideologies',Sociopolitical = '$Sociopolitical',Socioeconomical = '$Socioeconomical',Geocultural = '$Geocultural',Laws = '$Laws',Immigration = '$Immigration',Term_Lengths = '$Term_Lengths',Electoral_Process = '$Electoral_Process',Criminal_System = '$Criminal_System',International_Relations = '$International_Relations',Civilian_Life = '$Civilian_Life',Approval_Ratings = '$Approval_Ratings',Space_Program = '$Space_Program',Leaders = '$Leaders',Groups = '$Groups',Political_figures = '$Political_figures',Military = '$Military',Navy = '$Navy',Airforce = '$Airforce',Notable_Wars = '$Notable_Wars',Founding_Story = '$Founding_Story',Flag_Design_Story = '$Flag_Design_Story',Holidays = '$Holidays',Vehicles = '$Vehicles',Items = '$Items',Technologies = '$Technologies',Creatures = '$Creatures',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -2714,13 +2954,15 @@ function getAllGroups(){
 }
 
 function getGroups(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM groups Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM groups Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -2728,8 +2970,8 @@ function getGroups(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -2752,40 +2994,40 @@ function addGroup($data){
 
     $log->info("Started save function.");
 
-	$Allies = trim($data->Allies);
-	$Clients = trim($data->Clients);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Enemies = trim($data->Enemies);
-	$Equipment = trim($data->Equipment);
-	$Goals = trim($data->Goals);
-	$Headquarters = trim($data->Headquarters);
-	$Inventory = trim($data->Inventory);
-	$Key_items = trim($data->Key_items);
-	$Leaders = trim($data->Leaders);
-	$Locations = trim($data->Locations);
-	$Members = trim($data->Members);
-	$Motivations = trim($data->Motivations);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Obstacles = trim($data->Obstacles);
-	$Offices = trim($data->Offices);
-	$Organization_structure = trim($data->Organization_structure);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
 	$Other_Names = trim($data->Other_Names);
-	$Private_notes = trim($data->Private_notes);
-	$Risks = trim($data->Risks);
-	$Rivals = trim($data->Rivals);
-	$Sistergroups = trim($data->Sistergroups);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
 	$Subgroups = trim($data->Subgroups);
 	$Supergroups = trim($data->Supergroups);
-	$Suppliers = trim($data->Suppliers);
-	$Tags = trim($data->Tags);
+	$Sistergroups = trim($data->Sistergroups);
+	$Organization_structure = trim($data->Organization_structure);
+	$Leaders = trim($data->Leaders);
+	$Creatures = trim($data->Creatures);
+	$Members = trim($data->Members);
+	$Offices = trim($data->Offices);
+	$Locations = trim($data->Locations);
+	$Headquarters = trim($data->Headquarters);
+	$Motivations = trim($data->Motivations);
 	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
+	$Risks = trim($data->Risks);
+	$Obstacles = trim($data->Obstacles);
+	$Goals = trim($data->Goals);
+	$Clients = trim($data->Clients);
+	$Allies = trim($data->Allies);
+	$Enemies = trim($data->Enemies);
+	$Rivals = trim($data->Rivals);
+	$Suppliers = trim($data->Suppliers);
+	$Inventory = trim($data->Inventory);
+	$Equipment = trim($data->Equipment);
+	$Key_items = trim($data->Key_items);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
-    $sql = "INSERT INTO groups(Allies,Clients,Creatures,Description,Enemies,Equipment,Goals,Headquarters,Inventory,Key_items,Leaders,Locations,Members,Motivations,Name,Notes,Obstacles,Offices,Organization_structure,Other_Names,Private_notes,Risks,Rivals,Sistergroups,Subgroups,Supergroups,Suppliers,Tags,Traditions,Universe) 
-VALUES('$Allies','$Clients','$Creatures','$Description','$Enemies','$Equipment','$Goals','$Headquarters','$Inventory','$Key_items','$Leaders','$Locations','$Members','$Motivations','$Name','$Notes','$Obstacles','$Offices','$Organization_structure','$Other_Names','$Private_notes','$Risks','$Rivals','$Sistergroups','$Subgroups','$Supergroups','$Suppliers','$Tags','$Traditions','$Universe')"; 
+    $sql = "INSERT INTO groups(Tags,Universe,Other_Names,Description,Name,Subgroups,Supergroups,Sistergroups,Organization_structure,Leaders,Creatures,Members,Offices,Locations,Headquarters,Motivations,Traditions,Risks,Obstacles,Goals,Clients,Allies,Enemies,Rivals,Suppliers,Inventory,Equipment,Key_items,Notes,Private_notes) 
+VALUES('$Tags','$Universe','$Other_Names','$Description','$Name','$Subgroups','$Supergroups','$Sistergroups','$Organization_structure','$Leaders','$Creatures','$Members','$Offices','$Locations','$Headquarters','$Motivations','$Traditions','$Risks','$Obstacles','$Goals','$Clients','$Allies','$Enemies','$Rivals','$Suppliers','$Inventory','$Equipment','$Key_items','$Notes','$Private_notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -2856,40 +3098,40 @@ function updateGroup($data){
 
     $log->info("Started update function.");
 
-	$Allies = trim($data->Allies);
-	$Clients = trim($data->Clients);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Enemies = trim($data->Enemies);
-	$Equipment = trim($data->Equipment);
-	$Goals = trim($data->Goals);
-	$Headquarters = trim($data->Headquarters);
-	$Inventory = trim($data->Inventory);
-	$Key_items = trim($data->Key_items);
-	$Leaders = trim($data->Leaders);
-	$Locations = trim($data->Locations);
-	$Members = trim($data->Members);
-	$Motivations = trim($data->Motivations);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Obstacles = trim($data->Obstacles);
-	$Offices = trim($data->Offices);
-	$Organization_structure = trim($data->Organization_structure);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
 	$Other_Names = trim($data->Other_Names);
-	$Private_notes = trim($data->Private_notes);
-	$Risks = trim($data->Risks);
-	$Rivals = trim($data->Rivals);
-	$Sistergroups = trim($data->Sistergroups);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
 	$Subgroups = trim($data->Subgroups);
 	$Supergroups = trim($data->Supergroups);
-	$Suppliers = trim($data->Suppliers);
-	$Tags = trim($data->Tags);
+	$Sistergroups = trim($data->Sistergroups);
+	$Organization_structure = trim($data->Organization_structure);
+	$Leaders = trim($data->Leaders);
+	$Creatures = trim($data->Creatures);
+	$Members = trim($data->Members);
+	$Offices = trim($data->Offices);
+	$Locations = trim($data->Locations);
+	$Headquarters = trim($data->Headquarters);
+	$Motivations = trim($data->Motivations);
 	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
+	$Risks = trim($data->Risks);
+	$Obstacles = trim($data->Obstacles);
+	$Goals = trim($data->Goals);
+	$Clients = trim($data->Clients);
+	$Allies = trim($data->Allies);
+	$Enemies = trim($data->Enemies);
+	$Rivals = trim($data->Rivals);
+	$Suppliers = trim($data->Suppliers);
+	$Inventory = trim($data->Inventory);
+	$Equipment = trim($data->Equipment);
+	$Key_items = trim($data->Key_items);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
     $sql = "UPDATE groups SET 
-Allies = '$Allies',Clients = '$Clients',Creatures = '$Creatures',Description = '$Description',Enemies = '$Enemies',Equipment = '$Equipment',Goals = '$Goals',Headquarters = '$Headquarters',Inventory = '$Inventory',Key_items = '$Key_items',Leaders = '$Leaders',Locations = '$Locations',Members = '$Members',Motivations = '$Motivations',Name = '$Name',Notes = '$Notes',Obstacles = '$Obstacles',Offices = '$Offices',Organization_structure = '$Organization_structure',Other_Names = '$Other_Names',Private_notes = '$Private_notes',Risks = '$Risks',Rivals = '$Rivals',Sistergroups = '$Sistergroups',Subgroups = '$Subgroups',Supergroups = '$Supergroups',Suppliers = '$Suppliers',Tags = '$Tags',Traditions = '$Traditions',Universe = '$Universe'    WHERE id = $id"; 
+Tags = '$Tags',Universe = '$Universe',Other_Names = '$Other_Names',Description = '$Description',Name = '$Name',Subgroups = '$Subgroups',Supergroups = '$Supergroups',Sistergroups = '$Sistergroups',Organization_structure = '$Organization_structure',Leaders = '$Leaders',Creatures = '$Creatures',Members = '$Members',Offices = '$Offices',Locations = '$Locations',Headquarters = '$Headquarters',Motivations = '$Motivations',Traditions = '$Traditions',Risks = '$Risks',Obstacles = '$Obstacles',Goals = '$Goals',Clients = '$Clients',Allies = '$Allies',Enemies = '$Enemies',Rivals = '$Rivals',Suppliers = '$Suppliers',Inventory = '$Inventory',Equipment = '$Equipment',Key_items = '$Key_items',Notes = '$Notes',Private_notes = '$Private_notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -2948,13 +3190,15 @@ function getAllItems(){
 }
 
 function getItems(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM items Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM items Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -2962,8 +3206,8 @@ function getItems(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -2986,28 +3230,28 @@ function addItem($data){
 
     $log->info("Started save function.");
 
-	$Current_Owners = trim($data->Current_Owners);
-	$Description = trim($data->Description);
-	$Item_Type = trim($data->Item_Type);
-	$Magic = trim($data->Magic);
-	$Magical_effects = trim($data->Magical_effects);
-	$Makers = trim($data->Makers);
-	$Materials = trim($data->Materials);
 	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Original_Owners = trim($data->Original_Owners);
-	$Past_Owners = trim($data->Past_Owners);
-	$Private_Notes = trim($data->Private_Notes);
+	$Item_Type = trim($data->Item_Type);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
 	$Tags = trim($data->Tags);
+	$Weight = trim($data->Weight);
+	$Materials = trim($data->Materials);
+	$Past_Owners = trim($data->Past_Owners);
+	$Year_it_was_made = trim($data->Year_it_was_made);
+	$Makers = trim($data->Makers);
+	$Current_Owners = trim($data->Current_Owners);
+	$Original_Owners = trim($data->Original_Owners);
+	$Magical_effects = trim($data->Magical_effects);
+	$Magic = trim($data->Magic);
 	$Technical_effects = trim($data->Technical_effects);
 	$Technology = trim($data->Technology);
-	$Universe = trim($data->Universe);
-	$Weight = trim($data->Weight);
-	$Year_it_was_made = trim($data->Year_it_was_made);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO items(Current_Owners,Description,Item_Type,Magic,Magical_effects,Makers,Materials,Name,Notes,Original_Owners,Past_Owners,Private_Notes,Tags,Technical_effects,Technology,Universe,Weight,Year_it_was_made) 
-VALUES('$Current_Owners','$Description','$Item_Type','$Magic','$Magical_effects','$Makers','$Materials','$Name','$Notes','$Original_Owners','$Past_Owners','$Private_Notes','$Tags','$Technical_effects','$Technology','$Universe','$Weight','$Year_it_was_made')"; 
+    $sql = "INSERT INTO items(Name,Item_Type,Universe,Description,Tags,Weight,Materials,Past_Owners,Year_it_was_made,Makers,Current_Owners,Original_Owners,Magical_effects,Magic,Technical_effects,Technology,Private_Notes,Notes) 
+VALUES('$Name','$Item_Type','$Universe','$Description','$Tags','$Weight','$Materials','$Past_Owners','$Year_it_was_made','$Makers','$Current_Owners','$Original_Owners','$Magical_effects','$Magic','$Technical_effects','$Technology','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -3078,28 +3322,28 @@ function updateItem($data){
 
     $log->info("Started update function.");
 
-	$Current_Owners = trim($data->Current_Owners);
-	$Description = trim($data->Description);
-	$Item_Type = trim($data->Item_Type);
-	$Magic = trim($data->Magic);
-	$Magical_effects = trim($data->Magical_effects);
-	$Makers = trim($data->Makers);
-	$Materials = trim($data->Materials);
 	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Original_Owners = trim($data->Original_Owners);
-	$Past_Owners = trim($data->Past_Owners);
-	$Private_Notes = trim($data->Private_Notes);
+	$Item_Type = trim($data->Item_Type);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
 	$Tags = trim($data->Tags);
+	$Weight = trim($data->Weight);
+	$Materials = trim($data->Materials);
+	$Past_Owners = trim($data->Past_Owners);
+	$Year_it_was_made = trim($data->Year_it_was_made);
+	$Makers = trim($data->Makers);
+	$Current_Owners = trim($data->Current_Owners);
+	$Original_Owners = trim($data->Original_Owners);
+	$Magical_effects = trim($data->Magical_effects);
+	$Magic = trim($data->Magic);
 	$Technical_effects = trim($data->Technical_effects);
 	$Technology = trim($data->Technology);
-	$Universe = trim($data->Universe);
-	$Weight = trim($data->Weight);
-	$Year_it_was_made = trim($data->Year_it_was_made);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE items SET 
-Current_Owners = '$Current_Owners',Description = '$Description',Item_Type = '$Item_Type',Magic = '$Magic',Magical_effects = '$Magical_effects',Makers = '$Makers',Materials = '$Materials',Name = '$Name',Notes = '$Notes',Original_Owners = '$Original_Owners',Past_Owners = '$Past_Owners',Private_Notes = '$Private_Notes',Tags = '$Tags',Technical_effects = '$Technical_effects',Technology = '$Technology',Universe = '$Universe',Weight = '$Weight',Year_it_was_made = '$Year_it_was_made'    WHERE id = $id"; 
+Name = '$Name',Item_Type = '$Item_Type',Universe = '$Universe',Description = '$Description',Tags = '$Tags',Weight = '$Weight',Materials = '$Materials',Past_Owners = '$Past_Owners',Year_it_was_made = '$Year_it_was_made',Makers = '$Makers',Current_Owners = '$Current_Owners',Original_Owners = '$Original_Owners',Magical_effects = '$Magical_effects',Magic = '$Magic',Technical_effects = '$Technical_effects',Technology = '$Technology',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -3158,13 +3402,15 @@ function getAllJobs(){
 }
 
 function getJobs(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM jobs Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM jobs Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -3172,8 +3418,8 @@ function getJobs(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -3196,36 +3442,36 @@ function addJob($data){
 
     $log->info("Started save function.");
 
-	$Alternate_names = trim($data->Alternate_names);
-	$Description = trim($data->Description);
-	$Education = trim($data->Education);
-	$Experience = trim($data->Experience);
-	$Field = trim($data->Field);
-	$Initial_goal = trim($data->Initial_goal);
-	$Job_origin = trim($data->Job_origin);
-	$Long_term_risks = trim($data->Long_term_risks);
 	$Name = trim($data->Name);
-	$Notable_figures = trim($data->Notable_figures);
-	$Notes = trim($data->Notes);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Type_of_job = trim($data->Type_of_job);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Experience = trim($data->Experience);
+	$Education = trim($data->Education);
+	$Work_hours = trim($data->Work_hours);
+	$Vehicles = trim($data->Vehicles);
+	$Training = trim($data->Training);
+	$Long_term_risks = trim($data->Long_term_risks);
 	$Occupational_hazards = trim($data->Occupational_hazards);
 	$Pay_rate = trim($data->Pay_rate);
-	$Private_Notes = trim($data->Private_Notes);
-	$Promotions = trim($data->Promotions);
-	$Ranks = trim($data->Ranks);
-	$Similar_jobs = trim($data->Similar_jobs);
-	$Specializations = trim($data->Specializations);
-	$Tags = trim($data->Tags);
 	$Time_off = trim($data->Time_off);
+	$Similar_jobs = trim($data->Similar_jobs);
+	$Promotions = trim($data->Promotions);
+	$Specializations = trim($data->Specializations);
+	$Field = trim($data->Field);
+	$Ranks = trim($data->Ranks);
 	$Traditions = trim($data->Traditions);
-	$Training = trim($data->Training);
-	$Type_of_job = trim($data->Type_of_job);
-	$Universe = trim($data->Universe);
-	$Vehicles = trim($data->Vehicles);
-	$Work_hours = trim($data->Work_hours);
+	$Job_origin = trim($data->Job_origin);
+	$Initial_goal = trim($data->Initial_goal);
+	$Notable_figures = trim($data->Notable_figures);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO jobs(Alternate_names,Description,Education,Experience,Field,Initial_goal,Job_origin,Long_term_risks,Name,Notable_figures,Notes,Occupational_hazards,Pay_rate,Private_Notes,Promotions,Ranks,Similar_jobs,Specializations,Tags,Time_off,Traditions,Training,Type_of_job,Universe,Vehicles,Work_hours) 
-VALUES('$Alternate_names','$Description','$Education','$Experience','$Field','$Initial_goal','$Job_origin','$Long_term_risks','$Name','$Notable_figures','$Notes','$Occupational_hazards','$Pay_rate','$Private_Notes','$Promotions','$Ranks','$Similar_jobs','$Specializations','$Tags','$Time_off','$Traditions','$Training','$Type_of_job','$Universe','$Vehicles','$Work_hours')"; 
+    $sql = "INSERT INTO jobs(Name,Universe,Description,Type_of_job,Alternate_names,Tags,Experience,Education,Work_hours,Vehicles,Training,Long_term_risks,Occupational_hazards,Pay_rate,Time_off,Similar_jobs,Promotions,Specializations,Field,Ranks,Traditions,Job_origin,Initial_goal,Notable_figures,Notes,Private_Notes) 
+VALUES('$Name','$Universe','$Description','$Type_of_job','$Alternate_names','$Tags','$Experience','$Education','$Work_hours','$Vehicles','$Training','$Long_term_risks','$Occupational_hazards','$Pay_rate','$Time_off','$Similar_jobs','$Promotions','$Specializations','$Field','$Ranks','$Traditions','$Job_origin','$Initial_goal','$Notable_figures','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -3296,36 +3542,36 @@ function updateJob($data){
 
     $log->info("Started update function.");
 
-	$Alternate_names = trim($data->Alternate_names);
-	$Description = trim($data->Description);
-	$Education = trim($data->Education);
-	$Experience = trim($data->Experience);
-	$Field = trim($data->Field);
-	$Initial_goal = trim($data->Initial_goal);
-	$Job_origin = trim($data->Job_origin);
-	$Long_term_risks = trim($data->Long_term_risks);
 	$Name = trim($data->Name);
-	$Notable_figures = trim($data->Notable_figures);
-	$Notes = trim($data->Notes);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Type_of_job = trim($data->Type_of_job);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Experience = trim($data->Experience);
+	$Education = trim($data->Education);
+	$Work_hours = trim($data->Work_hours);
+	$Vehicles = trim($data->Vehicles);
+	$Training = trim($data->Training);
+	$Long_term_risks = trim($data->Long_term_risks);
 	$Occupational_hazards = trim($data->Occupational_hazards);
 	$Pay_rate = trim($data->Pay_rate);
-	$Private_Notes = trim($data->Private_Notes);
-	$Promotions = trim($data->Promotions);
-	$Ranks = trim($data->Ranks);
-	$Similar_jobs = trim($data->Similar_jobs);
-	$Specializations = trim($data->Specializations);
-	$Tags = trim($data->Tags);
 	$Time_off = trim($data->Time_off);
+	$Similar_jobs = trim($data->Similar_jobs);
+	$Promotions = trim($data->Promotions);
+	$Specializations = trim($data->Specializations);
+	$Field = trim($data->Field);
+	$Ranks = trim($data->Ranks);
 	$Traditions = trim($data->Traditions);
-	$Training = trim($data->Training);
-	$Type_of_job = trim($data->Type_of_job);
-	$Universe = trim($data->Universe);
-	$Vehicles = trim($data->Vehicles);
-	$Work_hours = trim($data->Work_hours);
+	$Job_origin = trim($data->Job_origin);
+	$Initial_goal = trim($data->Initial_goal);
+	$Notable_figures = trim($data->Notable_figures);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE jobs SET 
-Alternate_names = '$Alternate_names',Description = '$Description',Education = '$Education',Experience = '$Experience',Field = '$Field',Initial_goal = '$Initial_goal',Job_origin = '$Job_origin',Long_term_risks = '$Long_term_risks',Name = '$Name',Notable_figures = '$Notable_figures',Notes = '$Notes',Occupational_hazards = '$Occupational_hazards',Pay_rate = '$Pay_rate',Private_Notes = '$Private_Notes',Promotions = '$Promotions',Ranks = '$Ranks',Similar_jobs = '$Similar_jobs',Specializations = '$Specializations',Tags = '$Tags',Time_off = '$Time_off',Traditions = '$Traditions',Training = '$Training',Type_of_job = '$Type_of_job',Universe = '$Universe',Vehicles = '$Vehicles',Work_hours = '$Work_hours'    WHERE id = $id"; 
+Name = '$Name',Universe = '$Universe',Description = '$Description',Type_of_job = '$Type_of_job',Alternate_names = '$Alternate_names',Tags = '$Tags',Experience = '$Experience',Education = '$Education',Work_hours = '$Work_hours',Vehicles = '$Vehicles',Training = '$Training',Long_term_risks = '$Long_term_risks',Occupational_hazards = '$Occupational_hazards',Pay_rate = '$Pay_rate',Time_off = '$Time_off',Similar_jobs = '$Similar_jobs',Promotions = '$Promotions',Specializations = '$Specializations',Field = '$Field',Ranks = '$Ranks',Traditions = '$Traditions',Job_origin = '$Job_origin',Initial_goal = '$Initial_goal',Notable_figures = '$Notable_figures',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -3384,13 +3630,15 @@ function getAllLandmarks(){
 }
 
 function getLandmarks(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM landmarks Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM landmarks Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -3398,8 +3646,8 @@ function getLandmarks(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -3422,27 +3670,27 @@ function addLandmark($data){
 
     $log->info("Started save function.");
 
-	$Colors = trim($data->Colors);
-	$Country = trim($data->Country);
-	$Creation_story = trim($data->Creation_story);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Established_year = trim($data->Established_year);
-	$Flora = trim($data->Flora);
-	$Materials = trim($data->Materials);
 	$Name = trim($data->Name);
-	$Nearby_towns = trim($data->Nearby_towns);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Private_Notes = trim($data->Private_Notes);
-	$Size = trim($data->Size);
 	$Tags = trim($data->Tags);
+	$Description = trim($data->Description);
+	$Other_Names = trim($data->Other_Names);
 	$Type_of_landmark = trim($data->Type_of_landmark);
 	$Universe = trim($data->Universe);
+	$Country = trim($data->Country);
+	$Nearby_towns = trim($data->Nearby_towns);
+	$Size = trim($data->Size);
+	$Colors = trim($data->Colors);
+	$Materials = trim($data->Materials);
+	$Creatures = trim($data->Creatures);
+	$Flora = trim($data->Flora);
+	$Creation_story = trim($data->Creation_story);
+	$Established_year = trim($data->Established_year);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO landmarks(Colors,Country,Creation_story,Creatures,Description,Established_year,Flora,Materials,Name,Nearby_towns,Notes,Other_Names,Private_Notes,Size,Tags,Type_of_landmark,Universe) 
-VALUES('$Colors','$Country','$Creation_story','$Creatures','$Description','$Established_year','$Flora','$Materials','$Name','$Nearby_towns','$Notes','$Other_Names','$Private_Notes','$Size','$Tags','$Type_of_landmark','$Universe')"; 
+    $sql = "INSERT INTO landmarks(Name,Tags,Description,Other_Names,Type_of_landmark,Universe,Country,Nearby_towns,Size,Colors,Materials,Creatures,Flora,Creation_story,Established_year,Notes,Private_Notes) 
+VALUES('$Name','$Tags','$Description','$Other_Names','$Type_of_landmark','$Universe','$Country','$Nearby_towns','$Size','$Colors','$Materials','$Creatures','$Flora','$Creation_story','$Established_year','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -3513,27 +3761,27 @@ function updateLandmark($data){
 
     $log->info("Started update function.");
 
-	$Colors = trim($data->Colors);
-	$Country = trim($data->Country);
-	$Creation_story = trim($data->Creation_story);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Established_year = trim($data->Established_year);
-	$Flora = trim($data->Flora);
-	$Materials = trim($data->Materials);
 	$Name = trim($data->Name);
-	$Nearby_towns = trim($data->Nearby_towns);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Private_Notes = trim($data->Private_Notes);
-	$Size = trim($data->Size);
 	$Tags = trim($data->Tags);
+	$Description = trim($data->Description);
+	$Other_Names = trim($data->Other_Names);
 	$Type_of_landmark = trim($data->Type_of_landmark);
 	$Universe = trim($data->Universe);
+	$Country = trim($data->Country);
+	$Nearby_towns = trim($data->Nearby_towns);
+	$Size = trim($data->Size);
+	$Colors = trim($data->Colors);
+	$Materials = trim($data->Materials);
+	$Creatures = trim($data->Creatures);
+	$Flora = trim($data->Flora);
+	$Creation_story = trim($data->Creation_story);
+	$Established_year = trim($data->Established_year);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE landmarks SET 
-Colors = '$Colors',Country = '$Country',Creation_story = '$Creation_story',Creatures = '$Creatures',Description = '$Description',Established_year = '$Established_year',Flora = '$Flora',Materials = '$Materials',Name = '$Name',Nearby_towns = '$Nearby_towns',Notes = '$Notes',Other_Names = '$Other_Names',Private_Notes = '$Private_Notes',Size = '$Size',Tags = '$Tags',Type_of_landmark = '$Type_of_landmark',Universe = '$Universe'    WHERE id = $id"; 
+Name = '$Name',Tags = '$Tags',Description = '$Description',Other_Names = '$Other_Names',Type_of_landmark = '$Type_of_landmark',Universe = '$Universe',Country = '$Country',Nearby_towns = '$Nearby_towns',Size = '$Size',Colors = '$Colors',Materials = '$Materials',Creatures = '$Creatures',Flora = '$Flora',Creation_story = '$Creation_story',Established_year = '$Established_year',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -3592,13 +3840,15 @@ function getAllLanguages(){
 }
 
 function getLanguages(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM languages Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM languages Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -3606,8 +3856,8 @@ function getLanguages(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -3630,39 +3880,39 @@ function addLanguage($data){
 
     $log->info("Started save function.");
 
-	$Body_parts = trim($data->Body_parts);
-	$Determiners = trim($data->Determiners);
-	$Dialectical_information = trim($data->Dialectical_information);
-	$Evolution = trim($data->Evolution);
-	$Family = trim($data->Family);
-	$Gestures = trim($data->Gestures);
-	$Goodbyes = trim($data->Goodbyes);
-	$Grammar = trim($data->Grammar);
-	$Greetings = trim($data->Greetings);
-	$History = trim($data->History);
-	$Name = trim($data->Name);
-	$No_words = trim($data->No_words);
-	$Notes = trim($data->Notes);
-	$Numbers = trim($data->Numbers);
-	$Other_Names = trim($data->Other_Names);
-	$Phonology = trim($data->Phonology);
-	$Please = trim($data->Please);
-	$Private_notes = trim($data->Private_notes);
-	$Pronouns = trim($data->Pronouns);
-	$Quantifiers = trim($data->Quantifiers);
-	$Register = trim($data->Register);
-	$Sorry = trim($data->Sorry);
-	$Tags = trim($data->Tags);
-	$Thank_you = trim($data->Thank_you);
-	$Trade = trim($data->Trade);
-	$Typology = trim($data->Typology);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Other_Names = trim($data->Other_Names);
+	$Name = trim($data->Name);
+	$Typology = trim($data->Typology);
+	$Dialectical_information = trim($data->Dialectical_information);
+	$Register = trim($data->Register);
+	$History = trim($data->History);
+	$Evolution = trim($data->Evolution);
+	$Gestures = trim($data->Gestures);
+	$Phonology = trim($data->Phonology);
+	$Grammar = trim($data->Grammar);
+	$Please = trim($data->Please);
+	$Trade = trim($data->Trade);
+	$Family = trim($data->Family);
+	$Body_parts = trim($data->Body_parts);
+	$No_words = trim($data->No_words);
 	$Yes_words = trim($data->Yes_words);
+	$Sorry = trim($data->Sorry);
 	$You_are_welcome = trim($data->You_are_welcome);
+	$Thank_you = trim($data->Thank_you);
+	$Goodbyes = trim($data->Goodbyes);
+	$Greetings = trim($data->Greetings);
+	$Pronouns = trim($data->Pronouns);
+	$Numbers = trim($data->Numbers);
+	$Quantifiers = trim($data->Quantifiers);
+	$Determiners = trim($data->Determiners);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
-    $sql = "INSERT INTO languages(Body_parts,Determiners,Dialectical_information,Evolution,Family,Gestures,Goodbyes,Grammar,Greetings,History,Name,No_words,Notes,Numbers,Other_Names,Phonology,Please,Private_notes,Pronouns,Quantifiers,Register,Sorry,Tags,Thank_you,Trade,Typology,Universe,Yes_words,You_are_welcome) 
-VALUES('$Body_parts','$Determiners','$Dialectical_information','$Evolution','$Family','$Gestures','$Goodbyes','$Grammar','$Greetings','$History','$Name','$No_words','$Notes','$Numbers','$Other_Names','$Phonology','$Please','$Private_notes','$Pronouns','$Quantifiers','$Register','$Sorry','$Tags','$Thank_you','$Trade','$Typology','$Universe','$Yes_words','$You_are_welcome')"; 
+    $sql = "INSERT INTO languages(Universe,Tags,Other_Names,Name,Typology,Dialectical_information,Register,History,Evolution,Gestures,Phonology,Grammar,Please,Trade,Family,Body_parts,No_words,Yes_words,Sorry,You_are_welcome,Thank_you,Goodbyes,Greetings,Pronouns,Numbers,Quantifiers,Determiners,Notes,Private_notes) 
+VALUES('$Universe','$Tags','$Other_Names','$Name','$Typology','$Dialectical_information','$Register','$History','$Evolution','$Gestures','$Phonology','$Grammar','$Please','$Trade','$Family','$Body_parts','$No_words','$Yes_words','$Sorry','$You_are_welcome','$Thank_you','$Goodbyes','$Greetings','$Pronouns','$Numbers','$Quantifiers','$Determiners','$Notes','$Private_notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -3733,39 +3983,39 @@ function updateLanguage($data){
 
     $log->info("Started update function.");
 
-	$Body_parts = trim($data->Body_parts);
-	$Determiners = trim($data->Determiners);
-	$Dialectical_information = trim($data->Dialectical_information);
-	$Evolution = trim($data->Evolution);
-	$Family = trim($data->Family);
-	$Gestures = trim($data->Gestures);
-	$Goodbyes = trim($data->Goodbyes);
-	$Grammar = trim($data->Grammar);
-	$Greetings = trim($data->Greetings);
-	$History = trim($data->History);
-	$Name = trim($data->Name);
-	$No_words = trim($data->No_words);
-	$Notes = trim($data->Notes);
-	$Numbers = trim($data->Numbers);
-	$Other_Names = trim($data->Other_Names);
-	$Phonology = trim($data->Phonology);
-	$Please = trim($data->Please);
-	$Private_notes = trim($data->Private_notes);
-	$Pronouns = trim($data->Pronouns);
-	$Quantifiers = trim($data->Quantifiers);
-	$Register = trim($data->Register);
-	$Sorry = trim($data->Sorry);
-	$Tags = trim($data->Tags);
-	$Thank_you = trim($data->Thank_you);
-	$Trade = trim($data->Trade);
-	$Typology = trim($data->Typology);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Other_Names = trim($data->Other_Names);
+	$Name = trim($data->Name);
+	$Typology = trim($data->Typology);
+	$Dialectical_information = trim($data->Dialectical_information);
+	$Register = trim($data->Register);
+	$History = trim($data->History);
+	$Evolution = trim($data->Evolution);
+	$Gestures = trim($data->Gestures);
+	$Phonology = trim($data->Phonology);
+	$Grammar = trim($data->Grammar);
+	$Please = trim($data->Please);
+	$Trade = trim($data->Trade);
+	$Family = trim($data->Family);
+	$Body_parts = trim($data->Body_parts);
+	$No_words = trim($data->No_words);
 	$Yes_words = trim($data->Yes_words);
+	$Sorry = trim($data->Sorry);
 	$You_are_welcome = trim($data->You_are_welcome);
+	$Thank_you = trim($data->Thank_you);
+	$Goodbyes = trim($data->Goodbyes);
+	$Greetings = trim($data->Greetings);
+	$Pronouns = trim($data->Pronouns);
+	$Numbers = trim($data->Numbers);
+	$Quantifiers = trim($data->Quantifiers);
+	$Determiners = trim($data->Determiners);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
     $sql = "UPDATE languages SET 
-Body_parts = '$Body_parts',Determiners = '$Determiners',Dialectical_information = '$Dialectical_information',Evolution = '$Evolution',Family = '$Family',Gestures = '$Gestures',Goodbyes = '$Goodbyes',Grammar = '$Grammar',Greetings = '$Greetings',History = '$History',Name = '$Name',No_words = '$No_words',Notes = '$Notes',Numbers = '$Numbers',Other_Names = '$Other_Names',Phonology = '$Phonology',Please = '$Please',Private_notes = '$Private_notes',Pronouns = '$Pronouns',Quantifiers = '$Quantifiers',Register = '$Register',Sorry = '$Sorry',Tags = '$Tags',Thank_you = '$Thank_you',Trade = '$Trade',Typology = '$Typology',Universe = '$Universe',Yes_words = '$Yes_words',You_are_welcome = '$You_are_welcome'    WHERE id = $id"; 
+Universe = '$Universe',Tags = '$Tags',Other_Names = '$Other_Names',Name = '$Name',Typology = '$Typology',Dialectical_information = '$Dialectical_information',Register = '$Register',History = '$History',Evolution = '$Evolution',Gestures = '$Gestures',Phonology = '$Phonology',Grammar = '$Grammar',Please = '$Please',Trade = '$Trade',Family = '$Family',Body_parts = '$Body_parts',No_words = '$No_words',Yes_words = '$Yes_words',Sorry = '$Sorry',You_are_welcome = '$You_are_welcome',Thank_you = '$Thank_you',Goodbyes = '$Goodbyes',Greetings = '$Greetings',Pronouns = '$Pronouns',Numbers = '$Numbers',Quantifiers = '$Quantifiers',Determiners = '$Determiners',Notes = '$Notes',Private_notes = '$Private_notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -3824,13 +4074,15 @@ function getAllLocations(){
 }
 
 function getLocations(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM locations Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM locations Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -3838,8 +4090,8 @@ function getLocations(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -3862,36 +4114,36 @@ function addLocation($data){
 
     $log->info("Started save function.");
 
-	$Area = trim($data->Area);
-	$Capital_cities = trim($data->Capital_cities);
-	$Climate = trim($data->Climate);
-	$Crops = trim($data->Crops);
-	$Currency = trim($data->Currency);
 	$Description = trim($data->Description);
-	$Established_Year = trim($data->Established_Year);
-	$Founding_Story = trim($data->Founding_Story);
-	$Landmarks = trim($data->Landmarks);
-	$Language = trim($data->Language);
-	$Largest_cities = trim($data->Largest_cities);
-	$Laws = trim($data->Laws);
-	$Leaders = trim($data->Leaders);
-	$Located_at = trim($data->Located_at);
-	$Motto = trim($data->Motto);
-	$Name = trim($data->Name);
-	$Notable_cities = trim($data->Notable_cities);
-	$Notable_Wars = trim($data->Notable_Wars);
-	$Notes = trim($data->Notes);
-	$Population = trim($data->Population);
-	$Private_Notes = trim($data->Private_Notes);
-	$Spoken_Languages = trim($data->Spoken_Languages);
-	$Sports = trim($data->Sports);
-	$Tags = trim($data->Tags);
-	$Type = trim($data->Type);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Type = trim($data->Type);
+	$Leaders = trim($data->Leaders);
+	$Language = trim($data->Language);
+	$Population = trim($data->Population);
+	$Currency = trim($data->Currency);
+	$Motto = trim($data->Motto);
+	$Sports = trim($data->Sports);
+	$Laws = trim($data->Laws);
+	$Spoken_Languages = trim($data->Spoken_Languages);
+	$Largest_cities = trim($data->Largest_cities);
+	$Notable_cities = trim($data->Notable_cities);
+	$Capital_cities = trim($data->Capital_cities);
+	$Landmarks = trim($data->Landmarks);
+	$Area = trim($data->Area);
+	$Crops = trim($data->Crops);
+	$Located_at = trim($data->Located_at);
+	$Climate = trim($data->Climate);
+	$Notable_Wars = trim($data->Notable_Wars);
+	$Founding_Story = trim($data->Founding_Story);
+	$Established_Year = trim($data->Established_Year);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO locations(Area,Capital_cities,Climate,Crops,Currency,Description,Established_Year,Founding_Story,Landmarks,Language,Largest_cities,Laws,Leaders,Located_at,Motto,Name,Notable_cities,Notable_Wars,Notes,Population,Private_Notes,Spoken_Languages,Sports,Tags,Type,Universe) 
-VALUES('$Area','$Capital_cities','$Climate','$Crops','$Currency','$Description','$Established_Year','$Founding_Story','$Landmarks','$Language','$Largest_cities','$Laws','$Leaders','$Located_at','$Motto','$Name','$Notable_cities','$Notable_Wars','$Notes','$Population','$Private_Notes','$Spoken_Languages','$Sports','$Tags','$Type','$Universe')"; 
+    $sql = "INSERT INTO locations(Description,Universe,Tags,Name,Type,Leaders,Language,Population,Currency,Motto,Sports,Laws,Spoken_Languages,Largest_cities,Notable_cities,Capital_cities,Landmarks,Area,Crops,Located_at,Climate,Notable_Wars,Founding_Story,Established_Year,Notes,Private_Notes) 
+VALUES('$Description','$Universe','$Tags','$Name','$Type','$Leaders','$Language','$Population','$Currency','$Motto','$Sports','$Laws','$Spoken_Languages','$Largest_cities','$Notable_cities','$Capital_cities','$Landmarks','$Area','$Crops','$Located_at','$Climate','$Notable_Wars','$Founding_Story','$Established_Year','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -3962,36 +4214,36 @@ function updateLocation($data){
 
     $log->info("Started update function.");
 
-	$Area = trim($data->Area);
-	$Capital_cities = trim($data->Capital_cities);
-	$Climate = trim($data->Climate);
-	$Crops = trim($data->Crops);
-	$Currency = trim($data->Currency);
 	$Description = trim($data->Description);
-	$Established_Year = trim($data->Established_Year);
-	$Founding_Story = trim($data->Founding_Story);
-	$Landmarks = trim($data->Landmarks);
-	$Language = trim($data->Language);
-	$Largest_cities = trim($data->Largest_cities);
-	$Laws = trim($data->Laws);
-	$Leaders = trim($data->Leaders);
-	$Located_at = trim($data->Located_at);
-	$Motto = trim($data->Motto);
-	$Name = trim($data->Name);
-	$Notable_cities = trim($data->Notable_cities);
-	$Notable_Wars = trim($data->Notable_Wars);
-	$Notes = trim($data->Notes);
-	$Population = trim($data->Population);
-	$Private_Notes = trim($data->Private_Notes);
-	$Spoken_Languages = trim($data->Spoken_Languages);
-	$Sports = trim($data->Sports);
-	$Tags = trim($data->Tags);
-	$Type = trim($data->Type);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Type = trim($data->Type);
+	$Leaders = trim($data->Leaders);
+	$Language = trim($data->Language);
+	$Population = trim($data->Population);
+	$Currency = trim($data->Currency);
+	$Motto = trim($data->Motto);
+	$Sports = trim($data->Sports);
+	$Laws = trim($data->Laws);
+	$Spoken_Languages = trim($data->Spoken_Languages);
+	$Largest_cities = trim($data->Largest_cities);
+	$Notable_cities = trim($data->Notable_cities);
+	$Capital_cities = trim($data->Capital_cities);
+	$Landmarks = trim($data->Landmarks);
+	$Area = trim($data->Area);
+	$Crops = trim($data->Crops);
+	$Located_at = trim($data->Located_at);
+	$Climate = trim($data->Climate);
+	$Notable_Wars = trim($data->Notable_Wars);
+	$Founding_Story = trim($data->Founding_Story);
+	$Established_Year = trim($data->Established_Year);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE locations SET 
-Area = '$Area',Capital_cities = '$Capital_cities',Climate = '$Climate',Crops = '$Crops',Currency = '$Currency',Description = '$Description',Established_Year = '$Established_Year',Founding_Story = '$Founding_Story',Landmarks = '$Landmarks',Language = '$Language',Largest_cities = '$Largest_cities',Laws = '$Laws',Leaders = '$Leaders',Located_at = '$Located_at',Motto = '$Motto',Name = '$Name',Notable_cities = '$Notable_cities',Notable_Wars = '$Notable_Wars',Notes = '$Notes',Population = '$Population',Private_Notes = '$Private_Notes',Spoken_Languages = '$Spoken_Languages',Sports = '$Sports',Tags = '$Tags',Type = '$Type',Universe = '$Universe'    WHERE id = $id"; 
+Description = '$Description',Universe = '$Universe',Tags = '$Tags',Name = '$Name',Type = '$Type',Leaders = '$Leaders',Language = '$Language',Population = '$Population',Currency = '$Currency',Motto = '$Motto',Sports = '$Sports',Laws = '$Laws',Spoken_Languages = '$Spoken_Languages',Largest_cities = '$Largest_cities',Notable_cities = '$Notable_cities',Capital_cities = '$Capital_cities',Landmarks = '$Landmarks',Area = '$Area',Crops = '$Crops',Located_at = '$Located_at',Climate = '$Climate',Notable_Wars = '$Notable_Wars',Founding_Story = '$Founding_Story',Established_Year = '$Established_Year',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -4050,13 +4302,15 @@ function getAllLores(){
 }
 
 function getLores(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM lores Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM lores Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -4064,8 +4318,8 @@ function getLores(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -4088,78 +4342,78 @@ function addLore($data){
 
     $log->info("Started save function.");
 
-	$Background_information = trim($data->Background_information);
-	$Believability = trim($data->Believability);
-	$Believers = trim($data->Believers);
-	$Buildings = trim($data->Buildings);
-	$Characters = trim($data->Characters);
-	$Conditions = trim($data->Conditions);
-	$Continents = trim($data->Continents);
-	$Countries = trim($data->Countries);
-	$Created_phrases = trim($data->Created_phrases);
-	$Created_traditions = trim($data->Created_traditions);
-	$Creatures = trim($data->Creatures);
-	$Criticism = trim($data->Criticism);
-	$Date_recorded = trim($data->Date_recorded);
-	$Deities = trim($data->Deities);
-	$Dialect = trim($data->Dialect);
-	$Evolution_over_time = trim($data->Evolution_over_time);
-	$False_parts = trim($data->False_parts);
-	$Floras = trim($data->Floras);
-	$Foods = trim($data->Foods);
-	$Full_text = trim($data->Full_text);
-	$Genre = trim($data->Genre);
-	$Geographical_variations = trim($data->Geographical_variations);
-	$Governments = trim($data->Governments);
-	$Groups = trim($data->Groups);
-	$Historical_context = trim($data->Historical_context);
-	$Hoaxes = trim($data->Hoaxes);
-	$Impact = trim($data->Impact);
-	$Important_translations = trim($data->Important_translations);
-	$Influence_on_modern_times = trim($data->Influence_on_modern_times);
-	$Inspirations = trim($data->Inspirations);
-	$Interpretations = trim($data->Interpretations);
-	$Jobs = trim($data->Jobs);
-	$Landmarks = trim($data->Landmarks);
-	$Magic = trim($data->Magic);
-	$Media_adaptations = trim($data->Media_adaptations);
-	$Morals = trim($data->Morals);
-	$Motivations = trim($data->Motivations);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Original_author = trim($data->Original_author);
-	$Original_languages = trim($data->Original_languages);
-	$Original_telling = trim($data->Original_telling);
-	$Planets = trim($data->Planets);
-	$Private_Notes = trim($data->Private_Notes);
-	$Propagation_method = trim($data->Propagation_method);
-	$Races = trim($data->Races);
-	$Reception = trim($data->Reception);
-	$Related_lores = trim($data->Related_lores);
-	$Religions = trim($data->Religions);
-	$Schools = trim($data->Schools);
-	$Source = trim($data->Source);
-	$Sports = trim($data->Sports);
-	$Structure = trim($data->Structure);
-	$Subjects = trim($data->Subjects);
-	$Summary = trim($data->Summary);
-	$Symbolisms = trim($data->Symbolisms);
 	$Tags = trim($data->Tags);
-	$Technologies = trim($data->Technologies);
-	$Time_period = trim($data->Time_period);
-	$Tone = trim($data->Tone);
-	$Towns = trim($data->Towns);
-	$Traditions = trim($data->Traditions);
-	$Translation_variations = trim($data->Translation_variations);
-	$True_parts = trim($data->True_parts);
+	$Name = trim($data->Name);
+	$Summary = trim($data->Summary);
 	$Type = trim($data->Type);
 	$Universe = trim($data->Universe);
-	$Variations = trim($data->Variations);
+	$Tone = trim($data->Tone);
+	$Full_text = trim($data->Full_text);
+	$Dialect = trim($data->Dialect);
+	$Structure = trim($data->Structure);
+	$Genre = trim($data->Genre);
+	$Buildings = trim($data->Buildings);
+	$Time_period = trim($data->Time_period);
+	$Planets = trim($data->Planets);
+	$Continents = trim($data->Continents);
+	$Countries = trim($data->Countries);
+	$Landmarks = trim($data->Landmarks);
+	$Towns = trim($data->Towns);
+	$Schools = trim($data->Schools);
+	$Conditions = trim($data->Conditions);
+	$Sports = trim($data->Sports);
+	$Foods = trim($data->Foods);
+	$Traditions = trim($data->Traditions);
+	$Groups = trim($data->Groups);
+	$Governments = trim($data->Governments);
+	$Magic = trim($data->Magic);
+	$Religions = trim($data->Religions);
+	$Races = trim($data->Races);
 	$Vehicles = trim($data->Vehicles);
+	$Technologies = trim($data->Technologies);
+	$Jobs = trim($data->Jobs);
+	$Floras = trim($data->Floras);
+	$Creatures = trim($data->Creatures);
+	$Deities = trim($data->Deities);
+	$Characters = trim($data->Characters);
+	$Subjects = trim($data->Subjects);
+	$Believers = trim($data->Believers);
+	$Hoaxes = trim($data->Hoaxes);
+	$True_parts = trim($data->True_parts);
+	$False_parts = trim($data->False_parts);
+	$Believability = trim($data->Believability);
+	$Morals = trim($data->Morals);
+	$Symbolisms = trim($data->Symbolisms);
+	$Motivations = trim($data->Motivations);
+	$Created_phrases = trim($data->Created_phrases);
+	$Reception = trim($data->Reception);
+	$Criticism = trim($data->Criticism);
+	$Media_adaptations = trim($data->Media_adaptations);
+	$Interpretations = trim($data->Interpretations);
+	$Impact = trim($data->Impact);
+	$Created_traditions = trim($data->Created_traditions);
+	$Influence_on_modern_times = trim($data->Influence_on_modern_times);
+	$Original_telling = trim($data->Original_telling);
+	$Inspirations = trim($data->Inspirations);
+	$Original_author = trim($data->Original_author);
+	$Original_languages = trim($data->Original_languages);
+	$Source = trim($data->Source);
+	$Date_recorded = trim($data->Date_recorded);
+	$Background_information = trim($data->Background_information);
+	$Propagation_method = trim($data->Propagation_method);
+	$Historical_context = trim($data->Historical_context);
+	$Important_translations = trim($data->Important_translations);
+	$Evolution_over_time = trim($data->Evolution_over_time);
+	$Geographical_variations = trim($data->Geographical_variations);
+	$Related_lores = trim($data->Related_lores);
+	$Variations = trim($data->Variations);
+	$Translation_variations = trim($data->Translation_variations);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO lores(Background_information,Believability,Believers,Buildings,Characters,Conditions,Continents,Countries,Created_phrases,Created_traditions,Creatures,Criticism,Date_recorded,Deities,Dialect,Evolution_over_time,False_parts,Floras,Foods,Full_text,Genre,Geographical_variations,Governments,Groups,Historical_context,Hoaxes,Impact,Important_translations,Influence_on_modern_times,Inspirations,Interpretations,Jobs,Landmarks,Magic,Media_adaptations,Morals,Motivations,Name,Notes,Original_author,Original_languages,Original_telling,Planets,Private_Notes,Propagation_method,Races,Reception,Related_lores,Religions,Schools,Source,Sports,Structure,Subjects,Summary,Symbolisms,Tags,Technologies,Time_period,Tone,Towns,Traditions,Translation_variations,True_parts,Type,Universe,Variations,Vehicles) 
-VALUES('$Background_information','$Believability','$Believers','$Buildings','$Characters','$Conditions','$Continents','$Countries','$Created_phrases','$Created_traditions','$Creatures','$Criticism','$Date_recorded','$Deities','$Dialect','$Evolution_over_time','$False_parts','$Floras','$Foods','$Full_text','$Genre','$Geographical_variations','$Governments','$Groups','$Historical_context','$Hoaxes','$Impact','$Important_translations','$Influence_on_modern_times','$Inspirations','$Interpretations','$Jobs','$Landmarks','$Magic','$Media_adaptations','$Morals','$Motivations','$Name','$Notes','$Original_author','$Original_languages','$Original_telling','$Planets','$Private_Notes','$Propagation_method','$Races','$Reception','$Related_lores','$Religions','$Schools','$Source','$Sports','$Structure','$Subjects','$Summary','$Symbolisms','$Tags','$Technologies','$Time_period','$Tone','$Towns','$Traditions','$Translation_variations','$True_parts','$Type','$Universe','$Variations','$Vehicles')"; 
+    $sql = "INSERT INTO lores(Tags,Name,Summary,Type,Universe,Tone,Full_text,Dialect,Structure,Genre,Buildings,Time_period,Planets,Continents,Countries,Landmarks,Towns,Schools,Conditions,Sports,Foods,Traditions,Groups,Governments,Magic,Religions,Races,Vehicles,Technologies,Jobs,Floras,Creatures,Deities,Characters,Subjects,Believers,Hoaxes,True_parts,False_parts,Believability,Morals,Symbolisms,Motivations,Created_phrases,Reception,Criticism,Media_adaptations,Interpretations,Impact,Created_traditions,Influence_on_modern_times,Original_telling,Inspirations,Original_author,Original_languages,Source,Date_recorded,Background_information,Propagation_method,Historical_context,Important_translations,Evolution_over_time,Geographical_variations,Related_lores,Variations,Translation_variations,Private_Notes,Notes) 
+VALUES('$Tags','$Name','$Summary','$Type','$Universe','$Tone','$Full_text','$Dialect','$Structure','$Genre','$Buildings','$Time_period','$Planets','$Continents','$Countries','$Landmarks','$Towns','$Schools','$Conditions','$Sports','$Foods','$Traditions','$Groups','$Governments','$Magic','$Religions','$Races','$Vehicles','$Technologies','$Jobs','$Floras','$Creatures','$Deities','$Characters','$Subjects','$Believers','$Hoaxes','$True_parts','$False_parts','$Believability','$Morals','$Symbolisms','$Motivations','$Created_phrases','$Reception','$Criticism','$Media_adaptations','$Interpretations','$Impact','$Created_traditions','$Influence_on_modern_times','$Original_telling','$Inspirations','$Original_author','$Original_languages','$Source','$Date_recorded','$Background_information','$Propagation_method','$Historical_context','$Important_translations','$Evolution_over_time','$Geographical_variations','$Related_lores','$Variations','$Translation_variations','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -4230,78 +4484,78 @@ function updateLore($data){
 
     $log->info("Started update function.");
 
-	$Background_information = trim($data->Background_information);
-	$Believability = trim($data->Believability);
-	$Believers = trim($data->Believers);
-	$Buildings = trim($data->Buildings);
-	$Characters = trim($data->Characters);
-	$Conditions = trim($data->Conditions);
-	$Continents = trim($data->Continents);
-	$Countries = trim($data->Countries);
-	$Created_phrases = trim($data->Created_phrases);
-	$Created_traditions = trim($data->Created_traditions);
-	$Creatures = trim($data->Creatures);
-	$Criticism = trim($data->Criticism);
-	$Date_recorded = trim($data->Date_recorded);
-	$Deities = trim($data->Deities);
-	$Dialect = trim($data->Dialect);
-	$Evolution_over_time = trim($data->Evolution_over_time);
-	$False_parts = trim($data->False_parts);
-	$Floras = trim($data->Floras);
-	$Foods = trim($data->Foods);
-	$Full_text = trim($data->Full_text);
-	$Genre = trim($data->Genre);
-	$Geographical_variations = trim($data->Geographical_variations);
-	$Governments = trim($data->Governments);
-	$Groups = trim($data->Groups);
-	$Historical_context = trim($data->Historical_context);
-	$Hoaxes = trim($data->Hoaxes);
-	$Impact = trim($data->Impact);
-	$Important_translations = trim($data->Important_translations);
-	$Influence_on_modern_times = trim($data->Influence_on_modern_times);
-	$Inspirations = trim($data->Inspirations);
-	$Interpretations = trim($data->Interpretations);
-	$Jobs = trim($data->Jobs);
-	$Landmarks = trim($data->Landmarks);
-	$Magic = trim($data->Magic);
-	$Media_adaptations = trim($data->Media_adaptations);
-	$Morals = trim($data->Morals);
-	$Motivations = trim($data->Motivations);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Original_author = trim($data->Original_author);
-	$Original_languages = trim($data->Original_languages);
-	$Original_telling = trim($data->Original_telling);
-	$Planets = trim($data->Planets);
-	$Private_Notes = trim($data->Private_Notes);
-	$Propagation_method = trim($data->Propagation_method);
-	$Races = trim($data->Races);
-	$Reception = trim($data->Reception);
-	$Related_lores = trim($data->Related_lores);
-	$Religions = trim($data->Religions);
-	$Schools = trim($data->Schools);
-	$Source = trim($data->Source);
-	$Sports = trim($data->Sports);
-	$Structure = trim($data->Structure);
-	$Subjects = trim($data->Subjects);
-	$Summary = trim($data->Summary);
-	$Symbolisms = trim($data->Symbolisms);
 	$Tags = trim($data->Tags);
-	$Technologies = trim($data->Technologies);
-	$Time_period = trim($data->Time_period);
-	$Tone = trim($data->Tone);
-	$Towns = trim($data->Towns);
-	$Traditions = trim($data->Traditions);
-	$Translation_variations = trim($data->Translation_variations);
-	$True_parts = trim($data->True_parts);
+	$Name = trim($data->Name);
+	$Summary = trim($data->Summary);
 	$Type = trim($data->Type);
 	$Universe = trim($data->Universe);
-	$Variations = trim($data->Variations);
+	$Tone = trim($data->Tone);
+	$Full_text = trim($data->Full_text);
+	$Dialect = trim($data->Dialect);
+	$Structure = trim($data->Structure);
+	$Genre = trim($data->Genre);
+	$Buildings = trim($data->Buildings);
+	$Time_period = trim($data->Time_period);
+	$Planets = trim($data->Planets);
+	$Continents = trim($data->Continents);
+	$Countries = trim($data->Countries);
+	$Landmarks = trim($data->Landmarks);
+	$Towns = trim($data->Towns);
+	$Schools = trim($data->Schools);
+	$Conditions = trim($data->Conditions);
+	$Sports = trim($data->Sports);
+	$Foods = trim($data->Foods);
+	$Traditions = trim($data->Traditions);
+	$Groups = trim($data->Groups);
+	$Governments = trim($data->Governments);
+	$Magic = trim($data->Magic);
+	$Religions = trim($data->Religions);
+	$Races = trim($data->Races);
 	$Vehicles = trim($data->Vehicles);
+	$Technologies = trim($data->Technologies);
+	$Jobs = trim($data->Jobs);
+	$Floras = trim($data->Floras);
+	$Creatures = trim($data->Creatures);
+	$Deities = trim($data->Deities);
+	$Characters = trim($data->Characters);
+	$Subjects = trim($data->Subjects);
+	$Believers = trim($data->Believers);
+	$Hoaxes = trim($data->Hoaxes);
+	$True_parts = trim($data->True_parts);
+	$False_parts = trim($data->False_parts);
+	$Believability = trim($data->Believability);
+	$Morals = trim($data->Morals);
+	$Symbolisms = trim($data->Symbolisms);
+	$Motivations = trim($data->Motivations);
+	$Created_phrases = trim($data->Created_phrases);
+	$Reception = trim($data->Reception);
+	$Criticism = trim($data->Criticism);
+	$Media_adaptations = trim($data->Media_adaptations);
+	$Interpretations = trim($data->Interpretations);
+	$Impact = trim($data->Impact);
+	$Created_traditions = trim($data->Created_traditions);
+	$Influence_on_modern_times = trim($data->Influence_on_modern_times);
+	$Original_telling = trim($data->Original_telling);
+	$Inspirations = trim($data->Inspirations);
+	$Original_author = trim($data->Original_author);
+	$Original_languages = trim($data->Original_languages);
+	$Source = trim($data->Source);
+	$Date_recorded = trim($data->Date_recorded);
+	$Background_information = trim($data->Background_information);
+	$Propagation_method = trim($data->Propagation_method);
+	$Historical_context = trim($data->Historical_context);
+	$Important_translations = trim($data->Important_translations);
+	$Evolution_over_time = trim($data->Evolution_over_time);
+	$Geographical_variations = trim($data->Geographical_variations);
+	$Related_lores = trim($data->Related_lores);
+	$Variations = trim($data->Variations);
+	$Translation_variations = trim($data->Translation_variations);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE lores SET 
-Background_information = '$Background_information',Believability = '$Believability',Believers = '$Believers',Buildings = '$Buildings',Characters = '$Characters',Conditions = '$Conditions',Continents = '$Continents',Countries = '$Countries',Created_phrases = '$Created_phrases',Created_traditions = '$Created_traditions',Creatures = '$Creatures',Criticism = '$Criticism',Date_recorded = '$Date_recorded',Deities = '$Deities',Dialect = '$Dialect',Evolution_over_time = '$Evolution_over_time',False_parts = '$False_parts',Floras = '$Floras',Foods = '$Foods',Full_text = '$Full_text',Genre = '$Genre',Geographical_variations = '$Geographical_variations',Governments = '$Governments',Groups = '$Groups',Historical_context = '$Historical_context',Hoaxes = '$Hoaxes',Impact = '$Impact',Important_translations = '$Important_translations',Influence_on_modern_times = '$Influence_on_modern_times',Inspirations = '$Inspirations',Interpretations = '$Interpretations',Jobs = '$Jobs',Landmarks = '$Landmarks',Magic = '$Magic',Media_adaptations = '$Media_adaptations',Morals = '$Morals',Motivations = '$Motivations',Name = '$Name',Notes = '$Notes',Original_author = '$Original_author',Original_languages = '$Original_languages',Original_telling = '$Original_telling',Planets = '$Planets',Private_Notes = '$Private_Notes',Propagation_method = '$Propagation_method',Races = '$Races',Reception = '$Reception',Related_lores = '$Related_lores',Religions = '$Religions',Schools = '$Schools',Source = '$Source',Sports = '$Sports',Structure = '$Structure',Subjects = '$Subjects',Summary = '$Summary',Symbolisms = '$Symbolisms',Tags = '$Tags',Technologies = '$Technologies',Time_period = '$Time_period',Tone = '$Tone',Towns = '$Towns',Traditions = '$Traditions',Translation_variations = '$Translation_variations',True_parts = '$True_parts',Type = '$Type',Universe = '$Universe',Variations = '$Variations',Vehicles = '$Vehicles'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Summary = '$Summary',Type = '$Type',Universe = '$Universe',Tone = '$Tone',Full_text = '$Full_text',Dialect = '$Dialect',Structure = '$Structure',Genre = '$Genre',Buildings = '$Buildings',Time_period = '$Time_period',Planets = '$Planets',Continents = '$Continents',Countries = '$Countries',Landmarks = '$Landmarks',Towns = '$Towns',Schools = '$Schools',Conditions = '$Conditions',Sports = '$Sports',Foods = '$Foods',Traditions = '$Traditions',Groups = '$Groups',Governments = '$Governments',Magic = '$Magic',Religions = '$Religions',Races = '$Races',Vehicles = '$Vehicles',Technologies = '$Technologies',Jobs = '$Jobs',Floras = '$Floras',Creatures = '$Creatures',Deities = '$Deities',Characters = '$Characters',Subjects = '$Subjects',Believers = '$Believers',Hoaxes = '$Hoaxes',True_parts = '$True_parts',False_parts = '$False_parts',Believability = '$Believability',Morals = '$Morals',Symbolisms = '$Symbolisms',Motivations = '$Motivations',Created_phrases = '$Created_phrases',Reception = '$Reception',Criticism = '$Criticism',Media_adaptations = '$Media_adaptations',Interpretations = '$Interpretations',Impact = '$Impact',Created_traditions = '$Created_traditions',Influence_on_modern_times = '$Influence_on_modern_times',Original_telling = '$Original_telling',Inspirations = '$Inspirations',Original_author = '$Original_author',Original_languages = '$Original_languages',Source = '$Source',Date_recorded = '$Date_recorded',Background_information = '$Background_information',Propagation_method = '$Propagation_method',Historical_context = '$Historical_context',Important_translations = '$Important_translations',Evolution_over_time = '$Evolution_over_time',Geographical_variations = '$Geographical_variations',Related_lores = '$Related_lores',Variations = '$Variations',Translation_variations = '$Translation_variations',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -4360,13 +4614,15 @@ function getAllMagics(){
 }
 
 function getMagics(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM magics Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM magics Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -4374,8 +4630,8 @@ function getMagics(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -4398,32 +4654,32 @@ function addMagic($data){
 
     $log->info("Started save function.");
 
-	$Aftereffects = trim($data->Aftereffects);
-	$Conditions = trim($data->Conditions);
-	$Deities = trim($data->Deities);
-	$Description = trim($data->Description);
-	$Education = trim($data->Education);
-	$Effects = trim($data->Effects);
-	$Element = trim($data->Element);
-	$Limitations = trim($data->Limitations);
-	$Materials_required = trim($data->Materials_required);
-	$Name = trim($data->Name);
-	$Negative_effects = trim($data->Negative_effects);
-	$Neutral_effects = trim($data->Neutral_effects);
-	$Notes = trim($data->Notes);
-	$Positive_effects = trim($data->Positive_effects);
-	$Private_notes = trim($data->Private_notes);
-	$Resource_costs = trim($data->Resource_costs);
-	$Scale = trim($data->Scale);
-	$Skills_required = trim($data->Skills_required);
 	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
 	$Type_of_magic = trim($data->Type_of_magic);
 	$Universe = trim($data->Universe);
+	$Effects = trim($data->Effects);
 	$Visuals = trim($data->Visuals);
+	$Aftereffects = trim($data->Aftereffects);
+	$Conditions = trim($data->Conditions);
+	$Scale = trim($data->Scale);
+	$Negative_effects = trim($data->Negative_effects);
+	$Neutral_effects = trim($data->Neutral_effects);
+	$Positive_effects = trim($data->Positive_effects);
+	$Deities = trim($data->Deities);
+	$Element = trim($data->Element);
+	$Materials_required = trim($data->Materials_required);
+	$Skills_required = trim($data->Skills_required);
+	$Education = trim($data->Education);
+	$Resource_costs = trim($data->Resource_costs);
+	$Limitations = trim($data->Limitations);
+	$Private_notes = trim($data->Private_notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO magics(Aftereffects,Conditions,Deities,Description,Education,Effects,Element,Limitations,Materials_required,Name,Negative_effects,Neutral_effects,Notes,Positive_effects,Private_notes,Resource_costs,Scale,Skills_required,Tags,Type_of_magic,Universe,Visuals) 
-VALUES('$Aftereffects','$Conditions','$Deities','$Description','$Education','$Effects','$Element','$Limitations','$Materials_required','$Name','$Negative_effects','$Neutral_effects','$Notes','$Positive_effects','$Private_notes','$Resource_costs','$Scale','$Skills_required','$Tags','$Type_of_magic','$Universe','$Visuals')"; 
+    $sql = "INSERT INTO magics(Tags,Name,Description,Type_of_magic,Universe,Effects,Visuals,Aftereffects,Conditions,Scale,Negative_effects,Neutral_effects,Positive_effects,Deities,Element,Materials_required,Skills_required,Education,Resource_costs,Limitations,Private_notes,Notes) 
+VALUES('$Tags','$Name','$Description','$Type_of_magic','$Universe','$Effects','$Visuals','$Aftereffects','$Conditions','$Scale','$Negative_effects','$Neutral_effects','$Positive_effects','$Deities','$Element','$Materials_required','$Skills_required','$Education','$Resource_costs','$Limitations','$Private_notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -4494,32 +4750,32 @@ function updateMagic($data){
 
     $log->info("Started update function.");
 
-	$Aftereffects = trim($data->Aftereffects);
-	$Conditions = trim($data->Conditions);
-	$Deities = trim($data->Deities);
-	$Description = trim($data->Description);
-	$Education = trim($data->Education);
-	$Effects = trim($data->Effects);
-	$Element = trim($data->Element);
-	$Limitations = trim($data->Limitations);
-	$Materials_required = trim($data->Materials_required);
-	$Name = trim($data->Name);
-	$Negative_effects = trim($data->Negative_effects);
-	$Neutral_effects = trim($data->Neutral_effects);
-	$Notes = trim($data->Notes);
-	$Positive_effects = trim($data->Positive_effects);
-	$Private_notes = trim($data->Private_notes);
-	$Resource_costs = trim($data->Resource_costs);
-	$Scale = trim($data->Scale);
-	$Skills_required = trim($data->Skills_required);
 	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
 	$Type_of_magic = trim($data->Type_of_magic);
 	$Universe = trim($data->Universe);
+	$Effects = trim($data->Effects);
 	$Visuals = trim($data->Visuals);
+	$Aftereffects = trim($data->Aftereffects);
+	$Conditions = trim($data->Conditions);
+	$Scale = trim($data->Scale);
+	$Negative_effects = trim($data->Negative_effects);
+	$Neutral_effects = trim($data->Neutral_effects);
+	$Positive_effects = trim($data->Positive_effects);
+	$Deities = trim($data->Deities);
+	$Element = trim($data->Element);
+	$Materials_required = trim($data->Materials_required);
+	$Skills_required = trim($data->Skills_required);
+	$Education = trim($data->Education);
+	$Resource_costs = trim($data->Resource_costs);
+	$Limitations = trim($data->Limitations);
+	$Private_notes = trim($data->Private_notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE magics SET 
-Aftereffects = '$Aftereffects',Conditions = '$Conditions',Deities = '$Deities',Description = '$Description',Education = '$Education',Effects = '$Effects',Element = '$Element',Limitations = '$Limitations',Materials_required = '$Materials_required',Name = '$Name',Negative_effects = '$Negative_effects',Neutral_effects = '$Neutral_effects',Notes = '$Notes',Positive_effects = '$Positive_effects',Private_notes = '$Private_notes',Resource_costs = '$Resource_costs',Scale = '$Scale',Skills_required = '$Skills_required',Tags = '$Tags',Type_of_magic = '$Type_of_magic',Universe = '$Universe',Visuals = '$Visuals'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Description = '$Description',Type_of_magic = '$Type_of_magic',Universe = '$Universe',Effects = '$Effects',Visuals = '$Visuals',Aftereffects = '$Aftereffects',Conditions = '$Conditions',Scale = '$Scale',Negative_effects = '$Negative_effects',Neutral_effects = '$Neutral_effects',Positive_effects = '$Positive_effects',Deities = '$Deities',Element = '$Element',Materials_required = '$Materials_required',Skills_required = '$Skills_required',Education = '$Education',Resource_costs = '$Resource_costs',Limitations = '$Limitations',Private_notes = '$Private_notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -4578,13 +4834,15 @@ function getAllOrganizations(){
 }
 
 function getOrganizations(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM organizations Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM organizations Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -4592,8 +4850,8 @@ function getOrganizations(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -4616,33 +4874,33 @@ function addOrganization($data){
 
     $log->info("Started save function.");
 
-	$Address = trim($data->Address);
-	$Alternate_names = trim($data->Alternate_names);
-	$Closure_year = trim($data->Closure_year);
-	$Description = trim($data->Description);
-	$Formation_year = trim($data->Formation_year);
-	$Headquarters = trim($data->Headquarters);
-	$Locations = trim($data->Locations);
-	$Members = trim($data->Members);
 	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Offices = trim($data->Offices);
-	$Organization_structure = trim($data->Organization_structure);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Type_of_organization = trim($data->Type_of_organization);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
 	$Owner = trim($data->Owner);
-	$Private_Notes = trim($data->Private_Notes);
+	$Members = trim($data->Members);
 	$Purpose = trim($data->Purpose);
-	$Rival_organizations = trim($data->Rival_organizations);
 	$Services = trim($data->Services);
-	$Sister_organizations = trim($data->Sister_organizations);
 	$Sub_organizations = trim($data->Sub_organizations);
 	$Super_organizations = trim($data->Super_organizations);
-	$Tags = trim($data->Tags);
-	$Type_of_organization = trim($data->Type_of_organization);
-	$Universe = trim($data->Universe);
+	$Sister_organizations = trim($data->Sister_organizations);
+	$Organization_structure = trim($data->Organization_structure);
+	$Rival_organizations = trim($data->Rival_organizations);
+	$Address = trim($data->Address);
+	$Offices = trim($data->Offices);
+	$Locations = trim($data->Locations);
+	$Headquarters = trim($data->Headquarters);
+	$Formation_year = trim($data->Formation_year);
+	$Closure_year = trim($data->Closure_year);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO organizations(Address,Alternate_names,Closure_year,Description,Formation_year,Headquarters,Locations,Members,Name,Notes,Offices,Organization_structure,Owner,Private_Notes,Purpose,Rival_organizations,Services,Sister_organizations,Sub_organizations,Super_organizations,Tags,Type_of_organization,Universe) 
-VALUES('$Address','$Alternate_names','$Closure_year','$Description','$Formation_year','$Headquarters','$Locations','$Members','$Name','$Notes','$Offices','$Organization_structure','$Owner','$Private_Notes','$Purpose','$Rival_organizations','$Services','$Sister_organizations','$Sub_organizations','$Super_organizations','$Tags','$Type_of_organization','$Universe')"; 
+    $sql = "INSERT INTO organizations(Name,Universe,Description,Type_of_organization,Alternate_names,Tags,Owner,Members,Purpose,Services,Sub_organizations,Super_organizations,Sister_organizations,Organization_structure,Rival_organizations,Address,Offices,Locations,Headquarters,Formation_year,Closure_year,Notes,Private_Notes) 
+VALUES('$Name','$Universe','$Description','$Type_of_organization','$Alternate_names','$Tags','$Owner','$Members','$Purpose','$Services','$Sub_organizations','$Super_organizations','$Sister_organizations','$Organization_structure','$Rival_organizations','$Address','$Offices','$Locations','$Headquarters','$Formation_year','$Closure_year','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -4713,33 +4971,33 @@ function updateOrganization($data){
 
     $log->info("Started update function.");
 
-	$Address = trim($data->Address);
-	$Alternate_names = trim($data->Alternate_names);
-	$Closure_year = trim($data->Closure_year);
-	$Description = trim($data->Description);
-	$Formation_year = trim($data->Formation_year);
-	$Headquarters = trim($data->Headquarters);
-	$Locations = trim($data->Locations);
-	$Members = trim($data->Members);
 	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Offices = trim($data->Offices);
-	$Organization_structure = trim($data->Organization_structure);
+	$Universe = trim($data->Universe);
+	$Description = trim($data->Description);
+	$Type_of_organization = trim($data->Type_of_organization);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
 	$Owner = trim($data->Owner);
-	$Private_Notes = trim($data->Private_Notes);
+	$Members = trim($data->Members);
 	$Purpose = trim($data->Purpose);
-	$Rival_organizations = trim($data->Rival_organizations);
 	$Services = trim($data->Services);
-	$Sister_organizations = trim($data->Sister_organizations);
 	$Sub_organizations = trim($data->Sub_organizations);
 	$Super_organizations = trim($data->Super_organizations);
-	$Tags = trim($data->Tags);
-	$Type_of_organization = trim($data->Type_of_organization);
-	$Universe = trim($data->Universe);
+	$Sister_organizations = trim($data->Sister_organizations);
+	$Organization_structure = trim($data->Organization_structure);
+	$Rival_organizations = trim($data->Rival_organizations);
+	$Address = trim($data->Address);
+	$Offices = trim($data->Offices);
+	$Locations = trim($data->Locations);
+	$Headquarters = trim($data->Headquarters);
+	$Formation_year = trim($data->Formation_year);
+	$Closure_year = trim($data->Closure_year);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE organizations SET 
-Address = '$Address',Alternate_names = '$Alternate_names',Closure_year = '$Closure_year',Description = '$Description',Formation_year = '$Formation_year',Headquarters = '$Headquarters',Locations = '$Locations',Members = '$Members',Name = '$Name',Notes = '$Notes',Offices = '$Offices',Organization_structure = '$Organization_structure',Owner = '$Owner',Private_Notes = '$Private_Notes',Purpose = '$Purpose',Rival_organizations = '$Rival_organizations',Services = '$Services',Sister_organizations = '$Sister_organizations',Sub_organizations = '$Sub_organizations',Super_organizations = '$Super_organizations',Tags = '$Tags',Type_of_organization = '$Type_of_organization',Universe = '$Universe'    WHERE id = $id"; 
+Name = '$Name',Universe = '$Universe',Description = '$Description',Type_of_organization = '$Type_of_organization',Alternate_names = '$Alternate_names',Tags = '$Tags',Owner = '$Owner',Members = '$Members',Purpose = '$Purpose',Services = '$Services',Sub_organizations = '$Sub_organizations',Super_organizations = '$Super_organizations',Sister_organizations = '$Sister_organizations',Organization_structure = '$Organization_structure',Rival_organizations = '$Rival_organizations',Address = '$Address',Offices = '$Offices',Locations = '$Locations',Headquarters = '$Headquarters',Formation_year = '$Formation_year',Closure_year = '$Closure_year',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -4798,13 +5056,15 @@ function getAllPlanets(){
 }
 
 function getPlanets(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM planets Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM planets Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -4812,8 +5072,8 @@ function getPlanets(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -4836,51 +5096,51 @@ function addPlanet($data){
 
     $log->info("Started save function.");
 
-	$Atmosphere = trim($data->Atmosphere);
-	$Calendar_System = trim($data->Calendar_System);
-	$Climate = trim($data->Climate);
+	$Description = trim($data->Description);
+	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Weather = trim($data->Weather);
+	$Water_Content = trim($data->Water_Content);
+	$Natural_Resources = trim($data->Natural_Resources);
 	$Continents = trim($data->Continents);
 	$Countries = trim($data->Countries);
-	$Creatures = trim($data->Creatures);
-	$Day_sky = trim($data->Day_sky);
-	$Deities = trim($data->Deities);
-	$Description = trim($data->Description);
-	$First_Inhabitants_Story = trim($data->First_Inhabitants_Story);
-	$Flora = trim($data->Flora);
-	$Groups = trim($data->Groups);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Length_Of_Day = trim($data->Length_Of_Day);
-	$Length_Of_Night = trim($data->Length_Of_Night);
 	$Locations = trim($data->Locations);
-	$Moons = trim($data->Moons);
-	$Name = trim($data->Name);
-	$Natural_diasters = trim($data->Natural_diasters);
-	$Natural_Resources = trim($data->Natural_Resources);
-	$Nearby_planets = trim($data->Nearby_planets);
-	$Night_sky = trim($data->Night_sky);
-	$Notes = trim($data->Notes);
-	$Orbit = trim($data->Orbit);
-	$Population = trim($data->Population);
-	$Private_Notes = trim($data->Private_Notes);
-	$Races = trim($data->Races);
-	$Religions = trim($data->Religions);
-	$Seasons = trim($data->Seasons);
+	$Landmarks = trim($data->Landmarks);
 	$Size = trim($data->Size);
-	$Suns = trim($data->Suns);
 	$Surface = trim($data->Surface);
-	$Tags = trim($data->Tags);
+	$Climate = trim($data->Climate);
+	$Atmosphere = trim($data->Atmosphere);
+	$Seasons = trim($data->Seasons);
 	$Temperature = trim($data->Temperature);
+	$Natural_diasters = trim($data->Natural_diasters);
+	$Calendar_System = trim($data->Calendar_System);
+	$Day_sky = trim($data->Day_sky);
+	$Night_sky = trim($data->Night_sky);
+	$Length_Of_Night = trim($data->Length_Of_Night);
+	$Length_Of_Day = trim($data->Length_Of_Day);
 	$Towns = trim($data->Towns);
-	$Universe = trim($data->Universe);
+	$Population = trim($data->Population);
+	$Races = trim($data->Races);
+	$Flora = trim($data->Flora);
+	$Creatures = trim($data->Creatures);
+	$Religions = trim($data->Religions);
+	$Deities = trim($data->Deities);
+	$Groups = trim($data->Groups);
+	$Languages = trim($data->Languages);
 	$Visible_Constellations = trim($data->Visible_Constellations);
-	$Water_Content = trim($data->Water_Content);
-	$Weather = trim($data->Weather);
+	$Suns = trim($data->Suns);
+	$Moons = trim($data->Moons);
+	$Orbit = trim($data->Orbit);
+	$Nearby_planets = trim($data->Nearby_planets);
+	$First_Inhabitants_Story = trim($data->First_Inhabitants_Story);
 	$World_History = trim($data->World_History);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO planets(Atmosphere,Calendar_System,Climate,Continents,Countries,Creatures,Day_sky,Deities,Description,First_Inhabitants_Story,Flora,Groups,Landmarks,Languages,Length_Of_Day,Length_Of_Night,Locations,Moons,Name,Natural_diasters,Natural_Resources,Nearby_planets,Night_sky,Notes,Orbit,Population,Private_Notes,Races,Religions,Seasons,Size,Suns,Surface,Tags,Temperature,Towns,Universe,Visible_Constellations,Water_Content,Weather,World_History) 
-VALUES('$Atmosphere','$Calendar_System','$Climate','$Continents','$Countries','$Creatures','$Day_sky','$Deities','$Description','$First_Inhabitants_Story','$Flora','$Groups','$Landmarks','$Languages','$Length_Of_Day','$Length_Of_Night','$Locations','$Moons','$Name','$Natural_diasters','$Natural_Resources','$Nearby_planets','$Night_sky','$Notes','$Orbit','$Population','$Private_Notes','$Races','$Religions','$Seasons','$Size','$Suns','$Surface','$Tags','$Temperature','$Towns','$Universe','$Visible_Constellations','$Water_Content','$Weather','$World_History')"; 
+    $sql = "INSERT INTO planets(Description,Universe,Tags,Name,Weather,Water_Content,Natural_Resources,Continents,Countries,Locations,Landmarks,Size,Surface,Climate,Atmosphere,Seasons,Temperature,Natural_diasters,Calendar_System,Day_sky,Night_sky,Length_Of_Night,Length_Of_Day,Towns,Population,Races,Flora,Creatures,Religions,Deities,Groups,Languages,Visible_Constellations,Suns,Moons,Orbit,Nearby_planets,First_Inhabitants_Story,World_History,Private_Notes,Notes) 
+VALUES('$Description','$Universe','$Tags','$Name','$Weather','$Water_Content','$Natural_Resources','$Continents','$Countries','$Locations','$Landmarks','$Size','$Surface','$Climate','$Atmosphere','$Seasons','$Temperature','$Natural_diasters','$Calendar_System','$Day_sky','$Night_sky','$Length_Of_Night','$Length_Of_Day','$Towns','$Population','$Races','$Flora','$Creatures','$Religions','$Deities','$Groups','$Languages','$Visible_Constellations','$Suns','$Moons','$Orbit','$Nearby_planets','$First_Inhabitants_Story','$World_History','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -4951,51 +5211,51 @@ function updatePlanet($data){
 
     $log->info("Started update function.");
 
-	$Atmosphere = trim($data->Atmosphere);
-	$Calendar_System = trim($data->Calendar_System);
-	$Climate = trim($data->Climate);
+	$Description = trim($data->Description);
+	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Weather = trim($data->Weather);
+	$Water_Content = trim($data->Water_Content);
+	$Natural_Resources = trim($data->Natural_Resources);
 	$Continents = trim($data->Continents);
 	$Countries = trim($data->Countries);
-	$Creatures = trim($data->Creatures);
-	$Day_sky = trim($data->Day_sky);
-	$Deities = trim($data->Deities);
-	$Description = trim($data->Description);
-	$First_Inhabitants_Story = trim($data->First_Inhabitants_Story);
-	$Flora = trim($data->Flora);
-	$Groups = trim($data->Groups);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Length_Of_Day = trim($data->Length_Of_Day);
-	$Length_Of_Night = trim($data->Length_Of_Night);
 	$Locations = trim($data->Locations);
-	$Moons = trim($data->Moons);
-	$Name = trim($data->Name);
-	$Natural_diasters = trim($data->Natural_diasters);
-	$Natural_Resources = trim($data->Natural_Resources);
-	$Nearby_planets = trim($data->Nearby_planets);
-	$Night_sky = trim($data->Night_sky);
-	$Notes = trim($data->Notes);
-	$Orbit = trim($data->Orbit);
-	$Population = trim($data->Population);
-	$Private_Notes = trim($data->Private_Notes);
-	$Races = trim($data->Races);
-	$Religions = trim($data->Religions);
-	$Seasons = trim($data->Seasons);
+	$Landmarks = trim($data->Landmarks);
 	$Size = trim($data->Size);
-	$Suns = trim($data->Suns);
 	$Surface = trim($data->Surface);
-	$Tags = trim($data->Tags);
+	$Climate = trim($data->Climate);
+	$Atmosphere = trim($data->Atmosphere);
+	$Seasons = trim($data->Seasons);
 	$Temperature = trim($data->Temperature);
+	$Natural_diasters = trim($data->Natural_diasters);
+	$Calendar_System = trim($data->Calendar_System);
+	$Day_sky = trim($data->Day_sky);
+	$Night_sky = trim($data->Night_sky);
+	$Length_Of_Night = trim($data->Length_Of_Night);
+	$Length_Of_Day = trim($data->Length_Of_Day);
 	$Towns = trim($data->Towns);
-	$Universe = trim($data->Universe);
+	$Population = trim($data->Population);
+	$Races = trim($data->Races);
+	$Flora = trim($data->Flora);
+	$Creatures = trim($data->Creatures);
+	$Religions = trim($data->Religions);
+	$Deities = trim($data->Deities);
+	$Groups = trim($data->Groups);
+	$Languages = trim($data->Languages);
 	$Visible_Constellations = trim($data->Visible_Constellations);
-	$Water_Content = trim($data->Water_Content);
-	$Weather = trim($data->Weather);
+	$Suns = trim($data->Suns);
+	$Moons = trim($data->Moons);
+	$Orbit = trim($data->Orbit);
+	$Nearby_planets = trim($data->Nearby_planets);
+	$First_Inhabitants_Story = trim($data->First_Inhabitants_Story);
 	$World_History = trim($data->World_History);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE planets SET 
-Atmosphere = '$Atmosphere',Calendar_System = '$Calendar_System',Climate = '$Climate',Continents = '$Continents',Countries = '$Countries',Creatures = '$Creatures',Day_sky = '$Day_sky',Deities = '$Deities',Description = '$Description',First_Inhabitants_Story = '$First_Inhabitants_Story',Flora = '$Flora',Groups = '$Groups',Landmarks = '$Landmarks',Languages = '$Languages',Length_Of_Day = '$Length_Of_Day',Length_Of_Night = '$Length_Of_Night',Locations = '$Locations',Moons = '$Moons',Name = '$Name',Natural_diasters = '$Natural_diasters',Natural_Resources = '$Natural_Resources',Nearby_planets = '$Nearby_planets',Night_sky = '$Night_sky',Notes = '$Notes',Orbit = '$Orbit',Population = '$Population',Private_Notes = '$Private_Notes',Races = '$Races',Religions = '$Religions',Seasons = '$Seasons',Size = '$Size',Suns = '$Suns',Surface = '$Surface',Tags = '$Tags',Temperature = '$Temperature',Towns = '$Towns',Universe = '$Universe',Visible_Constellations = '$Visible_Constellations',Water_Content = '$Water_Content',Weather = '$Weather',World_History = '$World_History'    WHERE id = $id"; 
+Description = '$Description',Universe = '$Universe',Tags = '$Tags',Name = '$Name',Weather = '$Weather',Water_Content = '$Water_Content',Natural_Resources = '$Natural_Resources',Continents = '$Continents',Countries = '$Countries',Locations = '$Locations',Landmarks = '$Landmarks',Size = '$Size',Surface = '$Surface',Climate = '$Climate',Atmosphere = '$Atmosphere',Seasons = '$Seasons',Temperature = '$Temperature',Natural_diasters = '$Natural_diasters',Calendar_System = '$Calendar_System',Day_sky = '$Day_sky',Night_sky = '$Night_sky',Length_Of_Night = '$Length_Of_Night',Length_Of_Day = '$Length_Of_Day',Towns = '$Towns',Population = '$Population',Races = '$Races',Flora = '$Flora',Creatures = '$Creatures',Religions = '$Religions',Deities = '$Deities',Groups = '$Groups',Languages = '$Languages',Visible_Constellations = '$Visible_Constellations',Suns = '$Suns',Moons = '$Moons',Orbit = '$Orbit',Nearby_planets = '$Nearby_planets',First_Inhabitants_Story = '$First_Inhabitants_Story',World_History = '$World_History',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -5054,13 +5314,15 @@ function getAllRaces(){
 }
 
 function getRaces(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM races Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM races Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -5068,8 +5330,8 @@ function getRaces(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -5092,36 +5354,36 @@ function addRace($data){
 
     $log->info("Started save function.");
 
-	$Beliefs = trim($data->Beliefs);
-	$Body_shape = trim($data->Body_shape);
-	$Conditions = trim($data->Conditions);
-	$Description = trim($data->Description);
-	$Economics = trim($data->Economics);
-	$Famous_figures = trim($data->Famous_figures);
-	$Favorite_foods = trim($data->Favorite_foods);
-	$General_height = trim($data->General_height);
-	$General_weight = trim($data->General_weight);
-	$Governments = trim($data->Governments);
-	$Name = trim($data->Name);
-	$Notable_events = trim($data->Notable_events);
-	$Notable_features = trim($data->Notable_features);
-	$Notes = trim($data->Notes);
-	$Occupations = trim($data->Occupations);
 	$Other_Names = trim($data->Other_Names);
-	$Physical_variance = trim($data->Physical_variance);
-	$Private_notes = trim($data->Private_notes);
-	$Skin_colors = trim($data->Skin_colors);
-	$Strengths = trim($data->Strengths);
-	$Tags = trim($data->Tags);
-	$Technologies = trim($data->Technologies);
-	$Traditions = trim($data->Traditions);
-	$Typical_clothing = trim($data->Typical_clothing);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
+	$General_weight = trim($data->General_weight);
+	$Notable_features = trim($data->Notable_features);
+	$Physical_variance = trim($data->Physical_variance);
+	$Typical_clothing = trim($data->Typical_clothing);
+	$Body_shape = trim($data->Body_shape);
+	$Skin_colors = trim($data->Skin_colors);
+	$General_height = trim($data->General_height);
 	$Weaknesses = trim($data->Weaknesses);
+	$Conditions = trim($data->Conditions);
+	$Strengths = trim($data->Strengths);
+	$Favorite_foods = trim($data->Favorite_foods);
+	$Famous_figures = trim($data->Famous_figures);
+	$Traditions = trim($data->Traditions);
+	$Beliefs = trim($data->Beliefs);
+	$Governments = trim($data->Governments);
+	$Technologies = trim($data->Technologies);
+	$Occupations = trim($data->Occupations);
+	$Economics = trim($data->Economics);
+	$Notable_events = trim($data->Notable_events);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
-    $sql = "INSERT INTO races(Beliefs,Body_shape,Conditions,Description,Economics,Famous_figures,Favorite_foods,General_height,General_weight,Governments,Name,Notable_events,Notable_features,Notes,Occupations,Other_Names,Physical_variance,Private_notes,Skin_colors,Strengths,Tags,Technologies,Traditions,Typical_clothing,Universe,Weaknesses) 
-VALUES('$Beliefs','$Body_shape','$Conditions','$Description','$Economics','$Famous_figures','$Favorite_foods','$General_height','$General_weight','$Governments','$Name','$Notable_events','$Notable_features','$Notes','$Occupations','$Other_Names','$Physical_variance','$Private_notes','$Skin_colors','$Strengths','$Tags','$Technologies','$Traditions','$Typical_clothing','$Universe','$Weaknesses')"; 
+    $sql = "INSERT INTO races(Other_Names,Universe,Tags,Description,Name,General_weight,Notable_features,Physical_variance,Typical_clothing,Body_shape,Skin_colors,General_height,Weaknesses,Conditions,Strengths,Favorite_foods,Famous_figures,Traditions,Beliefs,Governments,Technologies,Occupations,Economics,Notable_events,Notes,Private_notes) 
+VALUES('$Other_Names','$Universe','$Tags','$Description','$Name','$General_weight','$Notable_features','$Physical_variance','$Typical_clothing','$Body_shape','$Skin_colors','$General_height','$Weaknesses','$Conditions','$Strengths','$Favorite_foods','$Famous_figures','$Traditions','$Beliefs','$Governments','$Technologies','$Occupations','$Economics','$Notable_events','$Notes','$Private_notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -5192,36 +5454,36 @@ function updateRace($data){
 
     $log->info("Started update function.");
 
-	$Beliefs = trim($data->Beliefs);
-	$Body_shape = trim($data->Body_shape);
-	$Conditions = trim($data->Conditions);
-	$Description = trim($data->Description);
-	$Economics = trim($data->Economics);
-	$Famous_figures = trim($data->Famous_figures);
-	$Favorite_foods = trim($data->Favorite_foods);
-	$General_height = trim($data->General_height);
-	$General_weight = trim($data->General_weight);
-	$Governments = trim($data->Governments);
-	$Name = trim($data->Name);
-	$Notable_events = trim($data->Notable_events);
-	$Notable_features = trim($data->Notable_features);
-	$Notes = trim($data->Notes);
-	$Occupations = trim($data->Occupations);
 	$Other_Names = trim($data->Other_Names);
-	$Physical_variance = trim($data->Physical_variance);
-	$Private_notes = trim($data->Private_notes);
-	$Skin_colors = trim($data->Skin_colors);
-	$Strengths = trim($data->Strengths);
-	$Tags = trim($data->Tags);
-	$Technologies = trim($data->Technologies);
-	$Traditions = trim($data->Traditions);
-	$Typical_clothing = trim($data->Typical_clothing);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
+	$General_weight = trim($data->General_weight);
+	$Notable_features = trim($data->Notable_features);
+	$Physical_variance = trim($data->Physical_variance);
+	$Typical_clothing = trim($data->Typical_clothing);
+	$Body_shape = trim($data->Body_shape);
+	$Skin_colors = trim($data->Skin_colors);
+	$General_height = trim($data->General_height);
 	$Weaknesses = trim($data->Weaknesses);
+	$Conditions = trim($data->Conditions);
+	$Strengths = trim($data->Strengths);
+	$Favorite_foods = trim($data->Favorite_foods);
+	$Famous_figures = trim($data->Famous_figures);
+	$Traditions = trim($data->Traditions);
+	$Beliefs = trim($data->Beliefs);
+	$Governments = trim($data->Governments);
+	$Technologies = trim($data->Technologies);
+	$Occupations = trim($data->Occupations);
+	$Economics = trim($data->Economics);
+	$Notable_events = trim($data->Notable_events);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
     $sql = "UPDATE races SET 
-Beliefs = '$Beliefs',Body_shape = '$Body_shape',Conditions = '$Conditions',Description = '$Description',Economics = '$Economics',Famous_figures = '$Famous_figures',Favorite_foods = '$Favorite_foods',General_height = '$General_height',General_weight = '$General_weight',Governments = '$Governments',Name = '$Name',Notable_events = '$Notable_events',Notable_features = '$Notable_features',Notes = '$Notes',Occupations = '$Occupations',Other_Names = '$Other_Names',Physical_variance = '$Physical_variance',Private_notes = '$Private_notes',Skin_colors = '$Skin_colors',Strengths = '$Strengths',Tags = '$Tags',Technologies = '$Technologies',Traditions = '$Traditions',Typical_clothing = '$Typical_clothing',Universe = '$Universe',Weaknesses = '$Weaknesses'    WHERE id = $id"; 
+Other_Names = '$Other_Names',Universe = '$Universe',Tags = '$Tags',Description = '$Description',Name = '$Name',General_weight = '$General_weight',Notable_features = '$Notable_features',Physical_variance = '$Physical_variance',Typical_clothing = '$Typical_clothing',Body_shape = '$Body_shape',Skin_colors = '$Skin_colors',General_height = '$General_height',Weaknesses = '$Weaknesses',Conditions = '$Conditions',Strengths = '$Strengths',Favorite_foods = '$Favorite_foods',Famous_figures = '$Famous_figures',Traditions = '$Traditions',Beliefs = '$Beliefs',Governments = '$Governments',Technologies = '$Technologies',Occupations = '$Occupations',Economics = '$Economics',Notable_events = '$Notable_events',Notes = '$Notes',Private_notes = '$Private_notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -5280,13 +5542,15 @@ function getAllReligions(){
 }
 
 function getReligions(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM religions Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM religions Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -5294,8 +5558,8 @@ function getReligions(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -5318,33 +5582,33 @@ function addReligion($data){
 
     $log->info("Started save function.");
 
-	$Artifacts = trim($data->Artifacts);
-	$Deities = trim($data->Deities);
-	$Description = trim($data->Description);
-	$Holidays = trim($data->Holidays);
-	$Initiation_process = trim($data->Initiation_process);
+	$Tags = trim($data->Tags);
 	$Name = trim($data->Name);
-	$Notable_figures = trim($data->Notable_figures);
-	$Notes = trim($data->Notes);
-	$Obligations = trim($data->Obligations);
-	$Origin_story = trim($data->Origin_story);
+	$Description = trim($data->Description);
 	$Other_Names = trim($data->Other_Names);
+	$Universe = trim($data->Universe);
+	$Notable_figures = trim($data->Notable_figures);
+	$Origin_story = trim($data->Origin_story);
+	$Artifacts = trim($data->Artifacts);
 	$Places_of_worship = trim($data->Places_of_worship);
+	$Vision_of_paradise = trim($data->Vision_of_paradise);
+	$Obligations = trim($data->Obligations);
+	$Worship_services = trim($data->Worship_services);
+	$Prophecies = trim($data->Prophecies);
+	$Teachings = trim($data->Teachings);
+	$Deities = trim($data->Deities);
+	$Initiation_process = trim($data->Initiation_process);
+	$Rituals = trim($data->Rituals);
+	$Holidays = trim($data->Holidays);
+	$Traditions = trim($data->Traditions);
 	$Practicing_locations = trim($data->Practicing_locations);
 	$Practicing_races = trim($data->Practicing_races);
 	$Private_notes = trim($data->Private_notes);
-	$Prophecies = trim($data->Prophecies);
-	$Rituals = trim($data->Rituals);
-	$Tags = trim($data->Tags);
-	$Teachings = trim($data->Teachings);
-	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
-	$Vision_of_paradise = trim($data->Vision_of_paradise);
-	$Worship_services = trim($data->Worship_services);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO religions(Artifacts,Deities,Description,Holidays,Initiation_process,Name,Notable_figures,Notes,Obligations,Origin_story,Other_Names,Places_of_worship,Practicing_locations,Practicing_races,Private_notes,Prophecies,Rituals,Tags,Teachings,Traditions,Universe,Vision_of_paradise,Worship_services) 
-VALUES('$Artifacts','$Deities','$Description','$Holidays','$Initiation_process','$Name','$Notable_figures','$Notes','$Obligations','$Origin_story','$Other_Names','$Places_of_worship','$Practicing_locations','$Practicing_races','$Private_notes','$Prophecies','$Rituals','$Tags','$Teachings','$Traditions','$Universe','$Vision_of_paradise','$Worship_services')"; 
+    $sql = "INSERT INTO religions(Tags,Name,Description,Other_Names,Universe,Notable_figures,Origin_story,Artifacts,Places_of_worship,Vision_of_paradise,Obligations,Worship_services,Prophecies,Teachings,Deities,Initiation_process,Rituals,Holidays,Traditions,Practicing_locations,Practicing_races,Private_notes,Notes) 
+VALUES('$Tags','$Name','$Description','$Other_Names','$Universe','$Notable_figures','$Origin_story','$Artifacts','$Places_of_worship','$Vision_of_paradise','$Obligations','$Worship_services','$Prophecies','$Teachings','$Deities','$Initiation_process','$Rituals','$Holidays','$Traditions','$Practicing_locations','$Practicing_races','$Private_notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -5415,33 +5679,33 @@ function updateReligion($data){
 
     $log->info("Started update function.");
 
-	$Artifacts = trim($data->Artifacts);
-	$Deities = trim($data->Deities);
-	$Description = trim($data->Description);
-	$Holidays = trim($data->Holidays);
-	$Initiation_process = trim($data->Initiation_process);
+	$Tags = trim($data->Tags);
 	$Name = trim($data->Name);
-	$Notable_figures = trim($data->Notable_figures);
-	$Notes = trim($data->Notes);
-	$Obligations = trim($data->Obligations);
-	$Origin_story = trim($data->Origin_story);
+	$Description = trim($data->Description);
 	$Other_Names = trim($data->Other_Names);
+	$Universe = trim($data->Universe);
+	$Notable_figures = trim($data->Notable_figures);
+	$Origin_story = trim($data->Origin_story);
+	$Artifacts = trim($data->Artifacts);
 	$Places_of_worship = trim($data->Places_of_worship);
+	$Vision_of_paradise = trim($data->Vision_of_paradise);
+	$Obligations = trim($data->Obligations);
+	$Worship_services = trim($data->Worship_services);
+	$Prophecies = trim($data->Prophecies);
+	$Teachings = trim($data->Teachings);
+	$Deities = trim($data->Deities);
+	$Initiation_process = trim($data->Initiation_process);
+	$Rituals = trim($data->Rituals);
+	$Holidays = trim($data->Holidays);
+	$Traditions = trim($data->Traditions);
 	$Practicing_locations = trim($data->Practicing_locations);
 	$Practicing_races = trim($data->Practicing_races);
 	$Private_notes = trim($data->Private_notes);
-	$Prophecies = trim($data->Prophecies);
-	$Rituals = trim($data->Rituals);
-	$Tags = trim($data->Tags);
-	$Teachings = trim($data->Teachings);
-	$Traditions = trim($data->Traditions);
-	$Universe = trim($data->Universe);
-	$Vision_of_paradise = trim($data->Vision_of_paradise);
-	$Worship_services = trim($data->Worship_services);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE religions SET 
-Artifacts = '$Artifacts',Deities = '$Deities',Description = '$Description',Holidays = '$Holidays',Initiation_process = '$Initiation_process',Name = '$Name',Notable_figures = '$Notable_figures',Notes = '$Notes',Obligations = '$Obligations',Origin_story = '$Origin_story',Other_Names = '$Other_Names',Places_of_worship = '$Places_of_worship',Practicing_locations = '$Practicing_locations',Practicing_races = '$Practicing_races',Private_notes = '$Private_notes',Prophecies = '$Prophecies',Rituals = '$Rituals',Tags = '$Tags',Teachings = '$Teachings',Traditions = '$Traditions',Universe = '$Universe',Vision_of_paradise = '$Vision_of_paradise',Worship_services = '$Worship_services'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Description = '$Description',Other_Names = '$Other_Names',Universe = '$Universe',Notable_figures = '$Notable_figures',Origin_story = '$Origin_story',Artifacts = '$Artifacts',Places_of_worship = '$Places_of_worship',Vision_of_paradise = '$Vision_of_paradise',Obligations = '$Obligations',Worship_services = '$Worship_services',Prophecies = '$Prophecies',Teachings = '$Teachings',Deities = '$Deities',Initiation_process = '$Initiation_process',Rituals = '$Rituals',Holidays = '$Holidays',Traditions = '$Traditions',Practicing_locations = '$Practicing_locations',Practicing_races = '$Practicing_races',Private_notes = '$Private_notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -5500,13 +5764,15 @@ function getAllScenes(){
 }
 
 function getScenes(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM scenes Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM scenes Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -5514,8 +5780,8 @@ function getScenes(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -5538,22 +5804,22 @@ function addScene($data){
 
     $log->info("Started save function.");
 
-	$Characters_in_scene = trim($data->Characters_in_scene);
-	$Description = trim($data->Description);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Summary = trim($data->Summary);
+	$Universe = trim($data->Universe);
 	$Items_in_scene = trim($data->Items_in_scene);
 	$Locations_in_scene = trim($data->Locations_in_scene);
-	$Name = trim($data->Name);
+	$Characters_in_scene = trim($data->Characters_in_scene);
+	$Description = trim($data->Description);
+	$Results = trim($data->Results);
+	$What_caused_this = trim($data->What_caused_this);
 	$Notes = trim($data->Notes);
 	$Private_notes = trim($data->Private_notes);
-	$Results = trim($data->Results);
-	$Summary = trim($data->Summary);
-	$Tags = trim($data->Tags);
-	$Universe = trim($data->Universe);
-	$What_caused_this = trim($data->What_caused_this);
 
 
-    $sql = "INSERT INTO scenes(Characters_in_scene,Description,Items_in_scene,Locations_in_scene,Name,Notes,Private_notes,Results,Summary,Tags,Universe,What_caused_this) 
-VALUES('$Characters_in_scene','$Description','$Items_in_scene','$Locations_in_scene','$Name','$Notes','$Private_notes','$Results','$Summary','$Tags','$Universe','$What_caused_this')"; 
+    $sql = "INSERT INTO scenes(Tags,Name,Summary,Universe,Items_in_scene,Locations_in_scene,Characters_in_scene,Description,Results,What_caused_this,Notes,Private_notes) 
+VALUES('$Tags','$Name','$Summary','$Universe','$Items_in_scene','$Locations_in_scene','$Characters_in_scene','$Description','$Results','$What_caused_this','$Notes','$Private_notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -5624,22 +5890,22 @@ function updateScene($data){
 
     $log->info("Started update function.");
 
-	$Characters_in_scene = trim($data->Characters_in_scene);
-	$Description = trim($data->Description);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Summary = trim($data->Summary);
+	$Universe = trim($data->Universe);
 	$Items_in_scene = trim($data->Items_in_scene);
 	$Locations_in_scene = trim($data->Locations_in_scene);
-	$Name = trim($data->Name);
+	$Characters_in_scene = trim($data->Characters_in_scene);
+	$Description = trim($data->Description);
+	$Results = trim($data->Results);
+	$What_caused_this = trim($data->What_caused_this);
 	$Notes = trim($data->Notes);
 	$Private_notes = trim($data->Private_notes);
-	$Results = trim($data->Results);
-	$Summary = trim($data->Summary);
-	$Tags = trim($data->Tags);
-	$Universe = trim($data->Universe);
-	$What_caused_this = trim($data->What_caused_this);
 
 
     $sql = "UPDATE scenes SET 
-Characters_in_scene = '$Characters_in_scene',Description = '$Description',Items_in_scene = '$Items_in_scene',Locations_in_scene = '$Locations_in_scene',Name = '$Name',Notes = '$Notes',Private_notes = '$Private_notes',Results = '$Results',Summary = '$Summary',Tags = '$Tags',Universe = '$Universe',What_caused_this = '$What_caused_this'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Summary = '$Summary',Universe = '$Universe',Items_in_scene = '$Items_in_scene',Locations_in_scene = '$Locations_in_scene',Characters_in_scene = '$Characters_in_scene',Description = '$Description',Results = '$Results',What_caused_this = '$What_caused_this',Notes = '$Notes',Private_notes = '$Private_notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -5698,13 +5964,15 @@ function getAllSports(){
 }
 
 function getSports(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM sports Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM sports Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -5712,8 +5980,8 @@ function getSports(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -5736,40 +6004,40 @@ function addSport($data){
 
     $log->info("Started save function.");
 
-	$Common_injuries = trim($data->Common_injuries);
-	$Countries = trim($data->Countries);
-	$Creators = trim($data->Creators);
-	$Description = trim($data->Description);
-	$Equipment = trim($data->Equipment);
-	$Evolution = trim($data->Evolution);
-	$Famous_games = trim($data->Famous_games);
-	$Game_time = trim($data->Game_time);
-	$How_to_win = trim($data->How_to_win);
-	$Merchandise = trim($data->Merchandise);
-	$Most_important_muscles = trim($data->Most_important_muscles);
-	$Name = trim($data->Name);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
 	$Nicknames = trim($data->Nicknames);
-	$Notes = trim($data->Notes);
-	$Number_of_players = trim($data->Number_of_players);
-	$Origin_story = trim($data->Origin_story);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
+	$How_to_win = trim($data->How_to_win);
 	$Penalties = trim($data->Penalties);
+	$Scoring = trim($data->Scoring);
+	$Number_of_players = trim($data->Number_of_players);
+	$Equipment = trim($data->Equipment);
 	$Play_area = trim($data->Play_area);
+	$Most_important_muscles = trim($data->Most_important_muscles);
+	$Common_injuries = trim($data->Common_injuries);
+	$Strategies = trim($data->Strategies);
+	$Positions = trim($data->Positions);
+	$Game_time = trim($data->Game_time);
+	$Rules = trim($data->Rules);
+	$Traditions = trim($data->Traditions);
+	$Teams = trim($data->Teams);
+	$Countries = trim($data->Countries);
 	$Players = trim($data->Players);
 	$Popularity = trim($data->Popularity);
-	$Positions = trim($data->Positions);
-	$Private_Notes = trim($data->Private_Notes);
-	$Rules = trim($data->Rules);
-	$Scoring = trim($data->Scoring);
-	$Strategies = trim($data->Strategies);
-	$Tags = trim($data->Tags);
-	$Teams = trim($data->Teams);
-	$Traditions = trim($data->Traditions);
+	$Merchandise = trim($data->Merchandise);
 	$Uniforms = trim($data->Uniforms);
-	$Universe = trim($data->Universe);
+	$Famous_games = trim($data->Famous_games);
+	$Evolution = trim($data->Evolution);
+	$Creators = trim($data->Creators);
+	$Origin_story = trim($data->Origin_story);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
-    $sql = "INSERT INTO sports(Common_injuries,Countries,Creators,Description,Equipment,Evolution,Famous_games,Game_time,How_to_win,Merchandise,Most_important_muscles,Name,Nicknames,Notes,Number_of_players,Origin_story,Penalties,Play_area,Players,Popularity,Positions,Private_Notes,Rules,Scoring,Strategies,Tags,Teams,Traditions,Uniforms,Universe) 
-VALUES('$Common_injuries','$Countries','$Creators','$Description','$Equipment','$Evolution','$Famous_games','$Game_time','$How_to_win','$Merchandise','$Most_important_muscles','$Name','$Nicknames','$Notes','$Number_of_players','$Origin_story','$Penalties','$Play_area','$Players','$Popularity','$Positions','$Private_Notes','$Rules','$Scoring','$Strategies','$Tags','$Teams','$Traditions','$Uniforms','$Universe')"; 
+    $sql = "INSERT INTO sports(Tags,Universe,Nicknames,Description,Name,How_to_win,Penalties,Scoring,Number_of_players,Equipment,Play_area,Most_important_muscles,Common_injuries,Strategies,Positions,Game_time,Rules,Traditions,Teams,Countries,Players,Popularity,Merchandise,Uniforms,Famous_games,Evolution,Creators,Origin_story,Private_Notes,Notes) 
+VALUES('$Tags','$Universe','$Nicknames','$Description','$Name','$How_to_win','$Penalties','$Scoring','$Number_of_players','$Equipment','$Play_area','$Most_important_muscles','$Common_injuries','$Strategies','$Positions','$Game_time','$Rules','$Traditions','$Teams','$Countries','$Players','$Popularity','$Merchandise','$Uniforms','$Famous_games','$Evolution','$Creators','$Origin_story','$Private_Notes','$Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -5840,40 +6108,40 @@ function updateSport($data){
 
     $log->info("Started update function.");
 
-	$Common_injuries = trim($data->Common_injuries);
-	$Countries = trim($data->Countries);
-	$Creators = trim($data->Creators);
-	$Description = trim($data->Description);
-	$Equipment = trim($data->Equipment);
-	$Evolution = trim($data->Evolution);
-	$Famous_games = trim($data->Famous_games);
-	$Game_time = trim($data->Game_time);
-	$How_to_win = trim($data->How_to_win);
-	$Merchandise = trim($data->Merchandise);
-	$Most_important_muscles = trim($data->Most_important_muscles);
-	$Name = trim($data->Name);
+	$Tags = trim($data->Tags);
+	$Universe = trim($data->Universe);
 	$Nicknames = trim($data->Nicknames);
-	$Notes = trim($data->Notes);
-	$Number_of_players = trim($data->Number_of_players);
-	$Origin_story = trim($data->Origin_story);
+	$Description = trim($data->Description);
+	$Name = trim($data->Name);
+	$How_to_win = trim($data->How_to_win);
 	$Penalties = trim($data->Penalties);
+	$Scoring = trim($data->Scoring);
+	$Number_of_players = trim($data->Number_of_players);
+	$Equipment = trim($data->Equipment);
 	$Play_area = trim($data->Play_area);
+	$Most_important_muscles = trim($data->Most_important_muscles);
+	$Common_injuries = trim($data->Common_injuries);
+	$Strategies = trim($data->Strategies);
+	$Positions = trim($data->Positions);
+	$Game_time = trim($data->Game_time);
+	$Rules = trim($data->Rules);
+	$Traditions = trim($data->Traditions);
+	$Teams = trim($data->Teams);
+	$Countries = trim($data->Countries);
 	$Players = trim($data->Players);
 	$Popularity = trim($data->Popularity);
-	$Positions = trim($data->Positions);
-	$Private_Notes = trim($data->Private_Notes);
-	$Rules = trim($data->Rules);
-	$Scoring = trim($data->Scoring);
-	$Strategies = trim($data->Strategies);
-	$Tags = trim($data->Tags);
-	$Teams = trim($data->Teams);
-	$Traditions = trim($data->Traditions);
+	$Merchandise = trim($data->Merchandise);
 	$Uniforms = trim($data->Uniforms);
-	$Universe = trim($data->Universe);
+	$Famous_games = trim($data->Famous_games);
+	$Evolution = trim($data->Evolution);
+	$Creators = trim($data->Creators);
+	$Origin_story = trim($data->Origin_story);
+	$Private_Notes = trim($data->Private_Notes);
+	$Notes = trim($data->Notes);
 
 
     $sql = "UPDATE sports SET 
-Common_injuries = '$Common_injuries',Countries = '$Countries',Creators = '$Creators',Description = '$Description',Equipment = '$Equipment',Evolution = '$Evolution',Famous_games = '$Famous_games',Game_time = '$Game_time',How_to_win = '$How_to_win',Merchandise = '$Merchandise',Most_important_muscles = '$Most_important_muscles',Name = '$Name',Nicknames = '$Nicknames',Notes = '$Notes',Number_of_players = '$Number_of_players',Origin_story = '$Origin_story',Penalties = '$Penalties',Play_area = '$Play_area',Players = '$Players',Popularity = '$Popularity',Positions = '$Positions',Private_Notes = '$Private_Notes',Rules = '$Rules',Scoring = '$Scoring',Strategies = '$Strategies',Tags = '$Tags',Teams = '$Teams',Traditions = '$Traditions',Uniforms = '$Uniforms',Universe = '$Universe'    WHERE id = $id"; 
+Tags = '$Tags',Universe = '$Universe',Nicknames = '$Nicknames',Description = '$Description',Name = '$Name',How_to_win = '$How_to_win',Penalties = '$Penalties',Scoring = '$Scoring',Number_of_players = '$Number_of_players',Equipment = '$Equipment',Play_area = '$Play_area',Most_important_muscles = '$Most_important_muscles',Common_injuries = '$Common_injuries',Strategies = '$Strategies',Positions = '$Positions',Game_time = '$Game_time',Rules = '$Rules',Traditions = '$Traditions',Teams = '$Teams',Countries = '$Countries',Players = '$Players',Popularity = '$Popularity',Merchandise = '$Merchandise',Uniforms = '$Uniforms',Famous_games = '$Famous_games',Evolution = '$Evolution',Creators = '$Creators',Origin_story = '$Origin_story',Private_Notes = '$Private_Notes',Notes = '$Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -5932,13 +6200,15 @@ function getAllTechnologies(){
 }
 
 function getTechnologies(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM technologies Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM technologies Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -5946,8 +6216,8 @@ function getTechnologies(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -5970,39 +6240,39 @@ function addTechnologie($data){
 
     $log->info("Started save function.");
 
-	$Characters = trim($data->Characters);
-	$Child_technologies = trim($data->Child_technologies);
-	$Colors = trim($data->Colors);
-	$Cost = trim($data->Cost);
-	$Countries = trim($data->Countries);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Groups = trim($data->Groups);
-	$How_It_Works = trim($data->How_It_Works);
-	$Magic_effects = trim($data->Magic_effects);
-	$Manufacturing_Process = trim($data->Manufacturing_Process);
-	$Materials = trim($data->Materials);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Parent_technologies = trim($data->Parent_technologies);
-	$Physical_Description = trim($data->Physical_Description);
-	$Planets = trim($data->Planets);
-	$Private_Notes = trim($data->Private_Notes);
-	$Purpose = trim($data->Purpose);
-	$Rarity = trim($data->Rarity);
-	$Related_technologies = trim($data->Related_technologies);
-	$Resources_Used = trim($data->Resources_Used);
-	$Sales_Process = trim($data->Sales_Process);
-	$Size = trim($data->Size);
 	$Tags = trim($data->Tags);
-	$Towns = trim($data->Towns);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Other_Names = trim($data->Other_Names);
 	$Universe = trim($data->Universe);
+	$Sales_Process = trim($data->Sales_Process);
+	$Materials = trim($data->Materials);
+	$Manufacturing_Process = trim($data->Manufacturing_Process);
+	$Cost = trim($data->Cost);
+	$Planets = trim($data->Planets);
+	$Rarity = trim($data->Rarity);
+	$Creatures = trim($data->Creatures);
+	$Groups = trim($data->Groups);
+	$Countries = trim($data->Countries);
+	$Towns = trim($data->Towns);
+	$Characters = trim($data->Characters);
+	$Magic_effects = trim($data->Magic_effects);
+	$Resources_Used = trim($data->Resources_Used);
+	$How_It_Works = trim($data->How_It_Works);
+	$Purpose = trim($data->Purpose);
 	$Weight = trim($data->Weight);
+	$Physical_Description = trim($data->Physical_Description);
+	$Size = trim($data->Size);
+	$Colors = trim($data->Colors);
+	$Related_technologies = trim($data->Related_technologies);
+	$Parent_technologies = trim($data->Parent_technologies);
+	$Child_technologies = trim($data->Child_technologies);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO technologies(Characters,Child_technologies,Colors,Cost,Countries,Creatures,Description,Groups,How_It_Works,Magic_effects,Manufacturing_Process,Materials,Name,Notes,Other_Names,Parent_technologies,Physical_Description,Planets,Private_Notes,Purpose,Rarity,Related_technologies,Resources_Used,Sales_Process,Size,Tags,Towns,Universe,Weight) 
-VALUES('$Characters','$Child_technologies','$Colors','$Cost','$Countries','$Creatures','$Description','$Groups','$How_It_Works','$Magic_effects','$Manufacturing_Process','$Materials','$Name','$Notes','$Other_Names','$Parent_technologies','$Physical_Description','$Planets','$Private_Notes','$Purpose','$Rarity','$Related_technologies','$Resources_Used','$Sales_Process','$Size','$Tags','$Towns','$Universe','$Weight')"; 
+    $sql = "INSERT INTO technologies(Tags,Name,Description,Other_Names,Universe,Sales_Process,Materials,Manufacturing_Process,Cost,Planets,Rarity,Creatures,Groups,Countries,Towns,Characters,Magic_effects,Resources_Used,How_It_Works,Purpose,Weight,Physical_Description,Size,Colors,Related_technologies,Parent_technologies,Child_technologies,Notes,Private_Notes) 
+VALUES('$Tags','$Name','$Description','$Other_Names','$Universe','$Sales_Process','$Materials','$Manufacturing_Process','$Cost','$Planets','$Rarity','$Creatures','$Groups','$Countries','$Towns','$Characters','$Magic_effects','$Resources_Used','$How_It_Works','$Purpose','$Weight','$Physical_Description','$Size','$Colors','$Related_technologies','$Parent_technologies','$Child_technologies','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -6073,39 +6343,39 @@ function updateTechnologie($data){
 
     $log->info("Started update function.");
 
-	$Characters = trim($data->Characters);
-	$Child_technologies = trim($data->Child_technologies);
-	$Colors = trim($data->Colors);
-	$Cost = trim($data->Cost);
-	$Countries = trim($data->Countries);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Groups = trim($data->Groups);
-	$How_It_Works = trim($data->How_It_Works);
-	$Magic_effects = trim($data->Magic_effects);
-	$Manufacturing_Process = trim($data->Manufacturing_Process);
-	$Materials = trim($data->Materials);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Other_Names = trim($data->Other_Names);
-	$Parent_technologies = trim($data->Parent_technologies);
-	$Physical_Description = trim($data->Physical_Description);
-	$Planets = trim($data->Planets);
-	$Private_Notes = trim($data->Private_Notes);
-	$Purpose = trim($data->Purpose);
-	$Rarity = trim($data->Rarity);
-	$Related_technologies = trim($data->Related_technologies);
-	$Resources_Used = trim($data->Resources_Used);
-	$Sales_Process = trim($data->Sales_Process);
-	$Size = trim($data->Size);
 	$Tags = trim($data->Tags);
-	$Towns = trim($data->Towns);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Other_Names = trim($data->Other_Names);
 	$Universe = trim($data->Universe);
+	$Sales_Process = trim($data->Sales_Process);
+	$Materials = trim($data->Materials);
+	$Manufacturing_Process = trim($data->Manufacturing_Process);
+	$Cost = trim($data->Cost);
+	$Planets = trim($data->Planets);
+	$Rarity = trim($data->Rarity);
+	$Creatures = trim($data->Creatures);
+	$Groups = trim($data->Groups);
+	$Countries = trim($data->Countries);
+	$Towns = trim($data->Towns);
+	$Characters = trim($data->Characters);
+	$Magic_effects = trim($data->Magic_effects);
+	$Resources_Used = trim($data->Resources_Used);
+	$How_It_Works = trim($data->How_It_Works);
+	$Purpose = trim($data->Purpose);
 	$Weight = trim($data->Weight);
+	$Physical_Description = trim($data->Physical_Description);
+	$Size = trim($data->Size);
+	$Colors = trim($data->Colors);
+	$Related_technologies = trim($data->Related_technologies);
+	$Parent_technologies = trim($data->Parent_technologies);
+	$Child_technologies = trim($data->Child_technologies);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE technologies SET 
-Characters = '$Characters',Child_technologies = '$Child_technologies',Colors = '$Colors',Cost = '$Cost',Countries = '$Countries',Creatures = '$Creatures',Description = '$Description',Groups = '$Groups',How_It_Works = '$How_It_Works',Magic_effects = '$Magic_effects',Manufacturing_Process = '$Manufacturing_Process',Materials = '$Materials',Name = '$Name',Notes = '$Notes',Other_Names = '$Other_Names',Parent_technologies = '$Parent_technologies',Physical_Description = '$Physical_Description',Planets = '$Planets',Private_Notes = '$Private_Notes',Purpose = '$Purpose',Rarity = '$Rarity',Related_technologies = '$Related_technologies',Resources_Used = '$Resources_Used',Sales_Process = '$Sales_Process',Size = '$Size',Tags = '$Tags',Towns = '$Towns',Universe = '$Universe',Weight = '$Weight'    WHERE id = $id"; 
+Tags = '$Tags',Name = '$Name',Description = '$Description',Other_Names = '$Other_Names',Universe = '$Universe',Sales_Process = '$Sales_Process',Materials = '$Materials',Manufacturing_Process = '$Manufacturing_Process',Cost = '$Cost',Planets = '$Planets',Rarity = '$Rarity',Creatures = '$Creatures',Groups = '$Groups',Countries = '$Countries',Towns = '$Towns',Characters = '$Characters',Magic_effects = '$Magic_effects',Resources_Used = '$Resources_Used',How_It_Works = '$How_It_Works',Purpose = '$Purpose',Weight = '$Weight',Physical_Description = '$Physical_Description',Size = '$Size',Colors = '$Colors',Related_technologies = '$Related_technologies',Parent_technologies = '$Parent_technologies',Child_technologies = '$Child_technologies',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -6164,8 +6434,9 @@ function getAllTimelineEventEntities(){
 }
 
 function getTimelineEventEntities(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
@@ -6178,8 +6449,8 @@ function getTimelineEventEntities(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -6202,16 +6473,16 @@ function addTimelineevententitie($data){
 
     $log->info("Started save function.");
 
-	$Created_at = trim($data->Created_at);
-	$Entity_id = trim($data->Entity_id);
 	$Entity_type = trim($data->Entity_type);
-	$Notes = trim($data->Notes);
+	$Entity_id = trim($data->Entity_id);
 	$Timeline_event_id = trim($data->Timeline_event_id);
+	$Notes = trim($data->Notes);
+	$Created_at = trim($data->Created_at);
 	$Updated_at = trim($data->Updated_at);
 
 
-    $sql = "INSERT INTO timeline_event_entities(Created_at,Entity_id,Entity_type,Notes,Timeline_event_id,Updated_at) 
-VALUES('$Created_at','$Entity_id','$Entity_type','$Notes','$Timeline_event_id','$Updated_at')"; 
+    $sql = "INSERT INTO timeline_event_entities(Entity_type,Entity_id,Timeline_event_id,Notes,Created_at,Updated_at) 
+VALUES('$Entity_type','$Entity_id','$Timeline_event_id','$Notes','$Created_at','$Updated_at')"; 
 
 
     $log->info("sql".$sql."");
@@ -6282,16 +6553,16 @@ function updateTimelineevententitie($data){
 
     $log->info("Started update function.");
 
-	$Created_at = trim($data->Created_at);
-	$Entity_id = trim($data->Entity_id);
 	$Entity_type = trim($data->Entity_type);
-	$Notes = trim($data->Notes);
+	$Entity_id = trim($data->Entity_id);
 	$Timeline_event_id = trim($data->Timeline_event_id);
+	$Notes = trim($data->Notes);
+	$Created_at = trim($data->Created_at);
 	$Updated_at = trim($data->Updated_at);
 
 
     $sql = "UPDATE timeline_event_entities SET 
-Created_at = '$Created_at',Entity_id = '$Entity_id',Entity_type = '$Entity_type',Notes = '$Notes',Timeline_event_id = '$Timeline_event_id',Updated_at = '$Updated_at'    WHERE id = $id"; 
+Entity_type = '$Entity_type',Entity_id = '$Entity_id',Timeline_event_id = '$Timeline_event_id',Notes = '$Notes',Created_at = '$Created_at',Updated_at = '$Updated_at'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -6350,8 +6621,9 @@ function getAllTimelineEvents(){
 }
 
 function getTimelineEvents(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
@@ -6364,8 +6636,8 @@ function getTimelineEvents(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -6388,19 +6660,19 @@ function addTimelineevent($data){
 
     $log->info("Started save function.");
 
-	$Created_at = trim($data->Created_at);
-	$Deleted_at = trim($data->Deleted_at);
+	$Timeline_id = trim($data->Timeline_id);
+	$Time_label = trim($data->Time_label);
+	$Title = trim($data->Title);
 	$Description = trim($data->Description);
 	$Notes = trim($data->Notes);
 	$Position = trim($data->Position);
-	$Time_label = trim($data->Time_label);
-	$Timeline_id = trim($data->Timeline_id);
-	$Title = trim($data->Title);
+	$Created_at = trim($data->Created_at);
 	$Updated_at = trim($data->Updated_at);
+	$Deleted_at = trim($data->Deleted_at);
 
 
-    $sql = "INSERT INTO timeline_events(Created_at,Deleted_at,Description,Notes,Position,Time_label,Timeline_id,Title,Updated_at) 
-VALUES('$Created_at','$Deleted_at','$Description','$Notes','$Position','$Time_label','$Timeline_id','$Title','$Updated_at')"; 
+    $sql = "INSERT INTO timeline_events(Timeline_id,Time_label,Title,Description,Notes,Position,Created_at,Updated_at,Deleted_at) 
+VALUES('$Timeline_id','$Time_label','$Title','$Description','$Notes','$Position','$Created_at','$Updated_at','$Deleted_at')"; 
 
 
     $log->info("sql".$sql."");
@@ -6471,19 +6743,19 @@ function updateTimelineevent($data){
 
     $log->info("Started update function.");
 
-	$Created_at = trim($data->Created_at);
-	$Deleted_at = trim($data->Deleted_at);
+	$Timeline_id = trim($data->Timeline_id);
+	$Time_label = trim($data->Time_label);
+	$Title = trim($data->Title);
 	$Description = trim($data->Description);
 	$Notes = trim($data->Notes);
 	$Position = trim($data->Position);
-	$Time_label = trim($data->Time_label);
-	$Timeline_id = trim($data->Timeline_id);
-	$Title = trim($data->Title);
+	$Created_at = trim($data->Created_at);
 	$Updated_at = trim($data->Updated_at);
+	$Deleted_at = trim($data->Deleted_at);
 
 
     $sql = "UPDATE timeline_events SET 
-Created_at = '$Created_at',Deleted_at = '$Deleted_at',Description = '$Description',Notes = '$Notes',Position = '$Position',Time_label = '$Time_label',Timeline_id = '$Timeline_id',Title = '$Title',Updated_at = '$Updated_at'    WHERE id = $id"; 
+Timeline_id = '$Timeline_id',Time_label = '$Time_label',Title = '$Title',Description = '$Description',Notes = '$Notes',Position = '$Position',Created_at = '$Created_at',Updated_at = '$Updated_at',Deleted_at = '$Deleted_at'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -6542,13 +6814,15 @@ function getAllTimelines(){
 }
 
 function getTimelines(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM timelines Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM timelines Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -6556,8 +6830,8 @@ function getTimelines(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -6580,22 +6854,22 @@ function addTimeline($data){
 
     $log->info("Started save function.");
 
+	$Name = trim($data->Name);
+	$Universe_id = trim($data->Universe_id);
+	$User_id = trim($data->User_id);
+	$Page_type = trim($data->Page_type);
+	$Deleted_at = trim($data->Deleted_at);
 	$Archived_at = trim($data->Archived_at);
 	$Created_at = trim($data->Created_at);
-	$Deleted_at = trim($data->Deleted_at);
-	$Description = trim($data->Description);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Page_type = trim($data->Page_type);
-	$Private_notes = trim($data->Private_notes);
-	$Subtitle = trim($data->Subtitle);
-	$Universe_id = trim($data->Universe_id);
 	$Updated_at = trim($data->Updated_at);
-	$User_id = trim($data->User_id);
+	$Description = trim($data->Description);
+	$Subtitle = trim($data->Subtitle);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
-    $sql = "INSERT INTO timelines(Archived_at,Created_at,Deleted_at,Description,Name,Notes,Page_type,Private_notes,Subtitle,Universe_id,Updated_at,User_id) 
-VALUES('$Archived_at','$Created_at','$Deleted_at','$Description','$Name','$Notes','$Page_type','$Private_notes','$Subtitle','$Universe_id','$Updated_at','$User_id')"; 
+    $sql = "INSERT INTO timelines(Name,Universe_id,User_id,Page_type,Deleted_at,Archived_at,Created_at,Updated_at,Description,Subtitle,Notes,Private_notes) 
+VALUES('$Name','$Universe_id','$User_id','$Page_type','$Deleted_at','$Archived_at','$Created_at','$Updated_at','$Description','$Subtitle','$Notes','$Private_notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -6666,22 +6940,22 @@ function updateTimeline($data){
 
     $log->info("Started update function.");
 
+	$Name = trim($data->Name);
+	$Universe_id = trim($data->Universe_id);
+	$User_id = trim($data->User_id);
+	$Page_type = trim($data->Page_type);
+	$Deleted_at = trim($data->Deleted_at);
 	$Archived_at = trim($data->Archived_at);
 	$Created_at = trim($data->Created_at);
-	$Deleted_at = trim($data->Deleted_at);
-	$Description = trim($data->Description);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Page_type = trim($data->Page_type);
-	$Private_notes = trim($data->Private_notes);
-	$Subtitle = trim($data->Subtitle);
-	$Universe_id = trim($data->Universe_id);
 	$Updated_at = trim($data->Updated_at);
-	$User_id = trim($data->User_id);
+	$Description = trim($data->Description);
+	$Subtitle = trim($data->Subtitle);
+	$Notes = trim($data->Notes);
+	$Private_notes = trim($data->Private_notes);
 
 
     $sql = "UPDATE timelines SET 
-Archived_at = '$Archived_at',Created_at = '$Created_at',Deleted_at = '$Deleted_at',Description = '$Description',Name = '$Name',Notes = '$Notes',Page_type = '$Page_type',Private_notes = '$Private_notes',Subtitle = '$Subtitle',Universe_id = '$Universe_id',Updated_at = '$Updated_at',User_id = '$User_id'    WHERE id = $id"; 
+Name = '$Name',Universe_id = '$Universe_id',User_id = '$User_id',Page_type = '$Page_type',Deleted_at = '$Deleted_at',Archived_at = '$Archived_at',Created_at = '$Created_at',Updated_at = '$Updated_at',Description = '$Description',Subtitle = '$Subtitle',Notes = '$Notes',Private_notes = '$Private_notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -6740,13 +7014,15 @@ function getAllTowns(){
 }
 
 function getTowns(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM towns Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM towns Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -6754,8 +7030,8 @@ function getTowns(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -6778,36 +7054,36 @@ function addTown($data){
 
     $log->info("Started save function.");
 
-	$Buildings = trim($data->Buildings);
-	$Busy_areas = trim($data->Busy_areas);
-	$Citizens = trim($data->Citizens);
-	$Country = trim($data->Country);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Energy_sources = trim($data->Energy_sources);
-	$Established_year = trim($data->Established_year);
-	$Flora = trim($data->Flora);
-	$Food_sources = trim($data->Food_sources);
-	$Founding_story = trim($data->Founding_story);
-	$Groups = trim($data->Groups);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Laws = trim($data->Laws);
-	$Name = trim($data->Name);
-	$Neighborhoods = trim($data->Neighborhoods);
-	$Notes = trim($data->Notes);
-	$Other_names = trim($data->Other_names);
-	$Politics = trim($data->Politics);
-	$Private_Notes = trim($data->Private_Notes);
-	$Recycling = trim($data->Recycling);
-	$Sports = trim($data->Sports);
-	$Tags = trim($data->Tags);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Other_names = trim($data->Other_names);
+	$Country = trim($data->Country);
+	$Groups = trim($data->Groups);
+	$Citizens = trim($data->Citizens);
+	$Buildings = trim($data->Buildings);
+	$Neighborhoods = trim($data->Neighborhoods);
+	$Busy_areas = trim($data->Busy_areas);
+	$Landmarks = trim($data->Landmarks);
+	$Laws = trim($data->Laws);
+	$Languages = trim($data->Languages);
+	$Flora = trim($data->Flora);
+	$Creatures = trim($data->Creatures);
+	$Politics = trim($data->Politics);
+	$Sports = trim($data->Sports);
+	$Established_year = trim($data->Established_year);
+	$Founding_story = trim($data->Founding_story);
+	$Food_sources = trim($data->Food_sources);
 	$Waste = trim($data->Waste);
+	$Energy_sources = trim($data->Energy_sources);
+	$Recycling = trim($data->Recycling);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO towns(Buildings,Busy_areas,Citizens,Country,Creatures,Description,Energy_sources,Established_year,Flora,Food_sources,Founding_story,Groups,Landmarks,Languages,Laws,Name,Neighborhoods,Notes,Other_names,Politics,Private_Notes,Recycling,Sports,Tags,Universe,Waste) 
-VALUES('$Buildings','$Busy_areas','$Citizens','$Country','$Creatures','$Description','$Energy_sources','$Established_year','$Flora','$Food_sources','$Founding_story','$Groups','$Landmarks','$Languages','$Laws','$Name','$Neighborhoods','$Notes','$Other_names','$Politics','$Private_Notes','$Recycling','$Sports','$Tags','$Universe','$Waste')"; 
+    $sql = "INSERT INTO towns(Universe,Tags,Name,Description,Other_names,Country,Groups,Citizens,Buildings,Neighborhoods,Busy_areas,Landmarks,Laws,Languages,Flora,Creatures,Politics,Sports,Established_year,Founding_story,Food_sources,Waste,Energy_sources,Recycling,Notes,Private_Notes) 
+VALUES('$Universe','$Tags','$Name','$Description','$Other_names','$Country','$Groups','$Citizens','$Buildings','$Neighborhoods','$Busy_areas','$Landmarks','$Laws','$Languages','$Flora','$Creatures','$Politics','$Sports','$Established_year','$Founding_story','$Food_sources','$Waste','$Energy_sources','$Recycling','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -6878,36 +7154,36 @@ function updateTown($data){
 
     $log->info("Started update function.");
 
-	$Buildings = trim($data->Buildings);
-	$Busy_areas = trim($data->Busy_areas);
-	$Citizens = trim($data->Citizens);
-	$Country = trim($data->Country);
-	$Creatures = trim($data->Creatures);
-	$Description = trim($data->Description);
-	$Energy_sources = trim($data->Energy_sources);
-	$Established_year = trim($data->Established_year);
-	$Flora = trim($data->Flora);
-	$Food_sources = trim($data->Food_sources);
-	$Founding_story = trim($data->Founding_story);
-	$Groups = trim($data->Groups);
-	$Landmarks = trim($data->Landmarks);
-	$Languages = trim($data->Languages);
-	$Laws = trim($data->Laws);
-	$Name = trim($data->Name);
-	$Neighborhoods = trim($data->Neighborhoods);
-	$Notes = trim($data->Notes);
-	$Other_names = trim($data->Other_names);
-	$Politics = trim($data->Politics);
-	$Private_Notes = trim($data->Private_Notes);
-	$Recycling = trim($data->Recycling);
-	$Sports = trim($data->Sports);
-	$Tags = trim($data->Tags);
 	$Universe = trim($data->Universe);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Other_names = trim($data->Other_names);
+	$Country = trim($data->Country);
+	$Groups = trim($data->Groups);
+	$Citizens = trim($data->Citizens);
+	$Buildings = trim($data->Buildings);
+	$Neighborhoods = trim($data->Neighborhoods);
+	$Busy_areas = trim($data->Busy_areas);
+	$Landmarks = trim($data->Landmarks);
+	$Laws = trim($data->Laws);
+	$Languages = trim($data->Languages);
+	$Flora = trim($data->Flora);
+	$Creatures = trim($data->Creatures);
+	$Politics = trim($data->Politics);
+	$Sports = trim($data->Sports);
+	$Established_year = trim($data->Established_year);
+	$Founding_story = trim($data->Founding_story);
+	$Food_sources = trim($data->Food_sources);
 	$Waste = trim($data->Waste);
+	$Energy_sources = trim($data->Energy_sources);
+	$Recycling = trim($data->Recycling);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE towns SET 
-Buildings = '$Buildings',Busy_areas = '$Busy_areas',Citizens = '$Citizens',Country = '$Country',Creatures = '$Creatures',Description = '$Description',Energy_sources = '$Energy_sources',Established_year = '$Established_year',Flora = '$Flora',Food_sources = '$Food_sources',Founding_story = '$Founding_story',Groups = '$Groups',Landmarks = '$Landmarks',Languages = '$Languages',Laws = '$Laws',Name = '$Name',Neighborhoods = '$Neighborhoods',Notes = '$Notes',Other_names = '$Other_names',Politics = '$Politics',Private_Notes = '$Private_Notes',Recycling = '$Recycling',Sports = '$Sports',Tags = '$Tags',Universe = '$Universe',Waste = '$Waste'    WHERE id = $id"; 
+Universe = '$Universe',Tags = '$Tags',Name = '$Name',Description = '$Description',Other_names = '$Other_names',Country = '$Country',Groups = '$Groups',Citizens = '$Citizens',Buildings = '$Buildings',Neighborhoods = '$Neighborhoods',Busy_areas = '$Busy_areas',Landmarks = '$Landmarks',Laws = '$Laws',Languages = '$Languages',Flora = '$Flora',Creatures = '$Creatures',Politics = '$Politics',Sports = '$Sports',Established_year = '$Established_year',Founding_story = '$Founding_story',Food_sources = '$Food_sources',Waste = '$Waste',Energy_sources = '$Energy_sources',Recycling = '$Recycling',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -6966,13 +7242,15 @@ function getAllTraditions(){
 }
 
 function getTraditions(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM traditions Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM traditions Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -6980,8 +7258,8 @@ function getTraditions(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -7004,32 +7282,32 @@ function addTradition($data){
 
     $log->info("Started save function.");
 
-	$Activities = trim($data->Activities);
+	$Universe = trim($data->Universe);
 	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Type_of_tradition = trim($data->Type_of_tradition);
 	$Countries = trim($data->Countries);
 	$Dates = trim($data->Dates);
-	$Description = trim($data->Description);
-	$Etymology = trim($data->Etymology);
-	$Food = trim($data->Food);
-	$Games = trim($data->Games);
-	$Gifts = trim($data->Gifts);
 	$Groups = trim($data->Groups);
-	$Name = trim($data->Name);
+	$Towns = trim($data->Towns);
+	$Gifts = trim($data->Gifts);
+	$Food = trim($data->Food);
+	$Symbolism = trim($data->Symbolism);
+	$Games = trim($data->Games);
+	$Activities = trim($data->Activities);
+	$Etymology = trim($data->Etymology);
+	$Origin = trim($data->Origin);
+	$Significance = trim($data->Significance);
+	$Religions = trim($data->Religions);
 	$Notable_events = trim($data->Notable_events);
 	$Notes = trim($data->Notes);
-	$Origin = trim($data->Origin);
 	$Private_Notes = trim($data->Private_Notes);
-	$Religions = trim($data->Religions);
-	$Significance = trim($data->Significance);
-	$Symbolism = trim($data->Symbolism);
-	$Tags = trim($data->Tags);
-	$Towns = trim($data->Towns);
-	$Type_of_tradition = trim($data->Type_of_tradition);
-	$Universe = trim($data->Universe);
 
 
-    $sql = "INSERT INTO traditions(Activities,Alternate_names,Countries,Dates,Description,Etymology,Food,Games,Gifts,Groups,Name,Notable_events,Notes,Origin,Private_Notes,Religions,Significance,Symbolism,Tags,Towns,Type_of_tradition,Universe) 
-VALUES('$Activities','$Alternate_names','$Countries','$Dates','$Description','$Etymology','$Food','$Games','$Gifts','$Groups','$Name','$Notable_events','$Notes','$Origin','$Private_Notes','$Religions','$Significance','$Symbolism','$Tags','$Towns','$Type_of_tradition','$Universe')"; 
+    $sql = "INSERT INTO traditions(Universe,Alternate_names,Tags,Name,Description,Type_of_tradition,Countries,Dates,Groups,Towns,Gifts,Food,Symbolism,Games,Activities,Etymology,Origin,Significance,Religions,Notable_events,Notes,Private_Notes) 
+VALUES('$Universe','$Alternate_names','$Tags','$Name','$Description','$Type_of_tradition','$Countries','$Dates','$Groups','$Towns','$Gifts','$Food','$Symbolism','$Games','$Activities','$Etymology','$Origin','$Significance','$Religions','$Notable_events','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -7100,32 +7378,32 @@ function updateTradition($data){
 
     $log->info("Started update function.");
 
-	$Activities = trim($data->Activities);
+	$Universe = trim($data->Universe);
 	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Type_of_tradition = trim($data->Type_of_tradition);
 	$Countries = trim($data->Countries);
 	$Dates = trim($data->Dates);
-	$Description = trim($data->Description);
-	$Etymology = trim($data->Etymology);
-	$Food = trim($data->Food);
-	$Games = trim($data->Games);
-	$Gifts = trim($data->Gifts);
 	$Groups = trim($data->Groups);
-	$Name = trim($data->Name);
+	$Towns = trim($data->Towns);
+	$Gifts = trim($data->Gifts);
+	$Food = trim($data->Food);
+	$Symbolism = trim($data->Symbolism);
+	$Games = trim($data->Games);
+	$Activities = trim($data->Activities);
+	$Etymology = trim($data->Etymology);
+	$Origin = trim($data->Origin);
+	$Significance = trim($data->Significance);
+	$Religions = trim($data->Religions);
 	$Notable_events = trim($data->Notable_events);
 	$Notes = trim($data->Notes);
-	$Origin = trim($data->Origin);
 	$Private_Notes = trim($data->Private_Notes);
-	$Religions = trim($data->Religions);
-	$Significance = trim($data->Significance);
-	$Symbolism = trim($data->Symbolism);
-	$Tags = trim($data->Tags);
-	$Towns = trim($data->Towns);
-	$Type_of_tradition = trim($data->Type_of_tradition);
-	$Universe = trim($data->Universe);
 
 
     $sql = "UPDATE traditions SET 
-Activities = '$Activities',Alternate_names = '$Alternate_names',Countries = '$Countries',Dates = '$Dates',Description = '$Description',Etymology = '$Etymology',Food = '$Food',Games = '$Games',Gifts = '$Gifts',Groups = '$Groups',Name = '$Name',Notable_events = '$Notable_events',Notes = '$Notes',Origin = '$Origin',Private_Notes = '$Private_Notes',Religions = '$Religions',Significance = '$Significance',Symbolism = '$Symbolism',Tags = '$Tags',Towns = '$Towns',Type_of_tradition = '$Type_of_tradition',Universe = '$Universe'    WHERE id = $id"; 
+Universe = '$Universe',Alternate_names = '$Alternate_names',Tags = '$Tags',Name = '$Name',Description = '$Description',Type_of_tradition = '$Type_of_tradition',Countries = '$Countries',Dates = '$Dates',Groups = '$Groups',Towns = '$Towns',Gifts = '$Gifts',Food = '$Food',Symbolism = '$Symbolism',Games = '$Games',Activities = '$Activities',Etymology = '$Etymology',Origin = '$Origin',Significance = '$Significance',Religions = '$Religions',Notable_events = '$Notable_events',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -7184,13 +7462,15 @@ function getAllUniverses(){
 }
 
 function getUniverses(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM universes Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM universes Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -7198,8 +7478,8 @@ function getUniverses(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -7222,22 +7502,22 @@ function addUniverse($data){
 
     $log->info("Started save function.");
 
+	$name = trim($data->name);
 	$description = trim($data->description);
-	$favorite = trim($data->favorite);
-	$genre = trim($data->genre);
 	$history = trim($data->history);
+	$notes = trim($data->notes);
+	$private_notes = trim($data->private_notes);
+	$privacy = trim($data->privacy);
 	$laws_of_physics = trim($data->laws_of_physics);
 	$magic_system = trim($data->magic_system);
-	$name = trim($data->name);
-	$notes = trim($data->notes);
-	$page_type = trim($data->page_type);
-	$privacy = trim($data->privacy);
-	$private_notes = trim($data->private_notes);
 	$technology = trim($data->technology);
+	$genre = trim($data->genre);
+	$page_type = trim($data->page_type);
+	$favorite = trim($data->favorite);
 
 
-    $sql = "INSERT INTO universes(description,favorite,genre,history,laws_of_physics,magic_system,name,notes,page_type,privacy,private_notes,technology) 
-VALUES('$description','$favorite','$genre','$history','$laws_of_physics','$magic_system','$name','$notes','$page_type','$privacy','$private_notes','$technology')"; 
+    $sql = "INSERT INTO universes(name,description,history,notes,private_notes,privacy,laws_of_physics,magic_system,technology,genre,page_type,favorite) 
+VALUES('$name','$description','$history','$notes','$private_notes','$privacy','$laws_of_physics','$magic_system','$technology','$genre','$page_type','$favorite')"; 
 
 
     $log->info("sql".$sql."");
@@ -7308,22 +7588,22 @@ function updateUniverse($data){
 
     $log->info("Started update function.");
 
+	$name = trim($data->name);
 	$description = trim($data->description);
-	$favorite = trim($data->favorite);
-	$genre = trim($data->genre);
 	$history = trim($data->history);
+	$notes = trim($data->notes);
+	$private_notes = trim($data->private_notes);
+	$privacy = trim($data->privacy);
 	$laws_of_physics = trim($data->laws_of_physics);
 	$magic_system = trim($data->magic_system);
-	$name = trim($data->name);
-	$notes = trim($data->notes);
-	$page_type = trim($data->page_type);
-	$privacy = trim($data->privacy);
-	$private_notes = trim($data->private_notes);
 	$technology = trim($data->technology);
+	$genre = trim($data->genre);
+	$page_type = trim($data->page_type);
+	$favorite = trim($data->favorite);
 
 
     $sql = "UPDATE universes SET 
-description = '$description',favorite = '$favorite',genre = '$genre',history = '$history',laws_of_physics = '$laws_of_physics',magic_system = '$magic_system',name = '$name',notes = '$notes',page_type = '$page_type',privacy = '$privacy',private_notes = '$private_notes',technology = '$technology'    WHERE id = $id"; 
+name = '$name',description = '$description',history = '$history',notes = '$notes',private_notes = '$private_notes',privacy = '$privacy',laws_of_physics = '$laws_of_physics',magic_system = '$magic_system',technology = '$technology',genre = '$genre',page_type = '$page_type',favorite = '$favorite'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -7382,13 +7662,15 @@ function getAllVehicles(){
 }
 
 function getVehicles(){
-    $user_id = $_GET['user_id']; 
-    $id = $_GET['id']; 
+    $user_id = $_GET['user_id'];
+    $id = $_GET['id'];
+
+
     global $response;
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM vehicles Where user_id = '$user_id',id = '$id'";
+    $sql = "SELECT * FROM vehicles Where user_id = '$user_id' and id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -7396,8 +7678,8 @@ function getVehicles(){
 
     if ($result) {
         if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
             }
 
             $response->success = true;
@@ -7420,36 +7702,36 @@ function addVehicle($data){
 
     $log->info("Started save function.");
 
-	$Alternate_names = trim($data->Alternate_names);
-	$Colors = trim($data->Colors);
-	$Costs = trim($data->Costs);
-	$Country = trim($data->Country);
-	$Description = trim($data->Description);
-	$Designer = trim($data->Designer);
-	$Dimensions = trim($data->Dimensions);
-	$Distance = trim($data->Distance);
-	$Doors = trim($data->Doors);
-	$Features = trim($data->Features);
-	$Fuel = trim($data->Fuel);
-	$Manufacturer = trim($data->Manufacturer);
-	$Materials = trim($data->Materials);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Owner = trim($data->Owner);
-	$Private_Notes = trim($data->Private_Notes);
-	$Safety = trim($data->Safety);
-	$Size = trim($data->Size);
-	$Speed = trim($data->Speed);
-	$Tags = trim($data->Tags);
-	$Type_of_vehicle = trim($data->Type_of_vehicle);
 	$Universe = trim($data->Universe);
-	$Variants = trim($data->Variants);
-	$Weight = trim($data->Weight);
+	$Type_of_vehicle = trim($data->Type_of_vehicle);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Dimensions = trim($data->Dimensions);
+	$Size = trim($data->Size);
+	$Doors = trim($data->Doors);
+	$Materials = trim($data->Materials);
+	$Designer = trim($data->Designer);
 	$Windows = trim($data->Windows);
+	$Colors = trim($data->Colors);
+	$Distance = trim($data->Distance);
+	$Features = trim($data->Features);
+	$Safety = trim($data->Safety);
+	$Fuel = trim($data->Fuel);
+	$Speed = trim($data->Speed);
+	$Variants = trim($data->Variants);
+	$Manufacturer = trim($data->Manufacturer);
+	$Costs = trim($data->Costs);
+	$Weight = trim($data->Weight);
+	$Country = trim($data->Country);
+	$Owner = trim($data->Owner);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
-    $sql = "INSERT INTO vehicles(Alternate_names,Colors,Costs,Country,Description,Designer,Dimensions,Distance,Doors,Features,Fuel,Manufacturer,Materials,Name,Notes,Owner,Private_Notes,Safety,Size,Speed,Tags,Type_of_vehicle,Universe,Variants,Weight,Windows) 
-VALUES('$Alternate_names','$Colors','$Costs','$Country','$Description','$Designer','$Dimensions','$Distance','$Doors','$Features','$Fuel','$Manufacturer','$Materials','$Name','$Notes','$Owner','$Private_Notes','$Safety','$Size','$Speed','$Tags','$Type_of_vehicle','$Universe','$Variants','$Weight','$Windows')"; 
+    $sql = "INSERT INTO vehicles(Universe,Type_of_vehicle,Alternate_names,Tags,Name,Description,Dimensions,Size,Doors,Materials,Designer,Windows,Colors,Distance,Features,Safety,Fuel,Speed,Variants,Manufacturer,Costs,Weight,Country,Owner,Notes,Private_Notes) 
+VALUES('$Universe','$Type_of_vehicle','$Alternate_names','$Tags','$Name','$Description','$Dimensions','$Size','$Doors','$Materials','$Designer','$Windows','$Colors','$Distance','$Features','$Safety','$Fuel','$Speed','$Variants','$Manufacturer','$Costs','$Weight','$Country','$Owner','$Notes','$Private_Notes')"; 
 
 
     $log->info("sql".$sql."");
@@ -7520,36 +7802,36 @@ function updateVehicle($data){
 
     $log->info("Started update function.");
 
-	$Alternate_names = trim($data->Alternate_names);
-	$Colors = trim($data->Colors);
-	$Costs = trim($data->Costs);
-	$Country = trim($data->Country);
-	$Description = trim($data->Description);
-	$Designer = trim($data->Designer);
-	$Dimensions = trim($data->Dimensions);
-	$Distance = trim($data->Distance);
-	$Doors = trim($data->Doors);
-	$Features = trim($data->Features);
-	$Fuel = trim($data->Fuel);
-	$Manufacturer = trim($data->Manufacturer);
-	$Materials = trim($data->Materials);
-	$Name = trim($data->Name);
-	$Notes = trim($data->Notes);
-	$Owner = trim($data->Owner);
-	$Private_Notes = trim($data->Private_Notes);
-	$Safety = trim($data->Safety);
-	$Size = trim($data->Size);
-	$Speed = trim($data->Speed);
-	$Tags = trim($data->Tags);
-	$Type_of_vehicle = trim($data->Type_of_vehicle);
 	$Universe = trim($data->Universe);
-	$Variants = trim($data->Variants);
-	$Weight = trim($data->Weight);
+	$Type_of_vehicle = trim($data->Type_of_vehicle);
+	$Alternate_names = trim($data->Alternate_names);
+	$Tags = trim($data->Tags);
+	$Name = trim($data->Name);
+	$Description = trim($data->Description);
+	$Dimensions = trim($data->Dimensions);
+	$Size = trim($data->Size);
+	$Doors = trim($data->Doors);
+	$Materials = trim($data->Materials);
+	$Designer = trim($data->Designer);
 	$Windows = trim($data->Windows);
+	$Colors = trim($data->Colors);
+	$Distance = trim($data->Distance);
+	$Features = trim($data->Features);
+	$Safety = trim($data->Safety);
+	$Fuel = trim($data->Fuel);
+	$Speed = trim($data->Speed);
+	$Variants = trim($data->Variants);
+	$Manufacturer = trim($data->Manufacturer);
+	$Costs = trim($data->Costs);
+	$Weight = trim($data->Weight);
+	$Country = trim($data->Country);
+	$Owner = trim($data->Owner);
+	$Notes = trim($data->Notes);
+	$Private_Notes = trim($data->Private_Notes);
 
 
     $sql = "UPDATE vehicles SET 
-Alternate_names = '$Alternate_names',Colors = '$Colors',Costs = '$Costs',Country = '$Country',Description = '$Description',Designer = '$Designer',Dimensions = '$Dimensions',Distance = '$Distance',Doors = '$Doors',Features = '$Features',Fuel = '$Fuel',Manufacturer = '$Manufacturer',Materials = '$Materials',Name = '$Name',Notes = '$Notes',Owner = '$Owner',Private_Notes = '$Private_Notes',Safety = '$Safety',Size = '$Size',Speed = '$Speed',Tags = '$Tags',Type_of_vehicle = '$Type_of_vehicle',Universe = '$Universe',Variants = '$Variants',Weight = '$Weight',Windows = '$Windows'    WHERE id = $id"; 
+Universe = '$Universe',Type_of_vehicle = '$Type_of_vehicle',Alternate_names = '$Alternate_names',Tags = '$Tags',Name = '$Name',Description = '$Description',Dimensions = '$Dimensions',Size = '$Size',Doors = '$Doors',Materials = '$Materials',Designer = '$Designer',Windows = '$Windows',Colors = '$Colors',Distance = '$Distance',Features = '$Features',Safety = '$Safety',Fuel = '$Fuel',Speed = '$Speed',Variants = '$Variants',Manufacturer = '$Manufacturer',Costs = '$Costs',Weight = '$Weight',Country = '$Country',Owner = '$Owner',Notes = '$Notes',Private_Notes = '$Private_Notes'    WHERE id = $id"; 
 
     $log->info("sql".$sql."");
                 
@@ -7989,6 +8271,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$procedureName = $_GET['procedureName'];
+
+	if ($procedureName == "getContentDetailsFromTypeID") {
+		getContentDetailsFromTypeID();
+	}
+
 	if ($procedureName == "getAllBuildings") {
 		getAllBuildings();
 	}

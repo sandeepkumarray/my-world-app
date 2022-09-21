@@ -1,0 +1,43 @@
+<c-row ngPreserveWhitespaces>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Angular Form Control</strong>
+      </c-card-header>
+      <c-card-body>
+        <c-col xs="12">
+          <c-row class="mb-3">
+            <label cLabel style="font-weight: bold;font-size: large;">Content Type</label>
+            <select aria-label="Default select example" cSelect style="border: 0px;" [(ngModel)]="selectedContentType"
+              (change)="contentTypeChanged($event)">
+              <option value="None">Select Content Type</option>
+              <option *ngFor="let content_type of content_type_list" [value]="content_type.name">
+                {{content_type.name}}
+              </option>
+            </select>
+            <div class="d-md-flex justify-content-md-center">
+              <button cButton style="width: 20%;margin: 1rem;" (click)="downloadTemplate()">Download Excel
+                Template</button>
+            </div>
+          </c-row>
+          <div class="mb-3">
+            <label cLabel style="font-weight: bold;font-size: large;">Upload Template with data.</label>
+            <input cFormControl id="excelFile" type="file" name="file" accept=".xlsx" (change)="onFileChange($event)" />
+            <div class="d-md-flex justify-content-md-center">
+              <button cButton style="width: 20%;margin: 1rem;" (click)="Upload()">Upload Excel Template</button>
+            </div>
+          </div>
+          <c-row>
+            <c-alert [visible]="alertVisible" color="danger" dismissible fade
+              variant="solid">
+              <ng-template cTemplateId="alertButtonCloseTemplate">
+                <button (click)="alertVisible=false" cButtonClose white></button>
+              </ng-template>
+              {{alertMessage}}
+            </c-alert>
+          </c-row>
+        </c-col>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

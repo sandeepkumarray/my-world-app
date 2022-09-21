@@ -1,0 +1,19 @@
+<c-row class="justify-content-md-center">
+    <c-col lg="6">
+        <div class="row">
+            <input placeholder="title" [(ngModel)]="title" readonly/>
+        </div>
+        <div class="row">
+            <a color="success" variant="outline" (click)="editDocument(id)" style="cursor: pointer; color: green;padding:0;">
+      Edit this document
+    </a>
+        </div>
+    </c-col>
+</c-row>
+<c-row class="justify-content-md-center" style="margin-top:20px;height:800px ">
+    <c-col lg="10">
+        <quill-view-html [content]="documentBody" 
+        format="text" 
+        theme="snow"></quill-view-html>
+    </c-col>
+</c-row>

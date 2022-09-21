@@ -1,9 +1,9 @@
-export class CharacterCompanions {
+import { BaseModel } from "./BaseModel";
+export class CharacterCompanions extends BaseModel {
 
-		public procedureName? : string;
-		public user_id? : string;
-		public character_id? : string;
-		public companion_id? : string;
-		public created_at? : string;
-		public updated_at? : string;
+		public user_id!: number;
+		public character_id!: number;
+		public companion_id!: number;
+		public created_at!: Date;
+		public updated_at!: Date;
 }

@@ -52,7 +52,7 @@ export class CreateContentComponent implements OnInit {
           this.myworldService.createItem(this.content_type, accountId).subscribe({
             next: (res) => {
               console.log(res);
-              this.router.navigate([this.content_type.toLowerCase() + "/" + res]);
+              this.router.navigate([this.content_type.toLowerCase() + "/" + res+ "/edit"]);
             }
           });
           //return RedirectToAction("View" + content_type, content_type, new { id = id });

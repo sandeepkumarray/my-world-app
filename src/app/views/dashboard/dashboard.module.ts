@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { CreateContentComponent } from './create-content/create-content.component';
-import { ButtonModule, CardModule, DropdownModule, FormModule, GridModule, SharedModule, WidgetModule } from '@coreui/angular';
+import { ButtonModule, CardModule, DropdownModule, FormModule, GridModule, SharedModule, WidgetModule, ProgressModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -27,7 +27,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SharedModule,
     ButtonModule,
     CardModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    ProgressModule
   ]
 })
 export class DashboardModule { }

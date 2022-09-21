@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContentPlans, ContentTypes, Users } from 'src/app/model';
@@ -32,7 +32,8 @@ export class DashboardComponent implements OnInit {
     private myworldService: MyworldService,
     private contentService: ContentService,
     private sanitized: DomSanitizer,
-    private router: Router) {
+    private router: Router,
+    private changeDetection: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -41,57 +42,65 @@ export class DashboardComponent implements OnInit {
     this.myworldService.getAllContentTypes().subscribe({
       next: (res) => {
         this.content_type_list = res;
-        
+        res.map(cnfg => {
+          this.authService.setValue(cnfg.name, cnfg);
+        });
       }
-    });  
-    
-    console.log(this.DashboardCreateItemList);
+    });
 
     this.myworldService.getDashboard(accountId).subscribe({
       next: (res) => {
-        
-        this.dashboardModel = res;
-        var createList = utility.getRandom(this.content_type_list, 3);
-        createList.forEach(c=>{
-          let dashboardItem: DashboardItem = new DashboardItem();
-          dashboardItem.Header = c.name,
-          dashboardItem.icon = c.icon,
-          dashboardItem.primary_color = c.primary_color,
-          dashboardItem.CountString = "You've created " + this.dashboardModel[c.name!.toLowerCase() + '_total'] + " " + c.name,
-          dashboardItem.ItemKey = c.name,
-          dashboardItem.Controller = c.name,
-          dashboardItem.Action = "View " + c.name
-          this.DashboardCreateItemList.push(dashboardItem);
-        });
+        if (res != null) {
+          this.dashboardModel = res;
+          var createList = utility.getRandom(this.content_type_list, 3);
+          createList.forEach(c => {
+            let dashboardItem: DashboardItem = new DashboardItem();
+            dashboardItem.Header = c.name,
+              dashboardItem.icon = c.icon,
+              dashboardItem.primary_color = c.primary_color,
+              dashboardItem.CountString = "You've created " + this.dashboardModel[c.name!.toLowerCase() + '_total'] + " " + c.name,
+              dashboardItem.ItemKey = c.name,
+              dashboardItem.Controller = c.name,
+              dashboardItem.Action = "View " + c.name
+            this.DashboardCreateItemList.push(dashboardItem);
+            this.changeDetection.detectChanges();
+          });
+        }
+      }
+    });
 
-        this.myworldService.getRecents(accountId).subscribe({
-          next: (res) => {
-            console.log(res);
-            this.DashboardRecentList = res.filter(r=> r.updated_at != null).sort(
-              (objA, objB) => new Date(objB.updated_at!).getTime()! - new Date(objA.updated_at!).getTime()!).slice(0, 5);
-              this.DashboardRecentList.forEach(r=>{
-                r.timeSince = utility.timeSince(new Date(r.updated_at!));
-              });
-          }
-        });
+    this.myworldService.getRecents(accountId).subscribe({
+      next: (res) => {
+        if (res != null) {
+          console.log(res);
+          this.DashboardRecentList = res.filter(r => r.updated_at != null).sort(
+            (objA, objB) => new Date(objB.updated_at!).getTime()! - new Date(objA.updated_at!).getTime()!).slice(0, 5);
+          this.DashboardRecentList.forEach(r => {
+            r.timeSince = utility.timeSince(new Date(r.updated_at!));
+          });
+          this.changeDetection.detectChanges();
+        }
+      }
+    });
 
-        this.myworldService.getUserContentPlans(accountId).subscribe({
-          next: (res) => {
-            this.userContentPlans = res;
-            this.PlanTemplate = JSON.parse(this.userContentPlans.plan_template);
-            this.PlanTemplate.PlanContentList!.forEach((item) => {
-              let dashboardItem: DashboardItem = new DashboardItem();
-              dashboardItem.Header = item.name;
-              dashboardItem.CountString = this.dashboardModel[item.name!.toLowerCase() + '_total'];
-              dashboardItem.Color = this.content_type_list!.find(c => c.name!.toLowerCase() == item.name!.toLowerCase())?.primary_color;
-              dashboardItem.icon = this.content_type_list!.find(c => c.name!.toLowerCase() == item.name!.toLowerCase())?.icon;
-              dashboardItem.ItemKey = item.name;
-              dashboardItem.Controller = item.name!.toLowerCase();
-              dashboardItem.Action = "View " + item.name;
-              this.DashboardItems.push(dashboardItem);
-            });          
-          }
-        });
+    this.myworldService.getUserContentPlans(accountId).subscribe({
+      next: (res) => {
+        if (res != null) {
+          this.userContentPlans = res;
+          this.PlanTemplate = JSON.parse(this.userContentPlans.plan_template);
+          this.PlanTemplate.PlanContentList!.forEach((item) => {
+            let dashboardItem: DashboardItem = new DashboardItem();
+            dashboardItem.Header = item.name;
+            dashboardItem.CountString = this.dashboardModel[item.name!.toLowerCase() + '_total'];
+            dashboardItem.Color = this.content_type_list!.find(c => c.name!.toLowerCase() == item.name!.toLowerCase())?.primary_color;
+            dashboardItem.icon = this.content_type_list!.find(c => c.name!.toLowerCase() == item.name!.toLowerCase())?.icon;
+            dashboardItem.ItemKey = item.name;
+            dashboardItem.Controller = item.name!.toLowerCase();
+            dashboardItem.Action = "View " + item.name;
+            this.DashboardItems.push(dashboardItem);
+            this.changeDetection.detectChanges();
+          });
+        }
       }
     });
   }

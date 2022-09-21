@@ -10,6 +10,60 @@ require "logWriter.php";
 $response = new dbResponse;
 $log = new logWriter;
 
+function createContent($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started createContent function.");
+
+	$content_type = trim($data->content_type);
+	$jsonData = trim($data->jsonData);
+	$user_id = trim($data->user_id);
+
+    $sqlInsertValues="";
+    $sqlInsertColumns="";
+
+    $arrayInsertValues = array();
+    $arrayInsertColumns = array();
+
+    $json = json_decode($jsonData, TRUE);
+    $columns = implode(", ",array_keys($json));
+    
+    $values  = implode("', '", array_values($json));
+    $sql = "INSERT INTO `$content_type`($columns) VALUES ('$values')";
+    
+    foreach($json as $key => $val) {
+        $log->info("KEY IS: $key<br/>");
+        $log->info("VALUE IS: $val<br/>");        
+    }
+
+    
+    $log->info("sql".$sql."");
+                
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Created successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed createContent function.");
+}
+
 function getRecents(){
     $user_id = $_GET['user_id']; 
     global $response;
@@ -26,7 +80,7 @@ function getRecents(){
     select tb.id,updated_at,tb.name,'floras' content_type, ct.icon, ct.primary_color from floras tb join content_types ct where ct.name = 'Floras' and user_id = $user_id union all 
     select tb.id,updated_at,tb.name,'foods' content_type, ct.icon, ct.primary_color from foods tb join content_types ct where ct.name = 'Foods' and user_id = $user_id union all 
     select tb.id,updated_at,tb.name,'governments' content_type, ct.icon, ct.primary_color from governments tb join content_types ct where ct.name = 'Governments' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'my_book.groups' content_type, ct.icon, ct.primary_color from my_book.groups tb join content_types ct where ct.name = 'Groups' and user_id = $user_id union all 
+    select tb.id,updated_at,tb.name,'groups' content_type, ct.icon, ct.primary_color from `groups` tb join content_types ct where ct.name = 'Groups' and user_id = $user_id union all 
     select tb.id,updated_at,tb.name,'items' content_type, ct.icon, ct.primary_color from items tb join content_types ct where ct.name = 'Items' and user_id = $user_id union all 
     select tb.id,updated_at,tb.name,'jobs' content_type, ct.icon, ct.primary_color from jobs tb join content_types ct where ct.name = 'Jobs' and user_id = $user_id union all 
     select tb.id,updated_at,tb.name,'landmarks' content_type, ct.icon, ct.primary_color from landmarks tb join content_types ct where ct.name = 'Landmarks' and user_id = $user_id union all 
@@ -3468,382 +3522,6 @@ created_by = '$created_by',created_date = '$created_date',fa_icon = '$fa_icon',i
     $log->info("Completed update function.");
 }
 
-function getAllDocuments(){
-    $user_id = $_GET['user_id']; 
-    global $response;
-    global $log;
-    global $link;
-
-    $sql = "SELECT * FROM documents Where user_id = '$user_id'";
-
-    $log->info("sql = ".$sql);
-    $result = mysqli_query($link, $sql);
-    $row_cnt = $result->num_rows;
-
-    if ($result) {
-        if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
-            }
-
-            $response->success = true;
-            $response->data = $myArray;
-            $result->close();
-        } else {
-            $response->success = false;
-            $response->message = "No data available in table";
-        }
-    } else {
-        $response->success = false;
-        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
-    }
-}
-
-function getDocuments(){
-    $user_id = $_GET['user_id'];
-    $id = $_GET['id'];
-
-
-    global $response;
-    global $log;
-    global $link;
-
-    $sql = "SELECT * FROM documents Where user_id = '$user_id',id = '$id'";
-
-    $log->info("sql = ".$sql);
-    $result = mysqli_query($link, $sql);
-    $row_cnt = $result->num_rows;
-
-    if ($result) {
-        if ($row_cnt > 0) {
-            while ($row = $result->fetch_object()) {
-                $myArray = $row;
-            }
-
-            $response->success = true;
-            $response->data = $myArray;
-            $result->close();
-        } else {
-            $response->success = false;
-            $response->message = "No data available in table";
-        }
-    } else {
-        $response->success = false;
-        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
-    }
-}
-
-function addDocument($data){
-    global $response;
-    global $log;
-    global $link;
-
-    $log->info("Started save function.");
-
-	$body = trim($data->body);
-	$cached_word_count = trim($data->cached_word_count);
-	$favorite = trim($data->favorite);
-	$folder_id = trim($data->folder_id);
-	$notes_text = trim($data->notes_text);
-	$privacy = trim($data->privacy);
-	$synopsis = trim($data->synopsis);
-	$title = trim($data->title);
-	$universe_id = trim($data->universe_id);
-
-
-    $sql = "INSERT INTO documents(body,cached_word_count,favorite,folder_id,notes_text,privacy,synopsis,title,universe_id) 
-VALUES('$body','$cached_word_count','$favorite','$folder_id','$notes_text','$privacy','$synopsis','$title','$universe_id')"; 
-
-
-    $log->info("sql".$sql."");
-                
-    if($stmt = mysqli_prepare($link, $sql)){
-          
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-            $response->success = true;
-            $priority_id = $stmt->insert_id;
-            $response->data = $stmt->insert_id;
-            $response->message = "Updated successfully!!!";
-        } 
-        else{
-            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
-            $log->info("".$dberror."");
-            $response->success = false;
-            $response->message = "Something went wrong.Please try again later.";
-        }
-    }
-            
-    // Close statement
-    mysqli_stmt_close($stmt);
-            
-    $log->info("Completed update function.");
-}
-
-function deleteDocument($data){
-    global $response;
-    global $log;
-    global $link;
-
-    $log->info("Started delete function.");
-
-    $id = trim($data->id);
-
-    $sql = "DELETE FROM documents WHERE id = $id; ";
-
-    $log->info("sql".$sql."");
-
-    if($stmt = mysqli_prepare($link, $sql)){
-          
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-            $response->success = true;
-            $priority_id = $stmt->insert_id;
-            $response->data = $stmt->insert_id;
-            $response->message = "Deleted successfully!!!";
-        } 
-        else{
-            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
-            $log->info("".$dberror."");
-            $response->success = false;
-            $response->message = "Something went wrong.Please try again later.";
-        }
-    }
-            
-    // Close statement
-    mysqli_stmt_close($stmt);            
-    $log->info("Completed delete function.");
-}
-
-function updateDocument($data){
-    global $response;
-    global $log;
-    global $link;
-    $id = $_GET['id']; 
-
-    $log->info("Started update function.");
-
-	$body = trim($data->body);
-	$cached_word_count = trim($data->cached_word_count);
-	$favorite = trim($data->favorite);
-	$folder_id = trim($data->folder_id);
-	$notes_text = trim($data->notes_text);
-	$privacy = trim($data->privacy);
-	$synopsis = trim($data->synopsis);
-	$title = trim($data->title);
-	$universe_id = trim($data->universe_id);
-
-
-    $sql = "UPDATE documents SET 
-body = '$body',cached_word_count = '$cached_word_count',favorite = '$favorite',folder_id = '$folder_id',notes_text = '$notes_text',privacy = '$privacy',synopsis = '$synopsis',title = '$title',universe_id = '$universe_id'    WHERE id = $id"; 
-
-    $log->info("sql".$sql."");
-                
-    if($stmt = mysqli_prepare($link, $sql)){
-          
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-            $response->success = true;
-            $priority_id = $stmt->insert_id;
-            $response->data = $stmt->insert_id;
-            $response->message = "Updated successfully!!!";
-        } 
-        else{
-            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
-            $log->info("".$dberror."");
-            $response->success = false;
-            $response->message = "Something went wrong.Please try again later.";
-        }
-    }
-            
-    // Close statement
-    mysqli_stmt_close($stmt);
-            
-    $log->info("Completed update function.");
-}
-
-function getAllFolders(){
-    $user_id = $_GET['user_id']; 
-    global $response;
-    global $log;
-    global $link;
-
-    $sql = "SELECT * FROM folders Where user_id = '$user_id'";
-
-    $log->info("sql = ".$sql);
-    $result = mysqli_query($link, $sql);
-    $row_cnt = $result->num_rows;
-
-    if ($result) {
-        if ($row_cnt > 0) {
-            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                $myArray[] = $row;
-            }
-
-            $response->success = true;
-            $response->data = $myArray;
-            $result->close();
-        } else {
-            $response->success = false;
-            $response->message = "No data available in table";
-        }
-    } else {
-        $response->success = false;
-        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
-    }
-}
-
-function getFolders(){
-    $user_id = $_GET['user_id'];
-    $id = $_GET['id'];
-
-
-    global $response;
-    global $log;
-    global $link;
-
-    $sql = "SELECT * FROM folders Where user_id = '$user_id',id = '$id'";
-
-    $log->info("sql = ".$sql);
-    $result = mysqli_query($link, $sql);
-    $row_cnt = $result->num_rows;
-
-    if ($result) {
-        if ($row_cnt > 0) {
-            while ($row = $result->fetch_object()) {
-                $myArray = $row;
-            }
-
-            $response->success = true;
-            $response->data = $myArray;
-            $result->close();
-        } else {
-            $response->success = false;
-            $response->message = "No data available in table";
-        }
-    } else {
-        $response->success = false;
-        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
-    }
-}
-
-function addFolder($data){
-    global $response;
-    global $log;
-    global $link;
-
-    $log->info("Started save function.");
-
-	$context = trim($data->context);
-	$parent_folder_id = trim($data->parent_folder_id);
-	$title = trim($data->title);
-
-
-    $sql = "INSERT INTO folders(context,parent_folder_id,title) 
-VALUES('$context','$parent_folder_id','$title')"; 
-
-
-    $log->info("sql".$sql."");
-                
-    if($stmt = mysqli_prepare($link, $sql)){
-          
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-            $response->success = true;
-            $priority_id = $stmt->insert_id;
-            $response->data = $stmt->insert_id;
-            $response->message = "Updated successfully!!!";
-        } 
-        else{
-            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
-            $log->info("".$dberror."");
-            $response->success = false;
-            $response->message = "Something went wrong.Please try again later.";
-        }
-    }
-            
-    // Close statement
-    mysqli_stmt_close($stmt);
-            
-    $log->info("Completed update function.");
-}
-
-function deleteFolder($data){
-    global $response;
-    global $log;
-    global $link;
-
-    $log->info("Started delete function.");
-
-    $id = trim($data->id);
-
-    $sql = "DELETE FROM folders WHERE id = $id; ";
-
-    $log->info("sql".$sql."");
-
-    if($stmt = mysqli_prepare($link, $sql)){
-          
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-            $response->success = true;
-            $priority_id = $stmt->insert_id;
-            $response->data = $stmt->insert_id;
-            $response->message = "Deleted successfully!!!";
-        } 
-        else{
-            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
-            $log->info("".$dberror."");
-            $response->success = false;
-            $response->message = "Something went wrong.Please try again later.";
-        }
-    }
-            
-    // Close statement
-    mysqli_stmt_close($stmt);            
-    $log->info("Completed delete function.");
-}
-
-function updateFolder($data){
-    global $response;
-    global $log;
-    global $link;
-    $id = $_GET['id']; 
-
-    $log->info("Started update function.");
-
-	$context = trim($data->context);
-	$parent_folder_id = trim($data->parent_folder_id);
-	$title = trim($data->title);
-
-
-    $sql = "UPDATE folders SET 
-context = '$context',parent_folder_id = '$parent_folder_id',title = '$title'    WHERE id = $id"; 
-
-    $log->info("sql".$sql."");
-                
-    if($stmt = mysqli_prepare($link, $sql)){
-          
-        // Attempt to execute the prepared statement
-        if(mysqli_stmt_execute($stmt)){
-            $response->success = true;
-            $priority_id = $stmt->insert_id;
-            $response->data = $stmt->insert_id;
-            $response->message = "Updated successfully!!!";
-        } 
-        else{
-            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
-            $log->info("".$dberror."");
-            $response->success = false;
-            $response->message = "Something went wrong.Please try again later.";
-        }
-    }
-            
-    // Close statement
-    mysqli_stmt_close($stmt);
-            
-    $log->info("Completed update function.");
-}
-
 function getAllUserDetails(){
     $user_id = $_GET['user_id']; 
     global $response;
@@ -4478,6 +4156,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$data = $request->data;
 	$procedureName = $data->procedureName;
     
+	if ($procedureName == "createContent") {
+		createContent($data);
+	}
+
 	if ($procedureName == "createItem") {
 		createItem($data);
 	}

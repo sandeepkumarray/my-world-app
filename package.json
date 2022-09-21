@@ -35,10 +35,12 @@
     "crypto-js": "^4.1.1",
     "ngx-perfect-scrollbar": "^10.1.1",
     "ngx-quill": "^16.1.1",
+    "node-html-parser": "^5.4.2",
     "quill": "^1.3.7",
     "quill-mention": "^3.0.4",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

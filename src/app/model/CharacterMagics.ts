@@ -1,9 +1,9 @@
-export class CharacterMagics {
+import { BaseModel } from "./BaseModel";
+export class CharacterMagics extends BaseModel {
 
-		public procedureName? : string;
-		public character_id? : string;
-		public magic_id? : string;
-		public user_id? : string;
-		public created_at? : string;
-		public updated_at? : string;
+		public character_id!: number;
+		public magic_id!: number;
+		public user_id!: number;
+		public created_at!: Date;
+		public updated_at!: Date;
 }

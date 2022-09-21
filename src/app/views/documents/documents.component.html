@@ -1,0 +1,72 @@
+<c-row class="justify-content-md-center" *ngIf="viewModel.documents.length <= 0">
+  <c-col lg="5">
+    <c-card>
+      <c-card-header class="text-center">
+        <h2>You haven't created any documents yet!</h2>
+      </c-card-header>
+      <c-card-body class="text-center">
+        <div>
+          You can create an unlimited number of documents with no limits on length. Enjoy!
+        </div>
+        <button type="button" class="btn btn-square btn-success" style="margin-left:10px;" (click)="createDocument()"
+          id="btnAddDocument" name="btnAddDocument">
+          CREATE YOUR FIRST DOCUMENT
+        </button>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<c-row class="justify-content-md-center" *ngIf="viewModel.documents.length > 0">
+  <!-- Recents -->
+  <c-col lg="12">
+    <h2>Recently-edited documents</h2>
+    <c-row>
+      <c-col sm="2" md="2" *ngFor="let doc of viewModel.documents.slice(0, 5)">
+        <c-card class="text-white" style="height:200px; width:200px; padding-bottom:10px">
+          <c-card-body class="text-center bg-success">
+            <div>
+              <div class="text-value-lg">{{doc.title}}</div>
+              <div class="text-muted">{{doc.timeSince}}</div>
+            </div>
+          </c-card-body>
+          <c-card-footer class="d-md-flex justify-content-md-between">
+            <a cButton color="primary" variant="outline" class="btn waves-effect waves-light"
+              (click)="viewDocument(doc.id)">
+              View
+            </a>
+            <a cButton color="success" variant="outline" class="btn waves-effect waves-light"
+              (click)="editDocument(doc.id)">
+              Edit
+            </a>
+          </c-card-footer>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-col>
+
+  <!-- Folder -->
+  <c-col lg="12">
+    <h2>All Folders <span class="text-muted">{{viewModel.folders.length}}</span></h2>
+    <button cButton color="warning" style="margin-left:10px;float: right;" (click)="addFolder()">
+      <svg cIcon class="" name="cilPlus" size="xl"></svg> Add New Folder
+    </button>
+    <c-row>
+      <c-col sm="2" *ngFor="let folder of viewModel.folders">
+        <a href="#/folders/{{folder.id}}" style="text-decoration:none;">
+          <c-card color="success" class="text-white success" style="height:100px; width:150px; padding-bottom:10px">
+            <c-card-body>
+              <div>
+                <div class="text-value-lg">{{folder.title}}</div>
+                <div>{{folder.timeSince}}</div>
+              </div>
+            </c-card-body>
+          </c-card>
+        </a>
+      </c-col>
+    </c-row>
+  </c-col>
+
+
+  <app-grid-documents [documents]="viewModel.documents" [folders]="viewModel.folders"></app-grid-documents>
+</c-row>

@@ -1,0 +1,166 @@
+
+  <!-- Documents -->
+  <c-col lg="12">
+    <h2>All Documents <span class="text-muted">{{documents.length}}</span></h2>
+    <button cButton color="warning" style="margin-left:10px;float: right;" id="btnAddDocument" name="btnAddDocument" (click)="createDocument()">
+      <span><i class="fas fa-plus fa-1x"></i></span> Add New Document
+    </button>
+    <table class="document-list-table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Title</th>
+          <th scope="col">Length</th>
+          <th scope="col">Last Edited</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of documents" class="hoverable" style="cursor: pointer">
+          <td [cModalToggle]="verticallyCenteredScrollableModal.id" (click)="selectDocument(doc)">
+            <i class="material-icons medium teal-text" translate="no">description</i>
+          </td>
+          <td [cModalToggle]="verticallyCenteredScrollableModal.id" (click)="selectDocument(doc)">
+            <div>
+              <div>
+                <i class="material-icons left orange-text" translate="no" style="position: relative; top: 3px;">
+                  star_border
+                </i>
+                <strong style="font-size: 1.2em">
+                  {{doc.title}}
+                </strong>
+              </div>
+              <div class="green-text">
+                <i class="material-icons left" translate="no" style="position: relative; top: 3px;">person</i>
+                by Sandeep Ray
+              </div>
+            </div>
+          </td>
+          <td [cModalToggle]="verticallyCenteredScrollableModal.id" (click)="selectDocument(doc)">
+            <div>
+              <i class="material-icons tiny teal-text" style="position: relative; top: 3px;"
+                translate="no">spellcheck</i>
+              {{doc.cached_word_count}}
+              words
+            </div>
+            <div>
+              <i class="material-icons tiny teal-text" style="position: relative; top: 3px;" translate="no">timer</i>
+              {{doc.readingTime}}
+            </div>
+          </td>
+          <td [cModalToggle]="verticallyCenteredScrollableModal.id" (click)="selectDocument(doc)">{{doc.timeSince}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </c-col>
+
+<c-modal #verticallyCenteredScrollableModal [scrollable]="true" alignment="center" size="lg" (visibleChange)="onModalChange($event)"
+  id="verticallyCenteredScrollableModal">
+  <c-modal-body> 
+    <div class="modal-content" style="border: 0px;">
+      <div class="d-md-flex justify-content-lg-start">
+        <h4 class="teal-text">
+          <i class="material-icons left large" translate="no">description</i>
+        </h4>
+        <div>
+          <span class="text-value-xl">{{selectedDocument.title}}</span>
+        </div>
+        <i class="material-icons right orange-text favorite-button tooltipped" data-tooltip="Favorite this page"
+          data-content-id="151931" data-content-class="documents" translate="no">
+          star_border
+        </i>
+      </div>
+      <c-row>
+        <c-col sm="4" md="4">
+          <div style="margin: 1rem;">
+            <i class="material-icons left text-lighten-1 teal-text" translate="no">folder</i>
+            <span class="text-value-xl">&nbsp; Folder</span>
+          </div>
+          <div style="margin: 1rem;">
+            <select aria-label="Default select example" cSelect style="border: 0px;" [(ngModel)]="selectedDocument.folder_id" (change)="folderChanged($event)">
+              <option *ngFor="let folder of folders" [value]="folder.id">
+                {{folder.title}}
+            </option>
+            </select>
+          </div>
+          <div style="margin: 1rem;">
+            <i class="material-icons left purple-text" translate="no">language</i>
+            <span class="text-value-xl">&nbsp; Universe</span>
+          </div>
+          <div style="margin: 1rem;">
+            <select aria-label="Default select example" cSelect style="border: 0px;" [(ngModel)]="selectedDocument.universe_id" (change)="universeChanged($event)">
+              <option *ngFor="let universe of universes" [value]="universe.id">
+                {{universe.name}}
+            </option>
+            </select>
+          </div>
+          <div style="margin: 1rem;">
+            <i class="material-icons left teal-text" translate="no">info</i>
+            <span class="text-value-xl">&nbsp; About</span>
+          </div>
+          <div style="margin: 1rem;">
+            <ul style="list-style-type: none;padding-left: 0px;">
+              <li>
+                <i class="material-icons tiny" style="position: relative; top: 3px;" translate="no">text_snippet</i>
+                {{selectedDocument.cached_word_count}}
+                words
+              </li>
+              <li>
+                <i class="material-icons tiny" style="position: relative; top: 3px;" translate="no">timer</i>
+                ~{{selectedDocument.readingTime}}
+              </li>
+              <li>
+                <i class="material-icons tiny" style="position: relative; top: 3px;" translate="no">history</i>
+                created {{selectedDocument.createdSince}}
+              </li>
+              <li>
+                <a href="/documents/151931/revisions">
+                  <i class="material-icons tiny" style="position: relative; top: 3px;" translate="no">content_copy</i>
+                  View revision log
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href="/documents/151931/plaintext">
+                  <i class="material-icons tiny" style="position: relative; top: 3px;" translate="no">title</i>
+                  View in plaintext
+                </a>
+              </li>
+            </ul>
+          </div>
+        </c-col>
+        <c-col sm="6" md="7">
+          <div style="margin: 1rem;">
+            <i class="material-icons left teal-text" translate="no">info</i>
+            <span class="text-value-xl">&nbsp; Document synopsis</span>
+          </div>
+          <div style="margin: 1rem;">
+            <input id="documentSynopsisIN" [(ngModel)]="selectedDocument.synopsis" class="form-control" (blur)="onBlur($event, 'synopsis')" />
+          </div>
+          <div style="margin: 1rem;">
+            <i class="material-icons left teal-text" translate="no">info</i>
+            <span class="text-value-xl">&nbsp; Document notes</span>
+          </div>
+          <div style="margin: 1rem;">
+            <input id="documentNotesIN" [(ngModel)]="selectedDocument.notes_text" class="form-control" (blur)="onBlur($event, 'notes_text')" />
+          </div>
+          <div style="margin: 1rem;">
+            <i class="material-icons left teal-text" translate="no">info</i>
+            <span class="text-value-xl">&nbsp; Document tags</span>
+          </div>
+          <div style="margin: 1rem;">
+            <input [value]="selectedDocument.title" class="form-control" (blur)="onBlur($event, 'tags')" />
+          </div>
+        </c-col>
+      </c-row>
+    </div>
+  </c-modal-body>
+  <c-modal-footer>
+    <a cButton color="primary" variant="outline" class="btn waves-effect waves-light"
+      (click)="viewDocument(selectedDocument.id)">
+      View
+    </a>
+    <a cButton color="success" variant="outline" class="btn waves-effect waves-light"
+      (click)="editDocument(selectedDocument.id)">
+      Edit
+    </a>
+  </c-modal-footer>
+</c-modal>

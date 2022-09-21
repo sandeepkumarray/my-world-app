@@ -7,6 +7,7 @@ import { Page500Component } from './views/pages/page500/page500.component';
 import { LoginComponent } from './views/pages/login/login.component';
 import { RegisterComponent } from './views/pages/register/register.component';
 import { AuthGuard } from './utility/AuthGuard';
+import { FoldersComponent } from './views/documents/folders/folders.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,32 @@ const routes: Routes = [
         path: 'create',
         loadChildren: () =>
           import('./views/dashboard/dashboard.module').then((m) => m.DashboardModule), canActivate: [AuthGuard]
+      }, 
+      {
+        path: 'data',
+        loadChildren: () =>
+          import('./views/data/data.module').then((m) => m.DataModule), canActivate: [AuthGuard]
+      }, 
+      {
+        path: 'documents',
+        loadChildren: () =>
+          import('./views/documents/documents.module').then((m) => m.DocumentsModule), canActivate: [AuthGuard]
+      },
+      {
+        path: 'folders',
+        data: {
+          title: 'Folders'
+        },
+        children:[
+          {
+            path: ':id',
+            component: FoldersComponent,
+            data: {
+              title: 'Folders',
+            },
+            canActivate: [AuthGuard]
+          },
+        ]
       },
       {
         path: 'buildings',
@@ -231,14 +258,14 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard]
       },
-      {
-        path: 'timelines',
-        loadChildren: () => import('./views/content/timelines/timelines.module').then((m) => m.TimelinesModule),
-        data: {
-          title: 'Timelines',
-        },
-        canActivate: [AuthGuard]
-      },
+      // {
+      //   path: 'timelines',
+      //   loadChildren: () => import('./views/content/timelines/timelines.module').then((m) => m.TimelinesModule),
+      //   data: {
+      //     title: 'Timelines',
+      //   },
+      //   canActivate: [AuthGuard]
+      // },
       {
         path: 'towns',
         loadChildren: () => import('./views/content/towns/towns.module').then((m) => m.TownsModule),
@@ -273,6 +300,7 @@ const routes: Routes = [
       },
     ]
   },
+  
   {
     path: '404',
     component: Page404Component,
@@ -301,7 +329,7 @@ const routes: Routes = [
       title: 'Register Page'
     }
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: '404' }
 ];
 
 @NgModule({

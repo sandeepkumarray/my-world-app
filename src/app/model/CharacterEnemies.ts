@@ -1,9 +1,9 @@
-export class CharacterEnemies {
+import { BaseModel } from "./BaseModel";
+export class CharacterEnemies extends BaseModel {
 
-		public procedureName? : string;
-		public character_id? : string;
-		public enemy_id? : string;
-		public user_id? : string;
-		public created_at? : string;
-		public updated_at? : string;
+		public character_id!: number;
+		public enemy_id!: number;
+		public user_id!: number;
+		public created_at!: Date;
+		public updated_at!: Date;
 }

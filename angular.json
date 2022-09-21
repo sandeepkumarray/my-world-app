@@ -71,6 +71,27 @@
               ],
               "outputHashing": "all"
             },
+            "uat": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
@@ -91,6 +112,9 @@
           "configurations": {
             "production": {
               "browserTarget": "my-world-app:build:production"
+            },
+            "uat": {
+              "browserTarget": "my-world-app:build:uat"
             },
             "development": {
               "browserTarget": "my-world-app:build:development"

@@ -1,9 +1,9 @@
-export class CharacterLoveInterests {
+import { BaseModel } from "./BaseModel";
+export class CharacterLoveInterests extends BaseModel {
 
-		public procedureName? : string;
-		public user_id? : string;
-		public character_id? : string;
-		public love_interest_id? : string;
-		public created_at? : string;
-		public updated_at? : string;
+		public user_id!: number;
+		public character_id!: number;
+		public love_interest_id!: number;
+		public created_at!: Date;
+		public updated_at!: Date;
 }

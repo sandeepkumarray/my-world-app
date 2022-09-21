@@ -80,44 +80,51 @@ export class utility {
 
     static getRandom(arr: any[], n: number) {
         var result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
-    if (n > len)
-        throw new RangeError("getRandom: more elements taken than available");
-    while (n--) {
-        var x = Math.floor(Math.random() * len);
-        result[n] = arr[x in taken ? taken[x] : x];
-        taken[x] = --len in taken ? taken[len] : len;
-    }
-    return result;
+            len = arr.length,
+            taken = new Array(len);
+        if (n > len)
+            throw new RangeError("getRandom: more elements taken than available");
+        while (n--) {
+            var x = Math.floor(Math.random() * len);
+            result[n] = arr[x in taken ? taken[x] : x];
+            taken[x] = --len in taken ? taken[len] : len;
+        }
+        return result;
     }
 
-    static timeSince(date:Date) {
+    static timeSince(date: Date) {
 
         var seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-      
+
         var interval = seconds / 31536000;
-      
+
         if (interval > 1) {
-          return "about " + Math.floor(interval) + " years ago.";
+            return "about " + Math.floor(interval) + " years ago.";
         }
         interval = seconds / 2592000;
         if (interval > 1) {
-          return "about " + Math.floor(interval) + " months ago.";
+            return "about " + Math.floor(interval) + " months ago.";
         }
         interval = seconds / 86400;
         if (interval > 1) {
-          return "about " + Math.floor(interval) + " days ago.";
+            return "about " + Math.floor(interval) + " days ago.";
         }
         interval = seconds / 3600;
         if (interval > 1) {
-          return "about " + Math.floor(interval) + " hours ago.";
+            return "about " + Math.floor(interval) + " hours ago.";
         }
         interval = seconds / 60;
         if (interval > 1) {
-          return "about " + Math.floor(interval) + " minutes ago.";
+            return "about " + Math.floor(interval) + " minutes ago.";
         }
         return "about " + Math.floor(seconds) + " seconds ago.";
-      }
-      
+    }
+
+    static readingTimeWithCount(wordCount: number) {
+        const wordsPerMinute = 250;
+        const minutes = wordCount / wordsPerMinute;
+        const time = Math.round(minutes * 60 * 1000);
+        const displayed = Math.ceil(parseFloat(minutes.toFixed(2)));
+        return displayed + " minutes read.";
+    }
 }

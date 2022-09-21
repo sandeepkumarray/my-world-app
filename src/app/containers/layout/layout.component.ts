@@ -7,6 +7,7 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ContentPlans, ContentTypes } from 'src/app/model';
 import { SiteTemplateModel } from 'src/app/usermodels/SiteTemplateModel';
 import { AppdataService } from 'src/app/service/appdata.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -21,12 +22,15 @@ export class LayoutComponent implements OnInit {
   public navItemsContents: any[];
   fixedNavItems: any[] = [];
   planNavItems: any[] = [];
+  writingItems: any[] = [];
 
   public perfectScrollbarConfig = {
     suppressScrollX: true,
   };
 
-  constructor(private myworldService: MyworldService, private appdataService: AppdataService, private sanitizer: DomSanitizer) {
+  constructor(private myworldService: MyworldService, private appdataService: AppdataService,
+    private sanitizer: DomSanitizer, private _router: Router) {
+   
     this.navItemsContents = [];
     this.createNavMenu();
   }
@@ -46,12 +50,14 @@ export class LayoutComponent implements OnInit {
         text: 'NEW'
       }
     };
+
     this.fixedNavItems.push(dashboardNavdata);
 
     let componentsNavdata: any = {
       name: 'Components',
       title: true
     };
+
     this.planNavItems.push(componentsNavdata);
 
     let moreNavdata: any = {
@@ -59,21 +65,43 @@ export class LayoutComponent implements OnInit {
       title: false,
       children: []
     };
+
+    let writingNavdata: any = {
+      name: 'Writing',
+      iconComponent: { name: 'cil-notes' },
+      children: []
+    };
+
+    let documentNavdata: any = {
+      name: "Documents",
+      url: '/documents',
+      iconComponent: { name: 'cil-file' },
+      badge: {
+        color: 'info',
+        text: 'NEW'
+      }
+    };
+
+    writingNavdata.children.push(documentNavdata);
+
+    this.writingItems.push(writingNavdata);
+
     this.appdataService.getAllAppConfig(1).subscribe(contents => {
       console.log(contents);
     });
+
     console.log(this.appdataService.ContentPlansList);
     this.myworldService.getContentPlans(1, 1).subscribe({
       next: (plan) => {
         this.FreePlanContents = plan.contents.split(',');
         let freePlanTemplate: SiteTemplateModel = JSON.parse(plan.plan_template);
         freePlanTemplate.PlanContentList.forEach(planContent => {
-          var content:any = this.appdataService.ContentTypesList.find(c => c.name == planContent.name);
+          var content: any = this.appdataService.ContentTypesList.find(c => c.name == planContent.name);
 
           let navdata: any = {
             name: content.name,
             url: '/' + content.name?.toLowerCase(),
-            icon: content.fa_icon + " " + content.name + "-pri", //this.sanitizer.bypassSecurityTrustHtml(content.icon),                  
+            icon: content.fa_icon + " " + content.name.toLowerCase() + "-pri", //this.sanitizer.bypassSecurityTrustHtml(content.icon),                  
             badge: {
               color: 'info',
               text: 'NEW'
@@ -81,8 +109,8 @@ export class LayoutComponent implements OnInit {
           };
           this.fixedNavItems.push(navdata);
         });
-        
-        
+
+
 
         this.myworldService.getAllContentTypes().subscribe({
           next: (v) => {
@@ -94,7 +122,7 @@ export class LayoutComponent implements OnInit {
                 let navdata: any = {
                   name: content.name,
                   url: '/' + content.name?.toLowerCase(),
-                  icon: content.fa_icon + " " + content.name + "-pri", //this.sanitizer.bypassSecurityTrustHtml(content.icon),
+                  icon: content.fa_icon + " " + content.name.toLowerCase() + "-pri", //this.sanitizer.bypassSecurityTrustHtml(content.icon),
                   badge: {
                     color: 'info',
                     text: 'NEW'
@@ -105,6 +133,7 @@ export class LayoutComponent implements OnInit {
             });
             this.planNavItems = this.planNavItems.concat(moreNavdata);
             this.fixedNavItems = this.fixedNavItems.concat(this.planNavItems);
+            this.fixedNavItems = this.fixedNavItems.concat(this.writingItems);
             this.navItemsContents = this.fixedNavItems;
           },
           error: (e) => console.error(e),

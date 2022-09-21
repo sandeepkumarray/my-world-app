@@ -49,6 +49,24 @@ export class MyworldService {
 		return this.http.get<DashboardRecentModel[]>(apiURL);
 	}
 
+	createContent(content_type: string, jsonString:string, user_id: string | undefined){
+		let apiURL = `${environment.serviceUrl}api_myworld.php`;
+		let json_object: any = {};
+
+		json_object.procedureName = "createContent";
+		json_object.content_type = content_type.toLowerCase();
+		json_object.jsonData = jsonString;
+		json_object.user_id = user_id;
+
+		const httpOptions = {
+			headers: new HttpHeaders({
+				'Content-Type': 'application/json'
+			})
+		};
+
+		return this.http.post<ResponseModel>(apiURL, { data: json_object }, httpOptions);
+	}
+
 	createItem(content_type: string, user_id: string | undefined) {
 		let apiURL = `${environment.serviceUrl}api_myworld.php`;
 		let json_object: any = {};

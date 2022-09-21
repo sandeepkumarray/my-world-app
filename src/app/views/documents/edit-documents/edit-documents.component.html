@@ -1,0 +1,102 @@
+<div class="mb-4 d-print-none header header-sticky" style="background: aquamarine;">
+    <ng-container>
+        <c-container [fluid]="true">
+
+            <c-header-nav class="d-none d-lg-flex me-auto">
+
+            </c-header-nav>
+
+            <c-header-nav class="ms-3">
+                <ng-container *ngTemplateOutlet="userDropdownm"></ng-container>
+            </c-header-nav>
+
+        </c-container>
+    </ng-container>
+</div>
+
+<ng-template #userDropdownm>
+    <c-dropdown alignment="end" variant="nav-item">
+        <button cButton color="" [caret]="false" cDropdownToggle class="py-0">
+            <svg cIcon name="cilBolt" cDropdownToggle size="xl"></svg>
+            About
+        </button>
+        <ul cDropdownMenu class="pt-0 pr-5 w-auto">
+            <li>
+                <h4 cDropdownHeader class="bg-light fw-semibold py-2">
+                    About this document
+                </h4>
+            </li>
+            <li>
+                <a routerLink="./#users/{{document.user_id}}" cDropdownItem><svg cIcon class="teal-text me-2" name="cilUser"
+                        size="lg"></svg>Written by <strong>{{document.userName}}</strong></a>
+            </li>
+            <li>
+                <a href="#/documents/{{document.id}}" cDropdownItem><svg cIcon class="teal-text me-2" name="cilDescription"
+                        size="lg"></svg>Read-only view</a>
+            </li>
+            <li>
+                <a [cModalToggle]="NewFeature.id" cDropdownItem><svg cIcon class="teal-text me-2" name="cilText"
+                        size="lg"></svg>Plaintext view</a>
+            </li>
+            <li>
+                <a [cModalToggle]="NewFeature.id" cDropdownItem><svg cIcon class="teal-text me-2" name="cilBarChart"
+                        size="lg"></svg>Analyze this document</a>
+            </li>
+            <li>
+                <a [cModalToggle]="NewFeature.id" cDropdownItem><svg cIcon class="teal-text me-2" name="cilPencil"
+                        size="lg"></svg>Document notes</a>
+            </li>
+            <li>
+                <a [cModalToggle]="NewFeature.id" cDropdownItem><svg cIcon class="teal-text me-2" name="cilShareAlt"
+                        size="lg"></svg>Share this document</a>
+            </li>
+            <li>
+                <a [cModalToggle]="NewFeature.id" cDropdownItem><svg cIcon class="teal-text me-2" name="cilCopy"
+                        size="lg"></svg>Revision log</a>
+            </li>
+            <li>
+                <a (click)="deleteDocument()" cDropdownItem><svg cIcon class="teal-text me-2" name="cilTrash"
+                        size="lg"></svg>Delete this document</a>
+            </li>
+
+        </ul>
+    </c-dropdown>
+</ng-template>
+
+<c-row class="justify-content-md-center">
+    <c-col lg="6">
+        <h2>Title</h2>
+        <div class="row">
+            <input placeholder="title" [(ngModel)]="document.title" (blur)="onBlur($event, 'title')" />
+        </div>
+    </c-col>
+</c-row>
+
+<c-row class="justify-content-md-center" style="margin-top:20px;height:800px ">
+    <c-col lg="10">
+        <div id="counter" hidden></div>
+        <quill-editor class="content-editor" placeholder="write your document contents here..." [modules]="modules"
+            #editor [(ngModel)]="document.body" (onBlur)="onQuillBlur($event)"
+            [styles]="{background: 'white', height: '650px', 'font-size': '1.125rem'}">
+        </quill-editor>
+    </c-col>
+</c-row>
+
+
+<div class="grey-text autosave-bar">
+    <i class="material-icons js-autosave-icon grey-text" translate="no">save</i>
+    <span class="js-autosave-status">
+        {{status}}
+    </span>
+</div>
+
+<c-modal #NewFeature alignment="center" size="lg" id="NewFeature">
+    <c-modal-body style="background:red;">
+        <h2>Feature coming soon.</h2>
+    </c-modal-body>
+    <c-modal-footer style="background:red;">
+        <button [cModalToggle]="NewFeature.id" cButton color="secondary">
+            Close
+          </button>
+    </c-modal-footer>
+</c-modal>

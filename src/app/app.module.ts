@@ -54,6 +54,7 @@ import { AuthenticationService } from './service/authentication.service';
 import { AppdataService } from './service/appdata.service';
 import { AuthGuard } from './utility/AuthGuard';
 import { QuillModule } from 'ngx-quill';
+import Counter from './utility/Counter';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -105,7 +106,16 @@ const APP_CONTAINERS = [
     ListGroupModule,
     CardModule,
     FormsModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot({
+      customModules: [{
+        implementation: Counter,
+        path: 'modules/counter'
+      }],
+      customOptions: [{
+        import: 'formats/font',
+        whitelist: ['mirza', 'roboto', 'aref', 'serif', 'sansserif', 'monospace']
+      }]
+    }),
   ],
   providers: [
     {
