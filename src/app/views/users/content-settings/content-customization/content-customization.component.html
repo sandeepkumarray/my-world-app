@@ -1,0 +1,162 @@
+<c-row class="justify-content-center">
+  <c-col md="8" class=" align-items-center">
+    <c-card>
+      <c-card-header class="card-header d-flex justify-content-between align-items-center"
+        [style.background]="content_type_details.primary_color">
+        {{content_type}}
+        <span [innerHTML]="content_type_details.icon"></span>
+      </c-card-header>
+      <c-card-body>
+        <c-accordion>
+          <c-accordion-item #item0="cAccordionItem" [visible]="false"
+            *ngFor="let category of ContentTemplate.categories">
+            <ng-template cTemplateId="accordionHeaderTemplate">
+              <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton
+                class="d-flex justify-content-between ">
+                <span [innerHTML]="category.icon" style="margin-right: 1rem;"></span>
+                {{category.label}}
+              </button>
+            </ng-template>
+            <ng-template cTemplateId="accordionBodyTemplate">
+              <div class="accordion-body">
+                <c-row>
+                  <c-col md="8">
+                    <c-card>
+                      <c-card-header>
+                        <span [innerHTML]="category.icon" class="margin-right: 1rem;"></span> Customize this category's
+                        fields
+                      </c-card-header>
+                      <c-card-body>
+                        <c-accordion>
+                          <c-accordion-item #item0="cAccordionItem" [visible]="false"
+                            *ngFor="let attribute of category.attributes">
+                            <ng-template cTemplateId="accordionHeaderTemplate">
+                              <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton
+                                class="d-flex justify-content-between ">
+                                <!-- <span [innerHTML]="attribute.icon" class="margin-right: 1rem;"></span> -->
+                                {{attribute.field_label}}
+                              </button>
+                            </ng-template>
+                            <ng-template cTemplateId="accordionBodyTemplate">
+                              <div class="accordion-body">
+
+                              </div>
+                            </ng-template>
+                          </c-accordion-item>
+
+                          <c-accordion-item #addTextField="cAccordionItem" [visible]="false">
+                            <ng-template cTemplateId="accordionHeaderTemplate">
+                              <button (click)="addTextField.toggleItem()" [collapsed]="!addTextField.visible" cAccordionButton
+                                class="d-flex justify-content-between ">
+                                <span style="margin-right: 1rem;"><i class="fas fa-plus"></i></span>
+                                Add a text field to this section
+                              </button>
+                            </ng-template>
+                            <ng-template cTemplateId="accordionBodyTemplate">
+                              <div class="accordion-body">
+
+                              </div>
+                            </ng-template>
+                          </c-accordion-item>
+                          
+                          <c-accordion-item #addLinkField="cAccordionItem" [visible]="false">
+                            <ng-template cTemplateId="accordionHeaderTemplate">
+                              <button (click)="addLinkField.toggleItem()" [collapsed]="!addLinkField.visible" cAccordionButton
+                                class="d-flex justify-content-between ">
+                                <span style="margin-right: 1rem;"><i class="fas fa-plus"></i></span>
+                                Add a link field to this section
+                              </button>
+                            </ng-template>
+                            <ng-template cTemplateId="accordionBodyTemplate">
+                              <div class="accordion-body">
+
+                              </div>
+                            </ng-template>
+                          </c-accordion-item>
+
+                        </c-accordion>
+                      </c-card-body>
+                    </c-card>
+                  </c-col>
+                  <c-col>
+                    <c-accordion style="margin: 5px;">
+                      <c-accordion-item #Renamecategory="cAccordionItem" [visible]="false">
+                        <ng-template cTemplateId="accordionHeaderTemplate">
+                          <button (click)="Renamecategory.toggleItem()" [collapsed]="!Renamecategory.visible"
+                            cAccordionButton class="d-flex justify-content-between" style="padding: 10px;">
+                            <span style="margin-right: 1rem;"><i class="fa-solid fa-wrench"></i></span>
+                            Rename this category
+                          </button>
+                        </ng-template>
+                        <ng-template cTemplateId="accordionBodyTemplate">
+                          <div class="accordion-body">
+                            <input id="category_label" [(ngModel)]="category.label" class="form-control" />
+                            <button cButton color="info" variant="outline" (click)="renameCategory(category)">Rename
+                              category</button>
+                          </div>
+                        </ng-template>
+                      </c-accordion-item>
+                    </c-accordion>
+                    <c-accordion style="margin: 5px;">
+                      <c-accordion-item #Customizecategory="cAccordionItem" [visible]="false">
+                        <ng-template cTemplateId="accordionHeaderTemplate">
+                          <button (click)="Customizecategory.toggleItem()" [collapsed]="!Customizecategory.visible"
+                            cAccordionButton class="d-flex justify-content-between " style="padding: 10px;">
+                            <span style="margin-right: 1rem;"><i class="fa-solid fa-wrench"></i></span>
+                            Customize this category's icon
+                          </button>
+                        </ng-template>
+                        <ng-template cTemplateId="accordionBodyTemplate">
+                          <div class="accordion-body">
+
+                          </div>
+                        </ng-template>
+                      </c-accordion-item>
+                    </c-accordion>
+                    <c-accordion style="margin: 5px;">
+                      <c-accordion-item #Hidecategory="cAccordionItem" [visible]="false">
+                        <ng-template cTemplateId="accordionHeaderTemplate">
+                          <button (click)="Hidecategory.toggleItem()" [collapsed]="!Hidecategory.visible"
+                            cAccordionButton class="d-flex justify-content-between " style="padding: 10px;">
+                            <span style="margin-right: 1rem;"><i class="fa-solid fa-wrench"></i></span>
+                            Hide or show this category
+                          </button>
+                        </ng-template>
+                        <ng-template cTemplateId="accordionBodyTemplate">
+                          <div class="accordion-body">
+                            <button cButton color="info" *ngIf="!category.is_hidden" variant="outline"
+                              (click)="hideCategory(category)">Hide
+                              Category</button>
+                            <button cButton color="info" *ngIf="category.is_hidden" variant="outline"
+                              (click)="showCategory(category)">Show
+                              Category</button>
+                          </div>
+                        </ng-template>
+                      </c-accordion-item>
+                    </c-accordion>
+                    <c-accordion style="margin: 5px;">
+                      <c-accordion-item #Deletecategory="cAccordionItem" [visible]="false">
+                        <ng-template cTemplateId="accordionHeaderTemplate">
+                          <button (click)="Deletecategory.toggleItem()" [collapsed]="!Deletecategory.visible"
+                            cAccordionButton class="d-flex justify-content-between " style="padding: 10px;">
+                            <span style="margin-right: 1rem;"><i class="fa-solid fa-wrench"></i></span>
+                            Delete this category
+                          </button>
+                        </ng-template>
+                        <ng-template cTemplateId="accordionBodyTemplate">
+                          <div class="accordion-body">
+
+                          </div>
+                        </ng-template>
+                      </c-accordion-item>
+                    </c-accordion>
+                  </c-col>
+                </c-row>
+              </div>
+            </ng-template>
+          </c-accordion-item>
+        </c-accordion>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

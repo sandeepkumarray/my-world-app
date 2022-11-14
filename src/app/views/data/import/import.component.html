@@ -15,6 +15,36 @@
                 {{content_type.name}}
               </option>
             </select>
+            <c-accordion style="padding: 10px;">
+              <c-accordion-item #item0="cAccordionItem" [visible]="false">
+                <ng-template cTemplateId="accordionHeaderTemplate">
+                  <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton>
+                    <strong>Important Note on {{selectedContentType}} Template.</strong>
+                  </button>
+                </ng-template>
+                <ng-template cTemplateId="accordionBodyTemplate">
+                  <div class="accordion-body">
+                    <table>
+                      <thead>
+                        {{selectedContentType}} Template Excel Column Definations
+                        <tr>
+                          <th>Column Name</th>
+                          <th>Column Type</th>
+                          <th>Column Defination</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let attr of SelectedContentTypeAttributes">
+                          <td>{{attr.field_name}}</td>
+                          <td>{{attr.field_type}}</td>
+                          <td>{{attr.help_text}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </ng-template>
+              </c-accordion-item>
+            </c-accordion>
             <div class="d-md-flex justify-content-md-center">
               <button cButton style="width: 20%;margin: 1rem;" (click)="downloadTemplate()">Download Excel
                 Template</button>
@@ -28,8 +58,7 @@
             </div>
           </div>
           <c-row>
-            <c-alert [visible]="alertVisible" color="danger" dismissible fade
-              variant="solid">
+            <c-alert [visible]="alertVisible" [color]="alertColor" dismissible fade variant="solid">
               <ng-template cTemplateId="alertButtonCloseTemplate">
                 <button (click)="alertVisible=false" cButtonClose white></button>
               </ng-template>

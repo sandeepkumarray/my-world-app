@@ -1,0 +1,8 @@
+<select id="content_select" name="content_select" style="padding: 0px;"
+ cSelect style="border: 0px;" [(ngModel)]="select_value"
+    (change)="valueChanged($event)" [disabled]="!is_Editable">
+    <option value="-1">Select {{utility.titleTransform(content_type)}}</option>
+    <option *ngFor="let option of options" [value]="option[id_column]">
+        {{option[display_column]}}
+    </option>
+</select>

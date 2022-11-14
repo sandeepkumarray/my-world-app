@@ -41,7 +41,7 @@ export class EditDocumentsComponent implements OnInit {
               content.id = m.id;
               content.icon = m.icon!.replace("fa-3x", "fa-2x");
               content.label = m.name;
-              content.link = "#/" + m.content_type + "/" + m.id;
+              content.link = "#/content/" + m.content_type + "/" + m.id;
               content.value = "[" + m.content_type + "-" + m.id + ":" + m.name + "]";
               matches.push(content);
             });

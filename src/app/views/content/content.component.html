@@ -1,0 +1,107 @@
+<c-row class="justify-content-md-center" *ngIf="!content_included_plan">
+    <c-col lg="5">
+        <c-card>
+            <c-card-header class="text-center">
+                <h2>You haven't created any {{content_type}} yet!</h2>
+            </c-card-header>
+            <c-card-body class="text-center">
+                <div>
+                    <span> <i [ngClass]="this.content_type_details.fa_icon"
+                            style="font-size: 6em;padding: 0.5rem;"></i></span>
+
+                </div>
+                <a variant="outline" [ngStyle]="{ 'color' : this.content_type_details.primary_color }"
+                    style="text-decoration: none; cursor: pointer;padding:0;" href=".#/plan/subscription">
+                    Upgrade to Premium to create your first {{content_type_details.name_singular.toLowerCase() }}
+                </a>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+<div class="row" *ngIf="content_included_plan">
+    <div class="col-lg-12">
+        <div class="row">
+            <c-col sm="6" xl="3" *ngFor="let content of contentList">
+                <div class="card-body"
+                    style="height: 265px;background: linear-gradient( rgb(122 122 122 / 50%), rgb(122 122 122 / 50%) ),  url('{{content.image_url}}');background-size: cover;">
+                    <p class="card-text text-white" style="margin-top:10rem;font-size: large;">{{content.content_name}}
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <div class="d-md-flex justify-content-between">
+                        <a class="btn" href=".#/content/{{content_type}}/{{content.id}}/edit">Edit</a>
+                        <a class="btn" href=".#/content/{{content_type}}/{{content.id}}">Preview</a>
+                        <a class="btn" (click)="onDelete(content.id)" [cModalToggle]="alertModal.id">Delete</a>
+                    </div>
+                </div>
+            </c-col>
+
+            <c-col sm="6" xl="3">
+                <a class="text-white" (click)="createContent()" style="cursor: pointer;">
+                    <c-card [style.background]="content_type_details.primary_color" style="height: 320px;background-size: cover;position: relative;
+                    transition: box-shadow .25s, -webkit-box-shadow .25s;
+                    border-radius: 2px;">
+                        <c-card-body style="padding: 24px;
+                        border-radius: 0 0 2px 2px;height: 9em;margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -80%);
+                        text-align: center;">
+                            <div class="align-items-center">
+                                <p><span><i class="fas fa-plus fa-5x"></i></span></p>
+                                <div>
+                                    <strong class="card-title" style="font-size: 24px;">
+                                        New<br>
+                                        {{content_type_details.name_singular.toLowerCase()}}
+                                    </strong>
+                                </div>
+                            </div>
+                        </c-card-body>
+                    </c-card>
+                </a>
+            </c-col>
+
+            <c-col sm="6" xl="3">
+                <a class="text-white" style="cursor: pointer;" href="#/users/content/settings/{{utility.titleTransform(content_type)}}">
+                    <c-card [style.background]="content_type_details.sec_color" style="height: 320px;background-size: cover;position: relative;
+                    transition: box-shadow .25s, -webkit-box-shadow .25s;
+                    border-radius: 2px;">
+                        <c-card-body style="padding: 24px;
+                        border-radius: 0 0 2px 2px;height: 9em;margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -80%);
+                        text-align: center;">
+                            <div class="align-items-center">
+                                <p> <span [innerHtml]="this.content_type_details.icon"></span></p>
+                                <div>
+                                    <strong class="card-title" style="font-size: 24px;">
+                                        Customize template
+                                    </strong>
+                                </div>
+                            </div>
+                        </c-card-body>
+                    </c-card>
+                </a>
+            </c-col>
+        </div>
+    </div>
+</div>
+
+<c-modal #alertModal alignment="center" id="alertModal">
+    <c-modal-body style="background:red;">
+        <h3>Are you sure to delete the {{content_type_details.name_singular.toLowerCase() }}?</h3>
+        <div class="d-md-flex justify-content-md-end">
+            <button [cModalToggle]="alertModal.id" cButton color="primary" style="margin: 20px"
+                (click)="deleteContent('YES')">
+                Yes
+            </button> <button [cModalToggle]="alertModal.id" cButton color="secondary" style="margin: 20px"
+                (click)="deleteContent('NO')">
+                No
+            </button>
+        </div>
+    </c-modal-body>
+</c-modal>

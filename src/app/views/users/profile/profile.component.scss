@@ -1,0 +1,184 @@
+.user-avatar {
+position: relative;
+margin-bottom: 0;
+display: inline-block;
+width: 2rem;
+height: 2rem;
+font-size: 2rem;
+vertical-align: middle;
+border-radius: 4rem;
+}
+
+.user-avatar audio, .user-avatar canvas, .user-avatar img, .user-avatar video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 4rem;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: top;
+    object-position: top;
+}
+
+.user-avatar-xl {
+width: 5rem;
+height: 5rem;
+font-size: 5rem;
+}
+
+.fileinput-button, .fileinput-dropzone {
+position: relative;
+overflow: hidden;
+display: inline-block;
+}
+
+.fileinput-button input, .fileinput-dropzone input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    direction: ltr;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.fileinput-button-label {
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 1rem;
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+background-color: rgba(52,108,176,.86);
+color: #fff;
+font-size: .875rem;
+text-align: center;
+opacity: 0;
+cursor: pointer;
+z-index: 1;
+transition: opacity .2s;
+}
+
+
+.pricingTable {
+    background: #fff;
+    font-family: 'Nanum Gothic', sans-serif;
+    text-align: center;
+
+    border-radius: 30px;
+    box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.3);
+}
+
+.pricingTable .pricingTable-header {
+    color: #fff;
+    background-color: #F08BEB;
+    padding: 20px 0;
+    margin: 0 0 15px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.2);
+}
+
+.pricingTable .title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.pricingTable .price-value {
+    color: #888;
+    margin: 0 0 15px;
+}
+
+.pricingTable .price-value .amount {
+    font-size: 42px;
+    font-weight: 500;
+}
+
+.pricingTable .price-value .duration {
+    font-size: 17px;
+}
+
+.pricingTable .pricing-content {
+    background: linear-gradient(#F27CC6, #F25A73);
+    padding: 25px 0;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+}
+
+.pricingTable .content-list {
+    padding: 0;
+    margin: 0 0 25px;
+    list-style: none;
+}
+
+.pricingTable .content-list li {
+    color: #fff;
+    font-size: 15px;
+    text-align: left;
+    position: relative;
+}
+
+.pricingTable .content-list li:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+.pricingTable .pricingTable-signup a {
+    color: #444;
+    background-color: #fff;
+    font-size: 18px;
+    text-transform: uppercase;
+    width: 150px;
+    padding: 8px 20px;
+    margin: 0 auto;
+    border-radius: 20px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    display: block;
+    transition: all 0.3s ease 0s;
+}
+
+.pricingTable .pricingTable-signup a:hover {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.pricingTable.blue .pricingTable-header {
+    background-color: #5AD8D7;
+}
+
+.pricingTable.blue .pricing-content {
+    background: linear-gradient(#4DC6E1, #249FFC);
+}
+
+.pricingTable.purple .pricingTable-header {
+    background-color: #6778E2;
+}
+
+.pricingTable.purple .pricing-content {
+    background: linear-gradient(#6B69CC, #734FA7);
+}
+
+@media only screen and (max-width: 990px) {
+    .pricingTable {
+        margin-bottom: 30px;
+    }
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid;
+    background-color: inherit;
+    border-color: rgba(0, 0, 21, 0.125);
+}

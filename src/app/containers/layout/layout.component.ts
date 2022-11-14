@@ -46,8 +46,8 @@ export class LayoutComponent implements OnInit {
       url: '/dashboard',
       iconComponent: { name: 'cil-speedometer' },
       badge: {
-        color: 'info',
-        text: 'NEW'
+        color: 'warning',
+        text: 'Core'
       }
     };
 
@@ -77,8 +77,8 @@ export class LayoutComponent implements OnInit {
       url: '/documents',
       iconComponent: { name: 'cil-file' },
       badge: {
-        color: 'info',
-        text: 'NEW'
+        color: 'danger',
+        text: 'HOT'
       }
     };
 
@@ -100,12 +100,12 @@ export class LayoutComponent implements OnInit {
 
           let navdata: any = {
             name: content.name,
-            url: '/' + content.name?.toLowerCase(),
+            url: '/content/' + content.name?.toLowerCase(),
             icon: content.fa_icon + " " + content.name.toLowerCase() + "-pri", //this.sanitizer.bypassSecurityTrustHtml(content.icon),                  
-            badge: {
-              color: 'info',
-              text: 'NEW'
-            }
+            // badge: {
+            //   color: 'info',
+            //   text: 'NEW'
+            // }
           };
           this.fixedNavItems.push(navdata);
         });
@@ -121,12 +121,12 @@ export class LayoutComponent implements OnInit {
               else {
                 let navdata: any = {
                   name: content.name,
-                  url: '/' + content.name?.toLowerCase(),
+                  url: '/content/' + content.name?.toLowerCase(),
                   icon: content.fa_icon + " " + content.name.toLowerCase() + "-pri", //this.sanitizer.bypassSecurityTrustHtml(content.icon),
-                  badge: {
-                    color: 'info',
-                    text: 'NEW'
-                  }
+                  // badge: {
+                  //   color: 'info',
+                  //   text: 'NEW'
+                  // }
                 };
                 moreNavdata.children.push(navdata);
               }

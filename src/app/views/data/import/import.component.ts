@@ -1,8 +1,36 @@
 import { isNull } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { ContentTypes, Users } from 'src/app/model';
+import { Buildings } from 'src/app/model/Buildings';
 import { Characters } from 'src/app/model/Characters';
+import { Conditions } from 'src/app/model/Conditions';
 import { Attribute, ContentTemplateModel } from 'src/app/model/ContentTemplateModel';
+import { Continents } from 'src/app/model/Continents';
+import { Countries } from 'src/app/model/Countries';
+import { Creatures } from 'src/app/model/Creatures';
+import { Deities } from 'src/app/model/Deities';
+import { Floras } from 'src/app/model/Floras';
+import { Foods } from 'src/app/model/Foods';
+import { Governments } from 'src/app/model/Governments';
+import { Groups } from 'src/app/model/Groups';
+import { Items } from 'src/app/model/Items';
+import { Jobs } from 'src/app/model/Jobs';
+import { Landmarks } from 'src/app/model/Landmarks';
+import { Languages } from 'src/app/model/Languages';
+import { Locations } from 'src/app/model/Locations';
+import { Lores } from 'src/app/model/Lores';
+import { Magics } from 'src/app/model/Magics';
+import { Organizations } from 'src/app/model/Organizations';
+import { Planets } from 'src/app/model/Planets';
+import { Races } from 'src/app/model/Races';
+import { Religions } from 'src/app/model/Religions';
+import { Scenes } from 'src/app/model/Scenes';
+import { Sports } from 'src/app/model/Sports';
+import { Technologies } from 'src/app/model/Technologies';
+import { Towns } from 'src/app/model/Towns';
+import { Traditions } from 'src/app/model/Traditions';
+import { Universes } from 'src/app/model/Universes';
+import { Vehicles } from 'src/app/model/Vehicles';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 import { ContentService } from 'src/app/service/content.service';
 import { MyworldService } from 'src/app/service/myworld.service';
@@ -16,12 +44,14 @@ import * as XLSX from 'xlsx';
 export class ImportComponent implements OnInit {
   file: any;
   selectedContentType: string = "";
+  SelectedContentTypeAttributes: Attribute[] = [];
   alertMessage: string = "";
   userContentPlans: any;
   content_type_list: ContentTypes[] = [];
   attr_array: any[] = [];
 
   alertVisible = false;
+  alertColor = 'danger';
 
   constructor(private authService: AuthenticationService,
     private contentService: ContentService, private myworldService: MyworldService) {
@@ -57,14 +87,14 @@ export class ImportComponent implements OnInit {
       let ContentTemplate = contentTemplateModel.contents.find(c => c.content_type == this.selectedContentType.toLowerCase())!;
       ContentTemplate.categories = ContentTemplate.categories.sort((a, b) => a.order - b.order);
 
-      let Attributes: Attribute[] = [];
+      this.SelectedContentTypeAttributes = [];
       ContentTemplate.categories.map(c => {
-        Attributes.push(...c.attributes);
+        this.SelectedContentTypeAttributes.push(...c.attributes);
       });
-      console.log("Attributes", Attributes);
+      console.log("Attributes", this.SelectedContentTypeAttributes);
 
       let headers: any[] = [];
-      Attributes.map(a => {
+      this.SelectedContentTypeAttributes.map(a => {
         headers.push(a.field_name);
       });
       this.attr_array.push(headers);
@@ -92,21 +122,21 @@ export class ImportComponent implements OnInit {
           var workbook = XLSX.read(bstr, { type: "binary" });
           var first_sheet_name = workbook.SheetNames[0];
           var worksheet = workbook.Sheets[first_sheet_name];
-          var excelJsondata = XLSX.utils.sheet_to_json(worksheet, { raw: true, defval: "" });
+          var excelJsondata = XLSX.utils.sheet_to_json(worksheet, { raw: true, defval: null });
 
           console.log("exceljsondata", excelJsondata);
           if (this.validateExcelData(excelJsondata)) {
-            this.uploadExcelData(excelJsondata);
+            //this.uploadExcelData(excelJsondata);
           }
         }
         fileReader.readAsArrayBuffer(this.file);
       }
       else {
-        this.addAlert("Select a File to upload.");
+        this.addAlert("Select a File to upload.", 'danger');
       }
     }
     else {
-      this.addAlert("Select a Content Type.");
+      this.addAlert("Select a Content Type.", 'danger');
     }
   }
 
@@ -115,23 +145,212 @@ export class ImportComponent implements OnInit {
     var saveObject: any;
     var saveAPIRef: any;
 
+    excelJsonString.user_id = accountId;
+
     switch (this.selectedContentType) {
+      case "Buildings":
+        saveObject = excelJsonString as Buildings;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addBuilding(saveObject);
+        break;
+
       case "Characters":
         saveObject = excelJsonString as Characters;
-        saveAPIRef = this.contentService.addCharacters(saveObject);
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addCharacter(saveObject);
+        break;
+
+      case "Conditions":
+        saveObject = excelJsonString as Conditions;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addCondition(saveObject);
+        break;
+
+      case "Continents":
+        saveObject = excelJsonString as Continents;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addContinent(saveObject);
+        break;
+
+      case "Countries":
+        saveObject = excelJsonString as Countries;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addCountrie(saveObject);
+        break;
+
+      case "Creatures":
+        saveObject = excelJsonString as Creatures;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addCreature(saveObject);
+        break;
+
+      case "Deities":
+        saveObject = excelJsonString as Deities;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addDeitie(saveObject);
+        break;
+
+      case "Floras":
+        saveObject = excelJsonString as Floras;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addFlora(saveObject);
+        break;
+
+      case "Foods":
+        saveObject = excelJsonString as Foods;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addFood(saveObject);
+        break;
+
+      case "Governments":
+        saveObject = excelJsonString as Governments;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addGovernment(saveObject);
+        break;
+
+      case "Groups":
+        saveObject = excelJsonString as Groups;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addGroup(saveObject);
+        break;
+
+      case "Items":
+        saveObject = excelJsonString as Items;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addItem(saveObject);
+        break;
+
+      case "Jobs":
+        saveObject = excelJsonString as Jobs;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addJob(saveObject);
+        break;
+
+      case "Landmarks":
+        saveObject = excelJsonString as Landmarks;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addLandmark(saveObject);
+        break;
+
+      case "Languages":
+        saveObject = excelJsonString as Languages;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addLanguage(saveObject);
+        break;
+
+      case "Locations":
+        saveObject = excelJsonString as Locations;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addLocation(saveObject);
+        break;
+
+      case "Lores":
+        saveObject = excelJsonString as Lores;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addLore(saveObject);
+        break;
+
+      case "Magics":
+        saveObject = excelJsonString as Magics;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addMagic(saveObject);
+        break;
+
+      case "Planets":
+        saveObject = excelJsonString as Planets;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addPlanet(saveObject);
+        break;
+
+      case "Races":
+        saveObject = excelJsonString as Races;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addRace(saveObject);
+        break;
+
+      case "Religions":
+        saveObject = excelJsonString as Religions;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addReligion(saveObject);
+        break;
+
+      case "Scenes":
+        saveObject = excelJsonString as Scenes;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addScene(saveObject);
+        break;
+
+      case "Sports":
+        saveObject = excelJsonString as Sports;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addSport(saveObject);
+        break;
+
+      case "Technologies":
+        saveObject = excelJsonString as Technologies;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addTechnologie(saveObject);
+        break;
+
+      case "Towns":
+        saveObject = excelJsonString as Towns;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addTown(saveObject);
+        break;
+
+      case "Traditions":
+        saveObject = excelJsonString as Traditions;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addTradition(saveObject);
+        break;
+
+      case "Universes":
+        saveObject = excelJsonString as Universes;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addUniverse(saveObject);
+        break;
+
+      case "Vehicles":
+        saveObject = excelJsonString as Vehicles;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addVehicle(saveObject);
+        break;
+
+      case "Organizations":
+        saveObject = excelJsonString as Organizations;
+        saveObject.user_id = accountId;
+        saveAPIRef = this.contentService.addOrganization(saveObject);
         break;
     }
+
     console.log("saveObject", saveObject);
     saveAPIRef.subscribe({
       next: (res: any) => {
-        console.log(res);
+        var user_id = accountId;
+        var content_id = res.data;
+        var name = excelJsonString.Name;
+        var content_type = this.selectedContentType;
+        var Universe = excelJsonString.Universe == '' ? null : (excelJsonString.Universe == null ? 0 : excelJsonString.Universe);
+
+        this.myworldService.addUserContentAttributes(Universe, user_id, content_id, name, content_type).subscribe({
+          next: (res: any) => {
+            console.log("addUserContentAttributes", res);
+          }
+        });
+
+        console.log("uploadExcelData result", res);
         //progress
+
+        this.addAlert("File upload complete.", 'success');
+      },
+      error: (e: any) => {
+        this.addAlert("File upload failed.", 'danger');
       }
     });
     // this.myworldService.createContent(this.selectedContentType, excelJsonString, accountId).subscribe({
     //   next: (res) => {
     //     console.log(res);
-    //     //progress
+    //     //progress 
     //   }
     // });
   }
@@ -175,7 +394,7 @@ export class ImportComponent implements OnInit {
           }
         }
         else {
-          this.addAlert("You have Exceeded the maximum allowed content for " + this.selectedContentType + ".");
+          this.addAlert("You have Exceeded the maximum allowed content for " + this.selectedContentType + ".", 'danger');
         }
       }
     });
@@ -217,8 +436,9 @@ export class ImportComponent implements OnInit {
     // });
   }
 
-  addAlert(message: string) {
+  addAlert(message: string, type: string) {
     this.alertVisible = true;
     this.alertMessage = message;
+    this.alertColor = type;
   }
 }

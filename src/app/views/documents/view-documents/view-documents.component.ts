@@ -3,10 +3,11 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
 import { ContentService } from 'src/app/service/content.service';
 import { DocumentService } from 'src/app/service/document.service';
 import 'quill-mention'
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Documents, Users } from 'src/app/model';
-import { from, map, mergeMap } from 'rxjs';
+import { filter, from, map, mergeMap } from 'rxjs';
 import { parse } from 'node-html-parser';
+import { htmlToText, HtmlToTextOptions } from 'html-to-text';
 
 @Component({
   selector: 'app-view-documents',
@@ -17,6 +18,7 @@ export class ViewDocumentsComponent implements OnInit {
   id: any = "";
   title: string = "";
   documentBody: string = "";
+  isReadonly: boolean = false;
 
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -24,7 +26,16 @@ export class ViewDocumentsComponent implements OnInit {
     private documentService: DocumentService,
     private contentService: ContentService,
     private router: Router) {
+
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.router.events.pipe(filter((event):
+      event is NavigationEnd =>
+      event instanceof NavigationEnd)).forEach(next => {
+        console.log("NavigationEnd", next);
+        if (next.url.includes('plaintext')) {
+          this.isReadonly = true;
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -46,21 +57,41 @@ export class ViewDocumentsComponent implements OnInit {
               var contentID = contentLabel.split('-')[1];
               this.contentService.getContentDetailsFromTypeID(contentType, contentID).pipe(
                 map((res) => {         // <-- map back to original item with added type
-                  let contentTypeName = contentType.substring(0, contentType.length - 1);
-                  parsedAnchors[index].classList.add(contentTypeName + "-link");
-                  parsedAnchors[index].innerHTML = res.content_name;
+                  if (res != null) {
+                    let contentTypeName = contentType.substring(0, contentType.length - 1);
+                    parsedAnchors[index].classList.add(contentTypeName + "-link");
+                    parsedAnchors[index].innerHTML = res.content_name;
+                    parsedAnchors[index].setAttribute("href", "#/content/" + contentType + "/" + contentID);
+                  }
 
                 })
               ).subscribe({
                 next: response => {
-                  this.documentBody = parsedHtml.outerHTML;
+                  let options: HtmlToTextOptions = {};
+                  options.wordwrap = false;
+
+                  var finalString = parsedHtml.outerHTML;
+
+                  if (this.isReadonly) {
+                    finalString = htmlToText(parsedHtml.outerHTML, options);
+                  }
+                  console.log("finalString", finalString);
+                  this.documentBody = finalString//parsedHtml.outerHTML;
                 }
               });
             }
           });
         }
         else {
-          this.documentBody = parsedHtml.outerHTML;
+          let options: HtmlToTextOptions = {};
+          options.wordwrap = false;
+          var finalString = parsedHtml.outerHTML;
+
+          if (this.isReadonly) {
+            finalString = htmlToText(parsedHtml.outerHTML, options);
+          }
+          //console.log("finalString", finalString);
+          this.documentBody = finalString//parsedHtml.outerHTML;
         }
       }
     });

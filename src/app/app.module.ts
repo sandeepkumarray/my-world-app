@@ -55,6 +55,7 @@ import { AppdataService } from './service/appdata.service';
 import { AuthGuard } from './utility/AuthGuard';
 import { QuillModule } from 'ngx-quill';
 import Counter from './utility/Counter';
+import { ContentPlanService } from './service/content-plan.service';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -73,7 +74,7 @@ const APP_CONTAINERS = [
     Page404Component,
     Page500Component,
     LoginComponent,
-    RegisterComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -128,7 +129,8 @@ const APP_CONTAINERS = [
     ContentService,
     AppdataService,
     AuthenticationService,
-    AuthGuard
+    AuthGuard,
+    ContentPlanService
   ],
   bootstrap: [AppComponent]
 })

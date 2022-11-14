@@ -34,7 +34,7 @@
                                     type="password" name="confirmpassword" [(ngModel)]="form.confirmpassword" required minlength="6" #confirmpassword="ngModel"/>
                             </c-input-group>
                             <div class="d-grid">
-                                <button cButton color="success">Create Account</button>
+                                <button cButton color="success" (onclick)="onRegister()">Create Account</button>
                             </div>
                         </form>
                     </c-card-body>

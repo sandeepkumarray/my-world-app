@@ -18,10 +18,7 @@ export class LoginComponent implements OnInit {
   customStylesValidated = false;
 
   public LoginForm!: FormGroup;
-  form: any = {
-    username: null,
-    password: null
-  };
+  
   errorMessage = '';
 
   constructor(private myworldService: MyworldService,
@@ -57,16 +54,17 @@ export class LoginComponent implements OnInit {
           if (response.success) {
             this.authService.setUser(response.data);
             let user = response.data as Users;
-            this.myworldService.getObjectStorageKeys(1, 1).subscribe({
-              next: response => {
-                this.myworldService.getUserContentBucket(user.id).subscribe({
-                  next: res => {
-                    response.bucketName = res.bucket_Name;
-                    this.authService.setValue(constants.ObjectStorageKey, response);
-                  }
-                });
-              }
-            });
+            console.log("user", user);
+            // this.myworldService.getObjectStorageKeys(1, 1).subscribe({
+            //   next: response => {
+            //     this.myworldService.getUserContentBucket(user.id).subscribe({
+            //       next: res => {
+            //         response.bucketName = res.bucket_Name;
+            //         this.authService.setValue(constants.ObjectStorageKey, response);
+            //       }
+            //     });
+            //   }
+            // });
 
             this.myworldService.getAllAppConfig(1).subscribe({
               next: (res) => {

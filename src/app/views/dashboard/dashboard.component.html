@@ -2,7 +2,7 @@
   <c-col sm="8">
     <c-row>
       <c-col sm="6" xl="3" *ngFor="let dItem of DashboardItems">
-        <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="#/{{dItem.Controller}}">
+        <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="#/content/{{dItem.Controller}}">
           <c-card class="text-white "
             style="width: 200px;height: 200px;background: linear-gradient( rgb(122 122 122), rgb(122 122 122 / 50%) ),  url('assets/img/cards/{{dItem.ItemKey}}.png');background-size: cover;">
             <c-card-body>
@@ -22,7 +22,7 @@
   </c-col>
   <c-col sm="4">
     <h5>PICK UP WHERE YOU LEFT OFF</h5>
-    <a style="text-decoration: none;width: inherit;" *ngFor="let dItem of DashboardRecentList" href="#/{{dItem.content_type}}/{{dItem.id}}">
+    <a style="text-decoration: none;width: inherit;" *ngFor="let dItem of DashboardRecentList" href="{{dItem.url}}">
       <c-card class="text-white text-center" [style.background]="dItem.primary_color">
         <c-card-body class="d-md-flex justify-content-lg-start">
           <span [innerHTML]="dItem.icon"></span>
@@ -34,7 +34,8 @@
       </c-card>
     </a>
     <h5>CREATE SOMETHING NEW</h5>
-    <a style="text-decoration: none;width: inherit;" *ngFor="let dItem of DashboardCreateItemList" href="#/create/{{dItem.Controller}}">
+    <a style="text-decoration: none;width: inherit;cursor: pointer;" *ngFor="let dItem of DashboardCreateItemList"
+    (click)="createContent(dItem.Controller!)">
       <c-card class="text-white text-center" [style.background]="dItem.primary_color">
         <c-card-body class="d-md-flex justify-content-lg-start">
           <span [innerHTML]="dItem.icon"></span>

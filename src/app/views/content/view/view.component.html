@@ -1,0 +1,162 @@
+<div class="c-body">
+    <main class="c-main">
+        <div class="container-fluid">
+            <div class="fade-in">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header"><strong>{{utility.titleTransform(content_type)}}</strong> Details
+
+                            </div>
+                            <div class="card-body">
+                                <div class="align-items-start" *ngIf="contentAvailable == true">
+                                    <div class="tab-content">
+                                        <div *ngFor="let category of ContentTemplate.categories">
+                                            <div id="{{category.label}}_panel"
+                                                *ngIf="category.attributes.length > 0 && category.is_active && !category.is_hidden">
+
+                                                <div class="card">
+                                                    <div class="card-header d-flex justify-content-between align-items-center"
+                                                        [style.background]="headerBackgroundColor">
+                                                        <span>{{category.label}}</span>
+                                                        <span [innerHTML]="category.icon"></span>
+                                                    </div>
+                                                    <div class="card-body" style="padding:10px;">
+                                                        <div *ngFor="let att of category.attributes">
+                                                            <div class="form-group row"
+                                                                *ngIf="att.is_active && ContentDic[att.field_name] != ''">
+                                                                <label class="col-md-3 col-form-label"
+                                                                    for="text-input">{{att.field_label}}</label>
+                                                                <div class="col-md-9"
+                                                                    *ngIf="att.control_type == 'select'">
+                                                                    <app-content-select class="form-control"
+                                                                        style="padding: 0px;"
+                                                                        [content_type]="att.reference_table"
+                                                                        [id_column]="'id'" [display_column]="'name'"
+                                                                        [select_value]="NumberType(ContentDic[att.field_name])"
+                                                                        aria-readonly="true" readonly
+                                                                        [is_Editable]=false>
+                                                                    </app-content-select>
+                                                                </div>
+                                                                <div class="col-md-9"
+                                                                    *ngIf="Constants.VarcharList.indexOf(att.field_type) > -1 ">
+                                                                    <div id="contentsModel_{{att.field_name}}"
+                                                                        [innerHtml]="ContentDic[att.field_name]"
+                                                                        class="form-control" readonly></div>
+                                                                </div>
+
+                                                                <div class="col-md-9"
+                                                                    *ngIf="att.control_type != 'select' && Constants.IntList.indexOf(att.field_type) > -1">
+                                                                    <div id="contentsModel_{{att.field_name}}"
+                                                                        [innerHtml]="ContentDic[att.field_name]"
+                                                                        class="form-control" type="number" readonly>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-9"
+                                                                    *ngIf="Constants.TinyintList.indexOf(att.field_type) > -1">
+                                                                    <input id="contentsModel_{{att.field_name}}"
+                                                                        [ngModel]="Constants.convertStringToNNumber(ContentDic[att.field_name]) == 1 ? true : Constants.convertStringToNNumber(ContentDic[att.field_name]) == 0 ? false : null"
+                                                                        style="margin: 15px ;padding: 15px;"
+                                                                        class="form-check-input mt-0" type="checkbox"
+                                                                        disabled="true" />
+                                                                </div>
+
+                                                                <div class="col-md-9"
+                                                                    *ngIf="Constants.TinyintList.indexOf(att.field_type) < 0 && Constants.IntList.indexOf(att.field_type) < 0 && Constants.VarcharList.indexOf(att.field_type) < 0">
+                                                                    <div id="contentsModel_{{att.field_name}}"
+                                                                        [innerHtml]="ContentDic[att.field_name]"
+                                                                        class="form-control" readonly></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <section id="{{category.label}}_panel"
+                                            *ngFor="let category of ContentTemplate.references">
+                                            <div class="card">
+                                                <div class="card-header d-flex justify-content-between align-items-center"
+                                                    style="background:cadetblue">
+                                                    <span>{{category.label}}</span>
+                                                    <span [innerHTML]="category.icon"></span>
+                                                </div>
+                                                <div class="card-body" style="padding:10px;">
+                                                    <div *ngFor="let att of category.attributes">
+                                                        <div class="form-group row"
+                                                            *ngIf="att.is_active && att.field_name.toLowerCase() == 'gallery'">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Uploaded Images</label>
+                                                                <div class="row">
+                                                                    <div class="card-img"
+                                                                        *ngFor="let contentObject of ContentObjectList"
+                                                                        style="width: 18rem; margin-right: 1.0rem;margin-top: 1.0rem;margin-left:0.5rem;">
+                                                                        <div class="card-body img-container"
+                                                                            style="height: 265px;background: url('{{contentObject.image_url}}');background-size: cover;">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col m3 l">
+                        <div class="card">
+                            <div class="card-header">ACTIONS</div>
+                            <div class="card-body" style="padding:0;">
+                                <ul id="categoriesTab" class="nav flex-column nav-pills collection content-tabs"
+                                    role="tablist">
+                                    <li class="nav-item collection-item tab">
+                                        <a class="d-flex justify-content-between align-items-center"
+                                            [routerLink]="['/content',content_type,id,'edit']">
+                                            <div>
+                                                <span>
+                                                    <i class="material-icons left" translate="no">business</i></span>
+                                                <span style="margin-left:20px">Edit this content</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item collection-item tab">
+                                        <a class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span>
+                                                    <i class="material-icons left" translate="no">share</i></span>
+                                                <span style="margin-left:20px">share this
+                                                    content</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item collection-item tab">
+                                        <a class="d-flex justify-content-between align-items-center">
+                                            <div><span>
+                                                    <i class="material-icons left" translate="no">history</i></span>
+                                                <span style="margin-left:20px">view change</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item collection-item tab">
+                                        <a class="d-flex justify-content-between align-items-center">
+                                            <div><span>
+                                                    <i class="material-icons left" translate="no">archive</i></span>
+                                                <span style="margin-left:20px">Archive page</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

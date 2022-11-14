@@ -1,4 +1,5 @@
 import { BaseModel } from "./BaseModel";
+import { ContentTypes } from "./ContentTypes";
 export class ContentPlans extends BaseModel {
 
 		public id!: number;
@@ -38,4 +39,6 @@ export class ContentPlans extends BaseModel {
 		public vehicles_count!: number;
 		public created_by!: number;
 		public created_date!: Date;
+		public plan_contents!: ContentTypes[];
+		public is_currentPlan!:boolean;
 }

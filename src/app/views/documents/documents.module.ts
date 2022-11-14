@@ -37,6 +37,7 @@ import {
 import { QuillModule } from 'ngx-quill';
 import { FoldersComponent } from './folders/folders.component';
 import { GridDocumentsComponent } from './grid-documents/grid-documents.component';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 
 @NgModule({
@@ -71,8 +72,11 @@ import { GridDocumentsComponent } from './grid-documents/grid-documents.componen
     DropdownModule,
     PaginationModule,
     PopoverModule,
-    TableModule,ModalModule,FormsModule,
-    QuillModule.forRoot()
+    TableModule,
+    ModalModule,
+    FormsModule,
+    QuillModule.forRoot(),
+    ComponentsModule
   ]
 })
 export class DocumentsModule { }

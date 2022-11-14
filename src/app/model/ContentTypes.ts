@@ -10,4 +10,6 @@ export class ContentTypes extends BaseModel {
 		public sec_color!: string;
 		public created_date!: Date;
 		public created_by!: number;
+		public count!: number;
+		public name_singular!: string;
 }

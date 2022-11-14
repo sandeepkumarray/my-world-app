@@ -1,0 +1,415 @@
+<c-row>
+    <c-col md="3">
+        <div class="card">
+            <div class="card-header">Profile details</div>
+            <div class="card-body" style="padding:0;">
+                <c-nav class="flex-column nav-pills collection content-tabs" #profileTab>
+                    <c-nav-item class="collection-item tab">
+                        <a class="d-flex justify-content-between align-items-center" style="cursor: pointer;"
+                            id="profile_panel" [active]="true" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0">
+                            <div>
+                                <span><i class="material-icons" translate="no">person</i></span>
+                                <span style="margin-left:20px">Profile</span>
+                            </div>
+                        </a>
+                    </c-nav-item>
+                    <c-nav-item class="collection-item tab">
+                        <a class="d-flex justify-content-between align-items-center" style="cursor: pointer;"
+                            id="Account_panel" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1">
+                            <div>
+                                <span><i class="material-icons" translate="no">settings</i></span>
+                                <span style="margin-left:20px">Account</span>
+                            </div>
+                        </a>
+                    </c-nav-item>
+                    <c-nav-item class="collection-item tab">
+                        <a class="d-flex justify-content-between align-items-center" style="cursor: pointer;"
+                            id="Notification_panel" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2">
+                            <div>
+                                <span><i class="material-icons" translate="no">notifications</i></span>
+                                <span style="margin-left:20px">Notifications</span>
+                            </div>
+                        </a>
+                    </c-nav-item>
+                    <c-nav-item class="collection-item tab">
+                        <a class="d-flex justify-content-between align-items-center" style="cursor: pointer;"
+                            id="ChangePassword_panel" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="3">
+                            <div>
+                                <span><i class="material-icons" translate="no">password</i></span>
+                                <span style="margin-left:20px">Change Password</span>
+                            </div>
+                        </a>
+                    </c-nav-item>
+                    <c-nav-item class="collection-item tab">
+                        <a class="d-flex justify-content-between align-items-center" style="cursor: pointer;"
+                            id="ContentPlans_panel" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="4">
+                            <div>
+                                <span><i class="material-icons" translate="no">info</i></span>
+                                <span style="margin-left:20px">Content Plans</span>
+                            </div>
+                        </a>
+                    </c-nav-item>
+                </c-nav>
+            </div>
+        </div>
+    </c-col>
+    <c-col md="8">
+        <div class="align-items-start">
+            <c-tab-content #tabContent="cTabContent" class="tab-content">
+                <c-tab-pane class="tab-pane " id="profile_tabpane">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="background: rgb(64, 64, 246);">
+                            Profile
+                            <span><i class="material-icons" translate="no">person</i></span>
+                        </div>
+                        <div class="card-body" style="padding:10px;">
+                            <div class="user-avatar user-avatar-xl fileinput-button">
+                                <div class="fileinput-button-label"> Change photo </div>
+                                <img class="c-avatar-img" [src]="profilePhoto" alt="user@email.com">
+                                <input id="fileupload-avatar" type="file" name="avatar" (change)="addImage($event)">
+                            </div>
+
+                            <div>
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputUsername">Username</label>
+                                        <input id="inputUsername" class="form-control"
+                                            (blur)="onBlur($event, 'username')" [value]="user.username" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputBio">Bio</label>
+                                        <input id="inputBio" class="form-control" (blur)="onBlur($event, 'bio')"
+                                            [value]="user.bio" />
+                                    </div>
+                                </div>
+                                <c-row class="form-group">
+                                    <c-col md="5">
+                                        <label class="col-form-label" for="inputCommunityFeaturesEnabled">Community
+                                            Features Enabled</label>
+                                    </c-col>
+                                    <c-col md="5">
+                                        <c-form-check sizing="xl" switch class="justify-content-end d-flex">
+                                            <input cFormCheckInput checked type="checkbox"
+                                                [ngModel]="Constants.convertStringToNNumber(user.community_features_enabled!) == 1 ? true : Constants.convertStringToNNumber(user.community_features_enabled!) == 0 ? false : null"
+                                                (change)="checkValue($event, 'community_features_enabled')" />
+                                        </c-form-check>
+                                    </c-col>
+                                </c-row>
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputForumsBadgeText">Forums Badge
+                                            Text</label>
+                                        <input id="inputForumsBadgeText" class="form-control"
+                                            (blur)="onBlur($event, 'forums_badge_text')"
+                                            [value]="user.forums_badge_text" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputFavoriteAuthor">Favorite Author</label>
+                                        <input id="inputFavoriteAuthor" class="form-control"
+                                            (blur)="onBlur($event, 'favorite_author')" [value]="user.favorite_author" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputFavoriteBook">Favorite Book</label>
+                                        <input id="inputFavoriteBook" class="form-control"
+                                            (blur)="onBlur($event, 'favorite_book')" [value]="user.favorite_book" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputFavoriteGenre">Favorite Genre</label>
+                                        <input id="inputFavoriteGenre" class="form-control"
+                                            (blur)="onBlur($event, 'favorite_genre')" [value]="user.favorite_genre" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputFavoritePageType">Favorite Page
+                                            Type</label>
+                                        <input id="inputFavoritePageType" class="form-control"
+                                            (blur)="onBlur($event, 'favorite_page_type')"
+                                            [value]="user.favorite_page_type" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputFavoriteQuote">Favorite Quote</label>
+                                        <input id="inputFavoriteQuote" class="form-control"
+                                            (blur)="onBlur($event, 'favorite_quote')" [value]="user.favorite_quote" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputInspirations">Inspirations</label>
+                                        <input id="inputInspirations" class="form-control"
+                                            (blur)="onBlur($event, 'inspirations')" [value]="user.inspirations" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputInterests">Interests</label>
+                                        <input id="inputInterests" class="form-control"
+                                            (blur)="onBlur($event, 'interests')" [value]="user.interests" />
+                                    </div>
+                                </div>
+
+                                <c-row class="form-group">
+                                    <c-col md="5">
+                                        <label class="col-form-label" for="inputPrivateProfile">Private Profile</label>
+                                    </c-col>
+                                    <c-col md="5">
+                                        <c-form-check sizing="xl" switch class="justify-content-end d-flex">
+                                            <input cFormCheckInput type="checkbox"
+                                                [ngModel]="Constants.convertStringToNNumber(user.private_profile!) == 1 ? true : Constants.convertStringToNNumber(user.private_profile!) == 0 ? false : null"
+                                                (change)="checkValue($event, 'private_profile')" />
+                                        </c-form-check>
+                                    </c-col>
+                                </c-row>
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputWebsite">Website</label>
+                                        <input id="inputWebsite" class="form-control" (blur)="onBlur($event, 'website')"
+                                            [value]="user.website" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c-tab-pane>
+                <c-tab-pane class="tab-pane " id="account_tabpane">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="background: rgb(64, 64, 246);">
+                            Account
+                            <span><i class="material-icons" translate="no">settings</i></span>
+                        </div>
+                        <div class="card-body" style="padding:10px;">
+                            <div>
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputName">Name</label>
+                                        <input id="inputName" class="form-control" (blur)="onBlur($event, 'name')"
+                                            [value]="user.name" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputAge">Age</label>
+                                        <input id="inputAge" class="form-control" (blur)="onBlur($event, 'age')"
+                                            [value]="user.age" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputEmail">Email</label>
+                                        <input id="inputEmail" class="form-control" (blur)="onBlur($event, 'email')"
+                                            [value]="user.email" />
+                                    </div>
+                                </div>
+
+                                <c-row class="form-group">
+                                    <c-col md="5">
+                                        <label class="col-form-label" for="inputDarkModeEnabled">Dark Mode
+                                            Enabled</label>
+                                    </c-col>
+                                    <c-col md="5">
+                                        <c-form-check sizing="xl" switch class="justify-content-end d-flex">
+                                            <input cFormCheckInput checked type="checkbox"
+                                                [ngModel]="Constants.convertStringToNNumber(user.dark_mode_enabled!) == 1 ? true : Constants.convertStringToNNumber(user.dark_mode_enabled!) == 0 ? false : null"
+                                                (change)="checkValue($event, 'dark_mode_enabled')" />
+                                        </c-form-check>
+                                    </c-col>
+                                </c-row>
+
+                                <c-row class="form-group">
+                                    <c-col md="5">
+                                        <label class="col-form-label" for="inputEmailUpdates">Email Updates</label>
+                                    </c-col>
+                                    <c-col md="5">
+                                        <c-form-check sizing="xl" switch class="justify-content-end d-flex">
+                                            <input cFormCheckInput checked type="checkbox"
+                                                [ngModel]="Constants.convertStringToNNumber(user.email_updates!) == 1 ? true : Constants.convertStringToNNumber(user.email_updates!) == 0 ? false : null"
+                                                (change)="checkValue($event, 'email_updates')" />
+                                        </c-form-check>
+                                    </c-col>
+                                </c-row>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputGender">Gender</label>
+                                        <input id="inputGender" class="form-control" (blur)="onBlur($event, 'gender')"
+                                            [value]="user.gender" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputLocation">Location</label>
+                                        <input id="inputLocation" class="form-control"
+                                            (blur)="onBlur($event, 'location')" [value]="user.location" />
+                                    </div>
+                                </div>
+
+                                <c-row class="form-group">
+                                    <c-col md="5">
+                                        <label class="col-form-label" for="inputNotificationUpdates">Notification
+                                            Updates</label>
+                                    </c-col>
+                                    <c-col md="5">
+                                        <c-form-check sizing="xl" switch class="justify-content-end d-flex">
+                                            <input cFormCheckInput checked type="checkbox"
+                                                [ngModel]="Constants.convertStringToNNumber(user.notification_updates!) == 1 ? true : Constants.convertStringToNNumber(user.notification_updates!) == 0 ? false : null"
+                                                (change)="checkValue($event, 'notification_updates')" />
+                                        </c-form-check>
+                                    </c-col>
+                                </c-row>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputOccupation">Occupation</label>
+                                        <input id="inputOccupation" class="form-control"
+                                            (blur)="onBlur($event, 'occupation')" [value]="user.occupation" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="inputOtherNames">Other Names</label>
+                                        <input id="inputOtherNames" class="form-control"
+                                            (blur)="onBlur($event, 'other_names')" [value]="user.other_names" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c-tab-pane>
+                <c-tab-pane class="tab-pane " id="notification_tabpane">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="background: rgb(64, 64, 246);">
+                            Notifications
+                            <span><i class="material-icons" translate="no">notifications</i></span>
+                        </div>
+                        <div class="card-body" style="padding:10px;">
+                            <div>
+                                <div class="form-group row">
+                                    <app-coming-soon></app-coming-soon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c-tab-pane>
+                <c-tab-pane class="tab-pane " id="changepassword_tabpane">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="background: rgb(64, 64, 246);">
+                            Change Password
+                            <span><i class="material-icons" translate="no">password</i></span>
+                        </div>
+                        <div class="card-body" style="padding:10px;">
+                            <div>
+                                <form cForm [formGroup]="passwordForm" novalidate (ngSubmit)="onSubmit()"
+                                    class="needs-validation">
+                                    <c-row class="form-group">
+                                        <c-col md="6">
+                                            <label class="col-form-label" for="new_password">New Password</label>
+                                            <input cFormControl id="password" type="password" formControlName="password"
+                                                placeholder="Password" autocomplete="new-password" required
+                                                [ngClass]="{ 'is-invalid': (submitted || f['password'].touched) && f['password'].invalid, 'is-valid': f['password'].touched && f['password'].valid }" />
+                                            <div *ngIf="submitted && f['password'].invalid" class="invalid-feedback">
+                                                <div *ngIf="f['password'].hasError('required')">Password is required
+                                                </div>
+                                                <div *ngIf="f['password'].hasError('minlength')">
+                                                    {{formErrors['password'].minLength}}</div>
+                                                <div *ngIf="f['password'].hasError('pattern')">
+                                                    {{formErrors['password'].pattern}}</div>
+                                            </div>
+                                        </c-col>
+                                    </c-row>
+                                    <c-row class="form-group">
+                                        <c-col md="6">
+                                            <label class="col-form-label" for="confirm_password">Confirm
+                                                Password</label>
+                                            <input cFormControl id="confirmPassword" type="password"
+                                                formControlName="confirmPassword" placeholder="Confirm password"
+                                                autocomplete="off" required
+                                                [ngClass]="{ 'is-invalid': submitted && passwordForm.errors, 'is-valid': f['confirmPassword'].touched && !passwordForm.errors }" />
+                                            <div *ngIf="submitted && passwordForm.errors" class="invalid-feedback">
+                                                <div *ngIf="passwordForm.errors['passwordMismatch']">
+                                                    {{formErrors['confirmPassword'].passwordMismatch}}</div>
+                                            </div>
+                                        </c-col>
+                                    </c-row>
+                                    <c-col xs="12">
+                                        <button cButton class="me-1" color="primary" type="submit">
+                                            Submit
+                                        </button>
+                                    </c-col>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </c-tab-pane>
+                <c-tab-pane class="tab-pane " id="contentplans_tabpane">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                            style="background: rgb(64, 64, 246);">
+                            Content Plans
+                            <span><i class="material-icons" translate="no">info</i></span>
+                        </div>
+                        <div class="card-body" style="padding:10px;">
+
+                            You're currently subscribed to MyWorld's {{this.current_plan.name}} plan.
+                            <div>
+                                <div class="card-group card-group-scroll" style="padding-top:5px">
+                                    <div class="col-md-4 col-sm-6" style="padding: 10px;" *ngFor="let plan of contentPlans">
+                                        <div class="pricingTable">
+                                            <div class="pricingTable-header">
+                                                <h3 class="title">{{plan.name}}</h3>
+                                            </div>
+                                            <div class="price-value">
+                                                <span class="amount">$ {{plan.monthly_cents}}</span>
+                                                <span class="duration">/month</span>
+                                            </div>
+                                            <div class="pricing-content">
+                                                <ul class="content-list list-group">
+                                                    <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center"
+                                                        *ngFor="let ct of plan.plan_contents">
+                                                        <span>{{ct.name}}</span>
+                                                        <span> <i [ngClass]="ct.fa_icon" style="font-size: xx-large;padding: 0.5rem;"></i></span>
+                                                        <span>{{ct.count}}</span>
+                                                    </li>
+                                                </ul>
+                                                <div class="pricingTable-signup">
+                                                    <label *ngIf="plan.is_currentPlan">Current Selected Plan</label>
+
+                                                    <a *ngIf="!plan.is_currentPlan" (onClick)="changePlan(plan.id)">Buy Now</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c-tab-pane>
+            </c-tab-content>
+        </div>
+    </c-col>
+</c-row>

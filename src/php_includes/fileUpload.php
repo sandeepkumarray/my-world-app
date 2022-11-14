@@ -13,11 +13,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $object_size = $_POST['object_size'];
     $content_type = $_POST['content_type'];
     $content_id = $_POST['content_id'];
+    $user_id = $_POST['user_id'];
 
     $log->info("Filename = $object_name.\r\n");
     $log->info("content_id = $content_id.\r\n");
     $log->info("content_type = $content_type.\r\n");
     $log->info("filetype = $object_type.\r\n");
+    $log->info("user_id = $user_id.\r\n");
+    
     
     $log->info("Started uploading file.\r\n");  
     $fileblob = file_get_contents($_FILES['object_blob']['tmp_name']);
@@ -31,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
    
     if ($result) {
 
-        $sql = "INSERT INTO content_object_attachment(`content_id`,`content_type`,`object_id`) 
-        VALUES('$content_id','$content_type','$object_id')"; 
+        $sql = "INSERT INTO content_object_attachment(`content_id`,`content_type`,`object_id`,`user_id`) 
+        VALUES('$content_id','$content_type','$object_id','$user_id')"; 
 
         $result2 = mysqli_query($link, $sql);
         if ($result2){

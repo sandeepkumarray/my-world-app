@@ -10,6 +10,222 @@ require "logWriter.php";
 $response = new dbResponse;
 $log = new logWriter;
 
+function deleteContent($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started delete function.");
+
+    $content_type = trim($data->content_type);
+    $content_id = trim($data->content_id);
+
+    $sql = "DELETE FROM `$content_type` WHERE id = $content_id; ";
+
+    $log->info("sql".$sql."");
+
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Deleted successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);            
+    $log->info("Completed delete function.");
+}
+
+function getAllContentBlobObject(){    
+    $user_id = $_GET['user_id'];
+    
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT cbo.`object_id`,`object_name`,`object_type`,`object_size`,`created_at`,coa.`content_type`,coa.`content_id`,
+    ct.icon, ct.primary_color, ct.fa_icon,
+    uca.name,`object_blob`
+        FROM `content_blob_object` cbo
+        Join content_object_attachment coa on cbo.object_id = coa.object_id
+        join content_types ct on coa.`content_type` = ct.name
+        inner Join user_content_attributes uca on coa.content_id = uca.content_id and uca.content_type = coa.content_type
+        Where coa.user_id = $user_id";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    $log->info("row_cnt = ".$row_cnt);
+    if ($result) {
+        if ($row_cnt > 0) {
+            $myArray = array();
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $log->info("row loop");
+                $obj = new stdClass();
+                $obj->object_id = $row['object_id'];
+                $obj->object_name = $row['object_name'];
+                $obj->object_type = $row['object_type'];
+                $obj->object_size = $row['object_size'];
+                $obj->created_at = $row['created_at'];
+                $obj->content_type = $row['content_type'];
+                $obj->content_id = $row['content_id'];
+                $obj->name = $row['name'];
+                $obj->icon = $row['icon'];
+                $obj->primary_color = $row['primary_color'];
+                $obj->fa_icon = $row['fa_icon'];
+                $obj->object_blob = base64_encode($row['object_blob']);
+                array_push($myArray, $obj);
+            }
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $log->info("no data");
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $log->info("no result");
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
+
+function getUserBlob(){
+    $user_id = $_GET['user_id'];
+    $blob_type = $_GET['blob_type'];
+
+
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT `user_id`, `blob`, `blob_type`, `file_type`, `created_at`, `updated_at` FROM `user_blob` WHERE user_id = '$user_id' and blob_type = '$blob_type'";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+
+            while($obj = mysqli_fetch_object($result)){
+                $log->info("user_id: ".$obj->user_id."\n");
+                $log->info("blob_type: ".$obj->blob_type."\n");
+                $log->info("file_type: ".$obj->file_type."\n");
+                $log->info("created_at: ".$obj->created_at."\n");
+                $log->info("updated_at: ".$obj->updated_at."\n");
+                $objClass = new stdClass();
+                $objClass->blob_type = $obj->blob_type;
+                $objClass->file_type = $obj->file_type;
+                $objClass->created_at = $obj->created_at;
+                $objClass->updated_at = $obj->updated_at;
+                $objClass->blob =  base64_encode($obj->blob);
+             }
+            // $row = $result->fetch_object();
+           
+            // $myArray = $obj;
+
+            $response->success = true;
+            $response->data = $objClass;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
+
+function addUserBlob($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started save function.");
+
+	$blob = $data->blob == null ? NULL : $data->blob; 
+	$blob_type = $data->blob_type == null ? NULL : $data->blob_type; 
+	$user_id = $data->user_id == null ? "NULL" : $data->user_id; 
+
+
+    $sql = "INSERT INTO user_blob(blob,blob_type,user_id) 
+VALUES('$blob','$blob_type',$user_id)"; 
+
+
+    $log->info("sql".$sql."");
+                
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Updated successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed update function.");
+}
+
+function deleteUserBlob($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started delete function.");
+
+    $id = trim($data->id);
+
+    $sql = "DELETE FROM user_blob WHERE id = $id; ";
+
+    $log->info("sql".$sql."");
+
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Deleted successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);            
+    $log->info("Completed delete function.");
+}
+
 function createContent($data){
     global $response;
     global $log;
@@ -70,37 +286,7 @@ function getRecents(){
     global $log;
     global $link;
 
-    $sql =  "select tb.id,updated_at,tb.name,'buildings' content_type, ct.icon, ct.primary_color from buildings tb join content_types ct where ct.name = 'Buildings' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'characters' content_type, ct.icon, ct.primary_color from characters tb join content_types ct where ct.name = 'Characters' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'conditions' content_type, ct.icon, ct.primary_color from conditions tb join content_types ct where ct.name = 'Conditions' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'continents' content_type, ct.icon, ct.primary_color from continents tb join content_types ct where ct.name = 'Continents' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'countries' content_type, ct.icon, ct.primary_color from countries tb join content_types ct where ct.name = 'Countries' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'creatures' content_type, ct.icon, ct.primary_color from creatures tb join content_types ct where ct.name = 'Creatures' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'deities' content_type, ct.icon, ct.primary_color from deities tb join content_types ct where ct.name = 'Deities' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'floras' content_type, ct.icon, ct.primary_color from floras tb join content_types ct where ct.name = 'Floras' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'foods' content_type, ct.icon, ct.primary_color from foods tb join content_types ct where ct.name = 'Foods' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'governments' content_type, ct.icon, ct.primary_color from governments tb join content_types ct where ct.name = 'Governments' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'groups' content_type, ct.icon, ct.primary_color from `groups` tb join content_types ct where ct.name = 'Groups' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'items' content_type, ct.icon, ct.primary_color from items tb join content_types ct where ct.name = 'Items' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'jobs' content_type, ct.icon, ct.primary_color from jobs tb join content_types ct where ct.name = 'Jobs' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'landmarks' content_type, ct.icon, ct.primary_color from landmarks tb join content_types ct where ct.name = 'Landmarks' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'languages' content_type, ct.icon, ct.primary_color from languages tb join content_types ct where ct.name = 'Languages' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'locations' content_type, ct.icon, ct.primary_color from locations tb join content_types ct where ct.name = 'Locations' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'lores' content_type, ct.icon, ct.primary_color from lores tb join content_types ct where ct.name = 'Lores' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'magics' content_type, ct.icon, ct.primary_color from magics tb join content_types ct where ct.name = 'Magics' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'planets' content_type, ct.icon, ct.primary_color from planets tb join content_types ct where ct.name = 'Planets' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'races' content_type, ct.icon, ct.primary_color from races tb join content_types ct where ct.name = 'Races' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'religions' content_type, ct.icon, ct.primary_color from religions tb join content_types ct where ct.name = 'Religions' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'scenes' content_type, ct.icon, ct.primary_color from scenes tb join content_types ct where ct.name = 'Scenes' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'sports' content_type, ct.icon, ct.primary_color from sports tb join content_types ct where ct.name = 'Sports' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'technologies' content_type, ct.icon, ct.primary_color from technologies tb join content_types ct where ct.name = 'Technologies' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'towns' content_type, ct.icon, ct.primary_color from towns tb join content_types ct where ct.name = 'Towns' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'traditions' content_type, ct.icon, ct.primary_color from traditions tb join content_types ct where ct.name = 'Traditions' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'universes' content_type, ct.icon, ct.primary_color from universes tb join content_types ct where ct.name = 'Universes' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'vehicles' content_type, ct.icon, ct.primary_color from vehicles tb join content_types ct where ct.name = 'Vehicles' and user_id = $user_id union all 
-    select tb.id,updated_at,tb.name,'organizations' content_type, ct.icon, ct.primary_color from organizations tb join content_types ct where ct.name = 'Organizations' and user_id = $user_id  ";
-   
-
+    $sql = "CALL get_recents('$user_id')"; 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
     $row_cnt = $result->num_rows;
@@ -124,6 +310,84 @@ function getRecents(){
     }
 }
 
+function addUserContentAttributes($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $content_type = $data->content_type == null ? NULL : $data->content_type; 
+    $user_id = $data->user_id == null ? NULL : $data->user_id; 
+    $name = $data->name == null ? NULL : $data->name; 
+    $universe_id = $data->universe_id == null ? NULL : $data->universe_id;
+
+    $content_id = $data->content_id == null ? NULL : $data->content_id; 
+    
+    $sql = "INSERT INTO `user_content_attributes` (`user_id`,`content_id`,`name`,`content_type`,universe_id)
+    VALUES($user_id, $content_id, '$name','$content_type',$data->universe_id)";
+
+   $log->info("sql".$sql."");
+   
+   if($stmt = mysqli_prepare($link, $sql)){
+       
+       // Attempt to execute the prepared statement
+       if(mysqli_stmt_execute($stmt)){                       
+        $response->success = true;
+        $priority_id = $stmt->insert_id;
+        $response->data = $stmt->insert_id;
+        $response->message = "Created successfully!!!";
+       } 
+       else{
+           $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+           $log->info("".$dberror."");
+           $response->success = false;
+           $response->message = "Something went wrong.Please try again later.";
+       }
+   }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed update function.");
+}
+
+function updateContentAttribute($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $content_type = $data->content_type == null ? NULL : $data->content_type; 
+    $attributeType = $data->attributeType == null ? NULL : $data->attributeType; 
+    $attributeValue = $data->attributeValue == null ? NULL : $data->attributeValue; 
+    $content_id = $data->content_id == null ? NULL : $data->content_id; 
+    
+    $sql = "UPDATE user_content_attributes SET 
+    $attributeType = '$attributeValue' WHERE content_type = '$content_type' and content_id = $content_id"; 
+    
+        $log->info("sql".$sql."");
+                    
+        if($stmt = mysqli_prepare($link, $sql)){
+              
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                $response->success = true;
+                $priority_id = $stmt->insert_id;
+                $response->data = $stmt->insert_id;
+                $response->message = "Updated successfully!!!";
+            } 
+            else{
+                $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+                $log->info("".$dberror."");
+                $response->success = false;
+                $response->message = "Something went wrong.Please try again later.";
+            }
+        }
+                
+        // Close statement
+        mysqli_stmt_close($stmt);
+                
+        $log->info("Completed update function.");
+}
+
 function createItem($data){
     global $response;
     global $log;
@@ -141,6 +405,27 @@ function createItem($data){
           
         // Attempt to execute the prepared statement
         if(mysqli_stmt_execute($stmt)){
+            {                
+                $sql = "INSERT INTO `user_content_attributes` (`universe_id`,`user_id`,`content_id`,`name`,`content_type`)
+                 VALUES(null, $user_id, $stmt->insert_id, '$name','$content_type')";
+
+                $log->info("sql".$sql."");
+                
+                if($stmt2 = mysqli_prepare($link, $sql)){
+                    
+                    // Attempt to execute the prepared statement
+                    if(mysqli_stmt_execute($stmt2)){                       
+                      
+                    } 
+                    else{
+                        $dberror= "DB Error: ".mysqli_stmt_error($stmt2);
+                        $log->info("".$dberror."");
+                        $response->success = false;
+                        $response->message = "Something went wrong.Please try again later.";
+                    }
+                }
+            
+            }
             $response->success = true;
             $priority_id = $stmt->insert_id;
             $response->data = $stmt->insert_id;
@@ -711,15 +996,15 @@ function updateUserContentTemplate($data){
     global $response;
     global $log;
     global $link;
-    $id = $_GET['id']; 
 
     $log->info("Started update function.");
 
-	$template = trim($data->template);
+	$template = addslashes($data->template);
+	$id = trim($data->id);
 
 
     $sql = "UPDATE user_content_template SET 
-template = '$template'    WHERE id = $id"; 
+template = '$template' WHERE id = $id";
 
     $log->info("sql".$sql."");
                 
@@ -3088,7 +3373,7 @@ character_id = '$character_id',technology_id = '$technology_id'    WHERE id = $i
 }
 
 function getAllContentPlans(){
-    $user_id = $_GET['user_id']; 
+    
     global $response;
     global $log;
     global $link;
@@ -3852,15 +4137,15 @@ function updateUserPlan($data){
     global $response;
     global $log;
     global $link;
-    $id = $_GET['id']; 
-
+    
     $log->info("Started update function.");
 
 	$plan_id = trim($data->plan_id);
+	$user_id = trim($data->user_id);
 
 
     $sql = "UPDATE user_plan SET 
-plan_id = '$plan_id'    WHERE id = $id"; 
+plan_id = '$plan_id'    WHERE user_id = $user_id"; 
 
     $log->info("sql".$sql."");
                 
@@ -4156,6 +4441,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$data = $request->data;
 	$procedureName = $data->procedureName;
     
+	if ($procedureName == "updateContentAttribute") {
+		updateContentAttribute($data);
+	}
+
+	if ($procedureName == "addUserContentAttributes") {
+		addUserContentAttributes($data);
+	}
+
+	if ($procedureName == "deleteContent") {
+		deleteContent($data);
+	}
+
+    if ($procedureName == "addUserBlob") {
+		addUserBlob($data);
+	}
+
+	if ($procedureName == "deleteUserBlob") {
+		deleteUserBlob($data);
+	}
+
 	if ($procedureName == "createContent") {
 		createContent($data);
 	}
@@ -4447,7 +4752,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$procedureName = $_GET['procedureName'];
-
+    
+	if ($procedureName == "getAllContentBlobObject") {
+		getAllContentBlobObject();
+	}
+    
+	if ($procedureName == "getUserBlob") {
+		getUserBlob();
+	}
+    
     if ($procedureName == "getRecents") {
 		getRecents();
 	}

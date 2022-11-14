@@ -38,6 +38,14 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard]
       },
+      {
+        path: ':id/plaintext',
+        component: ViewDocumentsComponent,
+        data: {
+          title: 'View Documents',
+        },
+        canActivate: [AuthGuard]
+      }
     ]
   },
 ];

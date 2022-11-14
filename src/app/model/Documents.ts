@@ -18,4 +18,5 @@ export class Documents extends BaseModel {
 		public createdSince?:string;
 		public timeSince?:string;
 		public readingTime?:string;
+		public docblob?:Blob|Buffer;
 }

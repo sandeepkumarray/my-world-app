@@ -8,4 +8,5 @@ export class ContentBlobObject extends BaseModel {
 	public inProgress?: boolean;
 	public progress?: any;
 	public size?:string;
+	public user_id!: number;
 }

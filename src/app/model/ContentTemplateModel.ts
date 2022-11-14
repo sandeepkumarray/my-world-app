@@ -12,6 +12,7 @@ export class Content {
 }
 
 export class Category {
+    public id!: number;
     public order!: number;
     public label?: string;
     public name?: string;
@@ -19,6 +20,7 @@ export class Category {
     public attributes!: Attribute[];
     public is_active!: boolean;
     public index!: number;
+    public is_hidden?: boolean;
 
 }
 
@@ -33,4 +35,6 @@ export class Attribute {
     public is_user_defined?: boolean;
     public allow_null?: boolean;
     public auto_increament?: boolean;
+    public control_type!: string;
+    public reference_table!: string;
 }

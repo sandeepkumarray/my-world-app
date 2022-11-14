@@ -18,11 +18,8 @@ export class CreateContentComponent implements OnInit {
   dashboardModel: any;
 
   constructor(private activatedRoute: ActivatedRoute,
-    private appdataService: AppdataService,
     private authService: AuthenticationService,
     private myworldService: MyworldService,
-    private contentService: ContentService,
-    private sanitized: DomSanitizer,
     private router: Router) {
     this.content_type = this.activatedRoute.snapshot.paramMap.get('content_type')!;
   }

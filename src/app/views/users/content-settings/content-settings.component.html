@@ -1,0 +1,28 @@
+<c-row class="justify-content-center">
+  <c-col md="12" style="margin: 20px;">
+    <span style="font-size: 3rem;"> Customize your my world pages</span>
+  </c-col>
+</c-row>
+<c-row>
+  <c-col md="12">
+    <c-row>
+      <c-col sm="6" xl="3" *ngFor="let dItem of content_type_list">
+        <a class="card-img" style="text-decoration: none;width: 200px;margin-right: 1.5rem;"
+          href="#/users/content/settings/{{dItem.name}}">
+          <c-card class="text-white "
+            style="width: 200px;height: 200px;background: linear-gradient( rgb(122 122 122), rgb(122 122 122 / 50%) ),  url('assets/img/cards/{{dItem.name}}.png');background-size: cover;">
+            <c-card-body>
+              <c-row>
+                <c-col>
+                  <h2>{{dItem.name}}</h2>
+                  <span class="fs-6 fw-normal">
+                  </span>
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+        </a>
+      </c-col>
+    </c-row>
+  </c-col>
+</c-row>

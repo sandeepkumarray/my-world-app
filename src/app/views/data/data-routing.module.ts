@@ -4,6 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { ImportComponent } from './import/import.component';
 import { AuthGuard } from 'src/app/utility/AuthGuard';
 import { DataComponent } from './data.component';
+import { ExportComponent } from './export/export.component';
+import { UsageComponent } from './usage/usage.component';
+import { ImagesManageComponent } from './images-manage/images-manage.component';
 
 
 const routes: Routes = [
@@ -28,12 +31,34 @@ const routes: Routes = [
           title: 'Data Import',
         },
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'export',
+        component: ExportComponent,
+        data: {
+          title: 'Data Export',
+        },
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'usage',
+        component: UsageComponent,
+        data: {
+          title: 'Data Usage',
+        },
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'manage',
+        component: ImagesManageComponent,
+        data: {
+          title: 'Images Management',
+        },
+        canActivate: [AuthGuard]
       }
     ]
   },
 ];
-
-
 
 @NgModule({
   declarations: [], 

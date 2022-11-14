@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center"
+        style="background:#F08BEB;">
+        Content Plans
+        <span><i class="material-icons" translate="no">info</i></span>
+    </div>
+    <div class="card-body" style="padding:10px;">
+
+        You're currently subscribed to MyWorld's {{this.current_plan.name}} plan.
+        <div>
+            <div class="card-group card-group-scroll" style="padding-top:5px">
+                <div class="col-md-4 col-sm-6" style="padding: 10px;" *ngFor="let plan of contentPlans">
+                    <div class="pricingTable">
+                        <div class="pricingTable-header">
+                            <h3 class="title">{{plan.name}}</h3>
+                        </div>
+                        <div class="price-value">
+                            <span class="amount">$ {{plan.monthly_cents}}</span>
+                            <span class="duration">/month</span>
+                        </div>
+                        <div class="pricing-content">
+                            <ul class="content-list list-group">
+                                <li class="list-group-item d-flex list-group-item-action justify-content-between align-items-center"
+                                    *ngFor="let ct of plan.plan_contents">
+                                    <span>{{ct.name}}</span>
+                                    <span> <i [ngClass]="ct.fa_icon" style="font-size: xx-large;padding: 0.5rem;"></i></span>
+                                    <span>{{ct.count}}</span>
+                                </li>
+                            </ul>
+                            <div class="pricingTable-signup">
+                                <label *ngIf="plan.is_currentPlan">Current Selected Plan</label>
+
+                                <a  style="text-decoration: none; cursor: pointer;" *ngIf="!plan.is_currentPlan" (click)="changePlan(plan.id)">Buy Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

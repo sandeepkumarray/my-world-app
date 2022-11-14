@@ -27,7 +27,7 @@
                 </h4>
             </li>
             <li>
-                <a routerLink="./#users/{{document.user_id}}" cDropdownItem><svg cIcon class="teal-text me-2" name="cilUser"
+                <a href="#/users/{{document.user_id}}" cDropdownItem><svg cIcon class="teal-text me-2" name="cilUser"
                         size="lg"></svg>Written by <strong>{{document.userName}}</strong></a>
             </li>
             <li>
@@ -35,7 +35,7 @@
                         size="lg"></svg>Read-only view</a>
             </li>
             <li>
-                <a [cModalToggle]="NewFeature.id" cDropdownItem><svg cIcon class="teal-text me-2" name="cilText"
+                <a href="#/documents/{{document.id}}/plaintext" cDropdownItem><svg cIcon class="teal-text me-2" name="cilText"
                         size="lg"></svg>Plaintext view</a>
             </li>
             <li>
@@ -92,7 +92,7 @@
 
 <c-modal #NewFeature alignment="center" size="lg" id="NewFeature">
     <c-modal-body style="background:red;">
-        <h2>Feature coming soon.</h2>
+        <app-coming-soon></app-coming-soon>
     </c-modal-body>
     <c-modal-footer style="background:red;">
         <button [cModalToggle]="NewFeature.id" cButton color="secondary">

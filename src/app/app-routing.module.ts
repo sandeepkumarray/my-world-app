@@ -33,9 +33,19 @@ const routes: Routes = [
           import('./views/dashboard/dashboard.module').then((m) => m.DashboardModule), canActivate: [AuthGuard]
       }, 
       {
+        path: 'users',
+        loadChildren: () =>
+          import('./views/users/users.module').then((m) => m.UsersModule), canActivate: [AuthGuard]
+      }, 
+      {
         path: 'data',
         loadChildren: () =>
           import('./views/data/data.module').then((m) => m.DataModule), canActivate: [AuthGuard]
+      },
+      {
+        path: 'plan',
+        loadChildren: () =>
+          import('./views/plan/plan.module').then((m) => m.PlanModule), canActivate: [AuthGuard]
       }, 
       {
         path: 'documents',
@@ -59,245 +69,13 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'buildings',
-        loadChildren: () => import('./views/content/buildings/buildings.module').then((m) => m.BuildingsModule),
+        path: 'content',
+        loadChildren: () => import('./views/content/content.module').then((m) => m.ContentModule),
         data: {
-          title: 'Buildings',
+          title: 'content',
         },
         canActivate: [AuthGuard]
-      },
-      {
-        path: 'characters',
-        loadChildren: () => import('./views/content/characters/characters.module').then((m) => m.CharactersModule),
-        data: {
-          title: 'Characters',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'conditions',
-        loadChildren: () => import('./views/content/conditions/conditions.module').then((m) => m.ConditionsModule),
-        data: {
-          title: 'Conditions',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'continents',
-        loadChildren: () => import('./views/content/continents/continents.module').then((m) => m.ContinentsModule),
-        data: {
-          title: 'Continents',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'countries',
-        loadChildren: () => import('./views/content/countries/countries.module').then((m) => m.CountriesModule),
-        data: {
-          title: 'Countries',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'creatures',
-        loadChildren: () => import('./views/content/creatures/creatures.module').then((m) => m.CreaturesModule),
-        data: {
-          title: 'Creatures',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'deities',
-        loadChildren: () => import('./views/content/deities/deities.module').then((m) => m.DeitiesModule),
-        data: {
-          title: 'Deities',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'floras',
-        loadChildren: () => import('./views/content/floras/floras.module').then((m) => m.FlorasModule),
-        data: {
-          title: 'Floras',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'foods',
-        loadChildren: () => import('./views/content/foods/foods.module').then((m) => m.FoodsModule),
-        data: {
-          title: 'Foods',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'governments',
-        loadChildren: () => import('./views/content/governments/governments.module').then((m) => m.GovernmentsModule),
-        data: {
-          title: 'Governments',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'groups',
-        loadChildren: () => import('./views/content/groups/groups.module').then((m) => m.GroupsModule),
-        data: {
-          title: 'Groups',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'items',
-        loadChildren: () => import('./views/content/items/items.module').then((m) => m.ItemsModule),
-        data: {
-          title: 'Items',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'jobs',
-        loadChildren: () => import('./views/content/jobs/jobs.module').then((m) => m.JobsModule),
-        data: {
-          title: 'Jobs',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'landmarks',
-        loadChildren: () => import('./views/content/landmarks/landmarks.module').then((m) => m.LandmarksModule),
-        data: {
-          title: 'Landmarks',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'languages',
-        loadChildren: () => import('./views/content/languages/languages.module').then((m) => m.LanguagesModule),
-        data: {
-          title: 'Languages',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'locations',
-        loadChildren: () => import('./views/content/locations/locations.module').then((m) => m.LocationsModule),
-        data: {
-          title: 'Locations',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'lores',
-        loadChildren: () => import('./views/content/lores/lores.module').then((m) => m.LoresModule),
-        data: {
-          title: 'Lores',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'magics',
-        loadChildren: () => import('./views/content/magics/magics.module').then((m) => m.MagicsModule),
-        data: {
-          title: 'Magics',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'organizations',
-        loadChildren: () => import('./views/content/organizations/organizations.module').then((m) => m.OrganizationsModule),
-        data: {
-          title: 'Organizations',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'planets',
-        loadChildren: () => import('./views/content/planets/planets.module').then((m) => m.PlanetsModule),
-        data: {
-          title: 'Planets',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'races',
-        loadChildren: () => import('./views/content/races/races.module').then((m) => m.RacesModule),
-        data: {
-          title: 'Races',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'religions',
-        loadChildren: () => import('./views/content/religions/religions.module').then((m) => m.ReligionsModule),
-        data: {
-          title: 'Religions',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'scenes',
-        loadChildren: () => import('./views/content/scenes/scenes.module').then((m) => m.ScenesModule),
-        data: {
-          title: 'Scenes',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'sports',
-        loadChildren: () => import('./views/content/sports/sports.module').then((m) => m.SportsModule),
-        data: {
-          title: 'Sports',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'technologies',
-        loadChildren: () => import('./views/content/technologies/technologies.module').then((m) => m.TechnologiesModule),
-        data: {
-          title: 'Technologies',
-        },
-        canActivate: [AuthGuard]
-      },
-      // {
-      //   path: 'timelines',
-      //   loadChildren: () => import('./views/content/timelines/timelines.module').then((m) => m.TimelinesModule),
-      //   data: {
-      //     title: 'Timelines',
-      //   },
-      //   canActivate: [AuthGuard]
-      // },
-      {
-        path: 'towns',
-        loadChildren: () => import('./views/content/towns/towns.module').then((m) => m.TownsModule),
-        data: {
-          title: 'Towns',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'traditions',
-        loadChildren: () => import('./views/content/traditions/traditions.module').then((m) => m.TraditionsModule),
-        data: {
-          title: 'Traditions',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'universes',
-        loadChildren: () => import('./views/content/universes/universes.module').then((m) => m.UniversesModule),
-        data: {
-          title: 'Universes',
-        },
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'vehicles',
-        loadChildren: () => import('./views/content/vehicles/vehicles.module').then((m) => m.VehiclesModule),
-        data: {
-          title: 'Vehicles',
-        },
-        canActivate: [AuthGuard]
-      },
+      }
     ]
   },
   

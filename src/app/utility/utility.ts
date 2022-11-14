@@ -1,4 +1,6 @@
 import * as CryptoJS from 'crypto-js';
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 export class utility {
     static EncryptionKey: string = "b@^*!|)#E><L@@@$$$";
@@ -126,5 +128,27 @@ export class utility {
         const time = Math.round(minutes * 60 * 1000);
         const displayed = Math.ceil(parseFloat(minutes.toFixed(2)));
         return displayed + " minutes read.";
+    }
+
+    static groupByKey(array: any[], key: any) {
+        return array
+            .reduce((hash, obj) => {
+                if (obj[key] === undefined) return hash;
+                return Object.assign(hash, { [obj[key]]: (hash[obj[key]] || []).concat(obj) })
+            }, {})
+    }
+
+    static titleTransform(value: string): string {
+        let first = value.substring(0, 1).toUpperCase();
+        return first + value.substring(1);
+    }
+
+    static sleep(milliseconds: number) {
+        let resolve: { (value: unknown): void; };
+        let promise = new Promise((_resolve) => {
+            resolve = _resolve;
+        });
+        setTimeout(() => resolve(1), milliseconds);
+        return promise;
     }
 }

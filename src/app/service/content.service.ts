@@ -43,33 +43,44 @@ import { Vehicles } from '../model/Vehicles'
 import { BaseModel } from '../model/BaseModel';
 
 @Injectable({
-providedIn: 'root'
+	providedIn: 'root'
 })
 export class ContentService {
-	constructor(private http: HttpClient,private router: Router) {
+	constructor(private http: HttpClient, private router: Router) {
 
 	}
-	getContentDetailsFromTypeID(contentType: any,id: any): Observable<BaseModel> {
+	
+	getAllContentDataForUser(user_id: any){
+		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getAllContentDataForUser&user_id=` + user_id;
+		return this.http.get<any>(apiURL);
+	}
+
+	getAllContentTypeDataForUser(user_id: any, contentType: any){
+		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getAllContentTypeDataForUser&contentType=` + contentType + `&user_id=` + user_id;
+		return this.http.get<any>(apiURL);
+	}
+
+	getContentDetailsFromTypeID(contentType: any, id: any): Observable<BaseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getContentDetailsFromTypeID&contentType=` + contentType + `&id=` + id;
 		return this.http.get<BaseModel>(apiURL);
 	}
 
 	saveData(model: BaseModel) {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
+
 		model.procedureName = "saveData";
-		
+
 		var jsonData = model;
-		
+
 		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
+			headers: new HttpHeaders({
+				'Content-Type': 'application/json'
+			})
 		};
-		
+
 		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-	  }
-	
+	}
+
 	getBuildings(user_id: any,id: any): Observable<Buildings> {
 		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getBuildings&user_id=` + user_id + `&id=` + id;
 		return this.http.get<Buildings>(apiURL);
@@ -82,11 +93,10 @@ export class ContentService {
 
 	}
 
-	addBuildings(buildings: Buildings): Observable<ResponseModel> {
+	addBuilding(buildings: Buildings): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
-		
-		buildings.procedureName = "addBuildings";
+		buildings.procedureName = "addBuilding";
 		
 		var jsonData = buildings;
 		
@@ -100,11 +110,11 @@ export class ContentService {
 
 	}
 
-	deleteBuildings(buildings: Buildings): Observable<ResponseModel> {
+	deleteBuilding(buildings: Buildings): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		buildings.procedureName = "deleteBuildings";
+		buildings.procedureName = "deleteBuilding";
 		
 		var jsonData = buildings;
 		
@@ -118,11 +128,11 @@ export class ContentService {
 
 	}
 
-	updateBuildings(buildings: Buildings): Observable<ResponseModel> {
+	updateBuilding(buildings: Buildings): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		buildings.procedureName = "updateBuildings";
+		buildings.procedureName = "updateBuilding";
 		
 		var jsonData = buildings;
 		
@@ -148,7 +158,7 @@ export class ContentService {
 
 	}
 
-	addCharacters(characters: Characters): Observable<ResponseModel> {
+	addCharacter(characters: Characters): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
@@ -166,11 +176,11 @@ export class ContentService {
 
 	}
 
-	deleteCharacters(characters: Characters): Observable<ResponseModel> {
+	deleteCharacter(characters: Characters): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		characters.procedureName = "deleteCharacters";
+		characters.procedureName = "deleteCharacter";
 		
 		var jsonData = characters;
 		
@@ -184,11 +194,11 @@ export class ContentService {
 
 	}
 
-	updateCharacters(characters: Characters): Observable<ResponseModel> {
+	updateCharacter(characters: Characters): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		characters.procedureName = "updateCharacters";
+		characters.procedureName = "updateCharacter";
 		
 		var jsonData = characters;
 		
@@ -214,11 +224,11 @@ export class ContentService {
 
 	}
 
-	addConditions(conditions: Conditions): Observable<ResponseModel> {
+	addCondition(conditions: Conditions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		conditions.procedureName = "addConditions";
+		conditions.procedureName = "addCondition";
 		
 		var jsonData = conditions;
 		
@@ -232,11 +242,11 @@ export class ContentService {
 
 	}
 
-	deleteConditions(conditions: Conditions): Observable<ResponseModel> {
+	deleteCondition(conditions: Conditions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		conditions.procedureName = "deleteConditions";
+		conditions.procedureName = "deleteCondition";
 		
 		var jsonData = conditions;
 		
@@ -250,79 +260,13 @@ export class ContentService {
 
 	}
 
-	updateConditions(conditions: Conditions): Observable<ResponseModel> {
+	updateCondition(conditions: Conditions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		conditions.procedureName = "updateConditions";
+		conditions.procedureName = "updateCondition";
 		
 		var jsonData = conditions;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	getContentChangeEvents(user_id: any,id: any): Observable<ContentChangeEvents> {
-		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getContentChangeEvents&user_id=` + user_id + `&id=` + id;
-		return this.http.get<ContentChangeEvents>(apiURL);
-
-	}
-
-	getAllContentChangeEvents(user_id: any): Observable<ContentChangeEvents[]> {
-		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getAllContentChangeEvents&user_id=` + user_id;
-		return this.http.get<ContentChangeEvents[]>(apiURL);
-
-	}
-
-	addContentChangeEvents(contentchangeevents: ContentChangeEvents): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		contentchangeevents.procedureName = "addContentChangeEvents";
-		
-		var jsonData = contentchangeevents;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	deleteContentChangeEvents(contentchangeevents: ContentChangeEvents): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		contentchangeevents.procedureName = "deleteContentChangeEvents";
-		
-		var jsonData = contentchangeevents;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	updateContentChangeEvents(contentchangeevents: ContentChangeEvents): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		contentchangeevents.procedureName = "updateContentChangeEvents";
-		
-		var jsonData = contentchangeevents;
 		
 		const httpOptions = {
 		  headers: new HttpHeaders({
@@ -346,11 +290,11 @@ export class ContentService {
 
 	}
 
-	addContinents(continents: Continents): Observable<ResponseModel> {
+	addContinent(continents: Continents): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		continents.procedureName = "addContinents";
+		continents.procedureName = "addContinent";
 		
 		var jsonData = continents;
 		
@@ -364,11 +308,11 @@ export class ContentService {
 
 	}
 
-	deleteContinents(continents: Continents): Observable<ResponseModel> {
+	deleteContinent(continents: Continents): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		continents.procedureName = "deleteContinents";
+		continents.procedureName = "deleteContinent";
 		
 		var jsonData = continents;
 		
@@ -382,11 +326,11 @@ export class ContentService {
 
 	}
 
-	updateContinents(continents: Continents): Observable<ResponseModel> {
+	updateContinent(continents: Continents): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		continents.procedureName = "updateContinents";
+		continents.procedureName = "updateContinent";
 		
 		var jsonData = continents;
 		
@@ -412,11 +356,11 @@ export class ContentService {
 
 	}
 
-	addCountries(countries: Countries): Observable<ResponseModel> {
+	addCountrie(countries: Countries): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		countries.procedureName = "addCountries";
+		countries.procedureName = "addCountrie";
 		
 		var jsonData = countries;
 		
@@ -430,11 +374,11 @@ export class ContentService {
 
 	}
 
-	deleteCountries(countries: Countries): Observable<ResponseModel> {
+	deleteCountrie(countries: Countries): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		countries.procedureName = "deleteCountries";
+		countries.procedureName = "deleteCountrie";
 		
 		var jsonData = countries;
 		
@@ -448,11 +392,11 @@ export class ContentService {
 
 	}
 
-	updateCountries(countries: Countries): Observable<ResponseModel> {
+	updateCountrie(countries: Countries): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		countries.procedureName = "updateCountries";
+		countries.procedureName = "updateCountrie";
 		
 		var jsonData = countries;
 		
@@ -478,11 +422,11 @@ export class ContentService {
 
 	}
 
-	addCreatures(creatures: Creatures): Observable<ResponseModel> {
+	addCreature(creatures: Creatures): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		creatures.procedureName = "addCreatures";
+		creatures.procedureName = "addCreature";
 		
 		var jsonData = creatures;
 		
@@ -496,11 +440,11 @@ export class ContentService {
 
 	}
 
-	deleteCreatures(creatures: Creatures): Observable<ResponseModel> {
+	deleteCreature(creatures: Creatures): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		creatures.procedureName = "deleteCreatures";
+		creatures.procedureName = "deleteCreature";
 		
 		var jsonData = creatures;
 		
@@ -514,11 +458,11 @@ export class ContentService {
 
 	}
 
-	updateCreatures(creatures: Creatures): Observable<ResponseModel> {
+	updateCreature(creatures: Creatures): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		creatures.procedureName = "updateCreatures";
+		creatures.procedureName = "updateCreature";
 		
 		var jsonData = creatures;
 		
@@ -544,11 +488,11 @@ export class ContentService {
 
 	}
 
-	addDeities(deities: Deities): Observable<ResponseModel> {
+	addDeitie(deities: Deities): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		deities.procedureName = "addDeities";
+		deities.procedureName = "addDeitie";
 		
 		var jsonData = deities;
 		
@@ -562,11 +506,11 @@ export class ContentService {
 
 	}
 
-	deleteDeities(deities: Deities): Observable<ResponseModel> {
+	deleteDeitie(deities: Deities): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		deities.procedureName = "deleteDeities";
+		deities.procedureName = "deleteDeitie";
 		
 		var jsonData = deities;
 		
@@ -580,11 +524,11 @@ export class ContentService {
 
 	}
 
-	updateDeities(deities: Deities): Observable<ResponseModel> {
+	updateDeitie(deities: Deities): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		deities.procedureName = "updateDeities";
+		deities.procedureName = "updateDeitie";
 		
 		var jsonData = deities;
 		
@@ -610,11 +554,11 @@ export class ContentService {
 
 	}
 
-	addFloras(floras: Floras): Observable<ResponseModel> {
+	addFlora(floras: Floras): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		floras.procedureName = "addFloras";
+		floras.procedureName = "addFlora";
 		
 		var jsonData = floras;
 		
@@ -628,11 +572,11 @@ export class ContentService {
 
 	}
 
-	deleteFloras(floras: Floras): Observable<ResponseModel> {
+	deleteFlora(floras: Floras): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		floras.procedureName = "deleteFloras";
+		floras.procedureName = "deleteFlora";
 		
 		var jsonData = floras;
 		
@@ -646,11 +590,11 @@ export class ContentService {
 
 	}
 
-	updateFloras(floras: Floras): Observable<ResponseModel> {
+	updateFlora(floras: Floras): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		floras.procedureName = "updateFloras";
+		floras.procedureName = "updateFlora";
 		
 		var jsonData = floras;
 		
@@ -676,11 +620,11 @@ export class ContentService {
 
 	}
 
-	addFoods(foods: Foods): Observable<ResponseModel> {
+	addFood(foods: Foods): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		foods.procedureName = "addFoods";
+		foods.procedureName = "addFood";
 		
 		var jsonData = foods;
 		
@@ -694,11 +638,11 @@ export class ContentService {
 
 	}
 
-	deleteFoods(foods: Foods): Observable<ResponseModel> {
+	deleteFood(foods: Foods): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		foods.procedureName = "deleteFoods";
+		foods.procedureName = "deleteFood";
 		
 		var jsonData = foods;
 		
@@ -712,11 +656,11 @@ export class ContentService {
 
 	}
 
-	updateFoods(foods: Foods): Observable<ResponseModel> {
+	updateFood(foods: Foods): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		foods.procedureName = "updateFoods";
+		foods.procedureName = "updateFood";
 		
 		var jsonData = foods;
 		
@@ -742,11 +686,11 @@ export class ContentService {
 
 	}
 
-	addGovernments(governments: Governments): Observable<ResponseModel> {
+	addGovernment(governments: Governments): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		governments.procedureName = "addGovernments";
+		governments.procedureName = "addGovernment";
 		
 		var jsonData = governments;
 		
@@ -760,11 +704,11 @@ export class ContentService {
 
 	}
 
-	deleteGovernments(governments: Governments): Observable<ResponseModel> {
+	deleteGovernment(governments: Governments): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		governments.procedureName = "deleteGovernments";
+		governments.procedureName = "deleteGovernment";
 		
 		var jsonData = governments;
 		
@@ -778,11 +722,11 @@ export class ContentService {
 
 	}
 
-	updateGovernments(governments: Governments): Observable<ResponseModel> {
+	updateGovernment(governments: Governments): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		governments.procedureName = "updateGovernments";
+		governments.procedureName = "updateGovernment";
 		
 		var jsonData = governments;
 		
@@ -808,11 +752,11 @@ export class ContentService {
 
 	}
 
-	addGroups(groups: Groups): Observable<ResponseModel> {
+	addGroup(groups: Groups): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		groups.procedureName = "addGroups";
+		groups.procedureName = "addGroup";
 		
 		var jsonData = groups;
 		
@@ -826,11 +770,11 @@ export class ContentService {
 
 	}
 
-	deleteGroups(groups: Groups): Observable<ResponseModel> {
+	deleteGroup(groups: Groups): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		groups.procedureName = "deleteGroups";
+		groups.procedureName = "deleteGroup";
 		
 		var jsonData = groups;
 		
@@ -844,11 +788,11 @@ export class ContentService {
 
 	}
 
-	updateGroups(groups: Groups): Observable<ResponseModel> {
+	updateGroup(groups: Groups): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		groups.procedureName = "updateGroups";
+		groups.procedureName = "updateGroup";
 		
 		var jsonData = groups;
 		
@@ -874,11 +818,11 @@ export class ContentService {
 
 	}
 
-	addItems(items: Items): Observable<ResponseModel> {
+	addItem(items: Items): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		items.procedureName = "addItems";
+		items.procedureName = "addItem";
 		
 		var jsonData = items;
 		
@@ -892,11 +836,11 @@ export class ContentService {
 
 	}
 
-	deleteItems(items: Items): Observable<ResponseModel> {
+	deleteItem(items: Items): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		items.procedureName = "deleteItems";
+		items.procedureName = "deleteItem";
 		
 		var jsonData = items;
 		
@@ -910,11 +854,11 @@ export class ContentService {
 
 	}
 
-	updateItems(items: Items): Observable<ResponseModel> {
+	updateItem(items: Items): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		items.procedureName = "updateItems";
+		items.procedureName = "updateItem";
 		
 		var jsonData = items;
 		
@@ -940,11 +884,11 @@ export class ContentService {
 
 	}
 
-	addJobs(jobs: Jobs): Observable<ResponseModel> {
+	addJob(jobs: Jobs): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		jobs.procedureName = "addJobs";
+		jobs.procedureName = "addJob";
 		
 		var jsonData = jobs;
 		
@@ -958,11 +902,11 @@ export class ContentService {
 
 	}
 
-	deleteJobs(jobs: Jobs): Observable<ResponseModel> {
+	deleteJob(jobs: Jobs): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		jobs.procedureName = "deleteJobs";
+		jobs.procedureName = "deleteJob";
 		
 		var jsonData = jobs;
 		
@@ -976,11 +920,11 @@ export class ContentService {
 
 	}
 
-	updateJobs(jobs: Jobs): Observable<ResponseModel> {
+	updateJob(jobs: Jobs): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		jobs.procedureName = "updateJobs";
+		jobs.procedureName = "updateJob";
 		
 		var jsonData = jobs;
 		
@@ -1006,11 +950,11 @@ export class ContentService {
 
 	}
 
-	addLandmarks(landmarks: Landmarks): Observable<ResponseModel> {
+	addLandmark(landmarks: Landmarks): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		landmarks.procedureName = "addLandmarks";
+		landmarks.procedureName = "addLandmark";
 		
 		var jsonData = landmarks;
 		
@@ -1024,11 +968,11 @@ export class ContentService {
 
 	}
 
-	deleteLandmarks(landmarks: Landmarks): Observable<ResponseModel> {
+	deleteLandmark(landmarks: Landmarks): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		landmarks.procedureName = "deleteLandmarks";
+		landmarks.procedureName = "deleteLandmark";
 		
 		var jsonData = landmarks;
 		
@@ -1042,11 +986,11 @@ export class ContentService {
 
 	}
 
-	updateLandmarks(landmarks: Landmarks): Observable<ResponseModel> {
+	updateLandmark(landmarks: Landmarks): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		landmarks.procedureName = "updateLandmarks";
+		landmarks.procedureName = "updateLandmark";
 		
 		var jsonData = landmarks;
 		
@@ -1072,11 +1016,11 @@ export class ContentService {
 
 	}
 
-	addLanguages(languages: Languages): Observable<ResponseModel> {
+	addLanguage(languages: Languages): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		languages.procedureName = "addLanguages";
+		languages.procedureName = "addLanguage";
 		
 		var jsonData = languages;
 		
@@ -1090,11 +1034,11 @@ export class ContentService {
 
 	}
 
-	deleteLanguages(languages: Languages): Observable<ResponseModel> {
+	deleteLanguage(languages: Languages): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		languages.procedureName = "deleteLanguages";
+		languages.procedureName = "deleteLanguage";
 		
 		var jsonData = languages;
 		
@@ -1108,11 +1052,11 @@ export class ContentService {
 
 	}
 
-	updateLanguages(languages: Languages): Observable<ResponseModel> {
+	updateLanguage(languages: Languages): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		languages.procedureName = "updateLanguages";
+		languages.procedureName = "updateLanguage";
 		
 		var jsonData = languages;
 		
@@ -1138,11 +1082,11 @@ export class ContentService {
 
 	}
 
-	addLocations(locations: Locations): Observable<ResponseModel> {
+	addLocation(locations: Locations): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		locations.procedureName = "addLocations";
+		locations.procedureName = "addLocation";
 		
 		var jsonData = locations;
 		
@@ -1156,11 +1100,11 @@ export class ContentService {
 
 	}
 
-	deleteLocations(locations: Locations): Observable<ResponseModel> {
+	deleteLocation(locations: Locations): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		locations.procedureName = "deleteLocations";
+		locations.procedureName = "deleteLocation";
 		
 		var jsonData = locations;
 		
@@ -1174,11 +1118,11 @@ export class ContentService {
 
 	}
 
-	updateLocations(locations: Locations): Observable<ResponseModel> {
+	updateLocation(locations: Locations): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		locations.procedureName = "updateLocations";
+		locations.procedureName = "updateLocation";
 		
 		var jsonData = locations;
 		
@@ -1204,11 +1148,11 @@ export class ContentService {
 
 	}
 
-	addLores(lores: Lores): Observable<ResponseModel> {
+	addLore(lores: Lores): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		lores.procedureName = "addLores";
+		lores.procedureName = "addLore";
 		
 		var jsonData = lores;
 		
@@ -1222,11 +1166,11 @@ export class ContentService {
 
 	}
 
-	deleteLores(lores: Lores): Observable<ResponseModel> {
+	deleteLore(lores: Lores): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		lores.procedureName = "deleteLores";
+		lores.procedureName = "deleteLore";
 		
 		var jsonData = lores;
 		
@@ -1240,11 +1184,11 @@ export class ContentService {
 
 	}
 
-	updateLores(lores: Lores): Observable<ResponseModel> {
+	updateLore(lores: Lores): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		lores.procedureName = "updateLores";
+		lores.procedureName = "updateLore";
 		
 		var jsonData = lores;
 		
@@ -1270,11 +1214,11 @@ export class ContentService {
 
 	}
 
-	addMagics(magics: Magics): Observable<ResponseModel> {
+	addMagic(magics: Magics): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		magics.procedureName = "addMagics";
+		magics.procedureName = "addMagic";
 		
 		var jsonData = magics;
 		
@@ -1288,11 +1232,11 @@ export class ContentService {
 
 	}
 
-	deleteMagics(magics: Magics): Observable<ResponseModel> {
+	deleteMagic(magics: Magics): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		magics.procedureName = "deleteMagics";
+		magics.procedureName = "deleteMagic";
 		
 		var jsonData = magics;
 		
@@ -1306,11 +1250,11 @@ export class ContentService {
 
 	}
 
-	updateMagics(magics: Magics): Observable<ResponseModel> {
+	updateMagic(magics: Magics): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		magics.procedureName = "updateMagics";
+		magics.procedureName = "updateMagic";
 		
 		var jsonData = magics;
 		
@@ -1336,11 +1280,11 @@ export class ContentService {
 
 	}
 
-	addOrganizations(organizations: Organizations): Observable<ResponseModel> {
+	addOrganization(organizations: Organizations): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		organizations.procedureName = "addOrganizations";
+		organizations.procedureName = "addOrganization";
 		
 		var jsonData = organizations;
 		
@@ -1354,11 +1298,11 @@ export class ContentService {
 
 	}
 
-	deleteOrganizations(organizations: Organizations): Observable<ResponseModel> {
+	deleteOrganization(organizations: Organizations): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		organizations.procedureName = "deleteOrganizations";
+		organizations.procedureName = "deleteOrganization";
 		
 		var jsonData = organizations;
 		
@@ -1372,11 +1316,11 @@ export class ContentService {
 
 	}
 
-	updateOrganizations(organizations: Organizations): Observable<ResponseModel> {
+	updateOrganization(organizations: Organizations): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		organizations.procedureName = "updateOrganizations";
+		organizations.procedureName = "updateOrganization";
 		
 		var jsonData = organizations;
 		
@@ -1402,11 +1346,11 @@ export class ContentService {
 
 	}
 
-	addPlanets(planets: Planets): Observable<ResponseModel> {
+	addPlanet(planets: Planets): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		planets.procedureName = "addPlanets";
+		planets.procedureName = "addPlanet";
 		
 		var jsonData = planets;
 		
@@ -1420,11 +1364,11 @@ export class ContentService {
 
 	}
 
-	deletePlanets(planets: Planets): Observable<ResponseModel> {
+	deletePlanet(planets: Planets): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		planets.procedureName = "deletePlanets";
+		planets.procedureName = "deletePlanet";
 		
 		var jsonData = planets;
 		
@@ -1438,11 +1382,11 @@ export class ContentService {
 
 	}
 
-	updatePlanets(planets: Planets): Observable<ResponseModel> {
+	updatePlanet(planets: Planets): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		planets.procedureName = "updatePlanets";
+		planets.procedureName = "updatePlanet";
 		
 		var jsonData = planets;
 		
@@ -1468,11 +1412,11 @@ export class ContentService {
 
 	}
 
-	addRaces(races: Races): Observable<ResponseModel> {
+	addRace(races: Races): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		races.procedureName = "addRaces";
+		races.procedureName = "addRace";
 		
 		var jsonData = races;
 		
@@ -1486,11 +1430,11 @@ export class ContentService {
 
 	}
 
-	deleteRaces(races: Races): Observable<ResponseModel> {
+	deleteRace(races: Races): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		races.procedureName = "deleteRaces";
+		races.procedureName = "deleteRace";
 		
 		var jsonData = races;
 		
@@ -1504,11 +1448,11 @@ export class ContentService {
 
 	}
 
-	updateRaces(races: Races): Observable<ResponseModel> {
+	updateRace(races: Races): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		races.procedureName = "updateRaces";
+		races.procedureName = "updateRace";
 		
 		var jsonData = races;
 		
@@ -1534,11 +1478,11 @@ export class ContentService {
 
 	}
 
-	addReligions(religions: Religions): Observable<ResponseModel> {
+	addReligion(religions: Religions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		religions.procedureName = "addReligions";
+		religions.procedureName = "addReligion";
 		
 		var jsonData = religions;
 		
@@ -1552,11 +1496,11 @@ export class ContentService {
 
 	}
 
-	deleteReligions(religions: Religions): Observable<ResponseModel> {
+	deleteReligion(religions: Religions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		religions.procedureName = "deleteReligions";
+		religions.procedureName = "deleteReligion";
 		
 		var jsonData = religions;
 		
@@ -1570,11 +1514,11 @@ export class ContentService {
 
 	}
 
-	updateReligions(religions: Religions): Observable<ResponseModel> {
+	updateReligion(religions: Religions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		religions.procedureName = "updateReligions";
+		religions.procedureName = "updateReligion";
 		
 		var jsonData = religions;
 		
@@ -1600,11 +1544,11 @@ export class ContentService {
 
 	}
 
-	addScenes(scenes: Scenes): Observable<ResponseModel> {
+	addScene(scenes: Scenes): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		scenes.procedureName = "addScenes";
+		scenes.procedureName = "addScene";
 		
 		var jsonData = scenes;
 		
@@ -1618,11 +1562,11 @@ export class ContentService {
 
 	}
 
-	deleteScenes(scenes: Scenes): Observable<ResponseModel> {
+	deleteScene(scenes: Scenes): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		scenes.procedureName = "deleteScenes";
+		scenes.procedureName = "deleteScene";
 		
 		var jsonData = scenes;
 		
@@ -1636,11 +1580,11 @@ export class ContentService {
 
 	}
 
-	updateScenes(scenes: Scenes): Observable<ResponseModel> {
+	updateScene(scenes: Scenes): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		scenes.procedureName = "updateScenes";
+		scenes.procedureName = "updateScene";
 		
 		var jsonData = scenes;
 		
@@ -1666,11 +1610,11 @@ export class ContentService {
 
 	}
 
-	addSports(sports: Sports): Observable<ResponseModel> {
+	addSport(sports: Sports): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		sports.procedureName = "addSports";
+		sports.procedureName = "addSport";
 		
 		var jsonData = sports;
 		
@@ -1684,11 +1628,11 @@ export class ContentService {
 
 	}
 
-	deleteSports(sports: Sports): Observable<ResponseModel> {
+	deleteSport(sports: Sports): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		sports.procedureName = "deleteSports";
+		sports.procedureName = "deleteSport";
 		
 		var jsonData = sports;
 		
@@ -1702,11 +1646,11 @@ export class ContentService {
 
 	}
 
-	updateSports(sports: Sports): Observable<ResponseModel> {
+	updateSport(sports: Sports): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		sports.procedureName = "updateSports";
+		sports.procedureName = "updateSport";
 		
 		var jsonData = sports;
 		
@@ -1732,11 +1676,11 @@ export class ContentService {
 
 	}
 
-	addTechnologies(technologies: Technologies): Observable<ResponseModel> {
+	addTechnologie(technologies: Technologies): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		technologies.procedureName = "addTechnologies";
+		technologies.procedureName = "addTechnologie";
 		
 		var jsonData = technologies;
 		
@@ -1750,11 +1694,11 @@ export class ContentService {
 
 	}
 
-	deleteTechnologies(technologies: Technologies): Observable<ResponseModel> {
+	deleteTechnologie(technologies: Technologies): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		technologies.procedureName = "deleteTechnologies";
+		technologies.procedureName = "deleteTechnologie";
 		
 		var jsonData = technologies;
 		
@@ -1768,145 +1712,13 @@ export class ContentService {
 
 	}
 
-	updateTechnologies(technologies: Technologies): Observable<ResponseModel> {
+	updateTechnologie(technologies: Technologies): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		technologies.procedureName = "updateTechnologies";
+		technologies.procedureName = "updateTechnologie";
 		
 		var jsonData = technologies;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	getTimelineEventEntities(user_id: any,id: any): Observable<TimelineEventEntities> {
-		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getTimelineEventEntities&user_id=` + user_id + `&id=` + id;
-		return this.http.get<TimelineEventEntities>(apiURL);
-
-	}
-
-	getAllTimelineEventEntities(user_id: any): Observable<TimelineEventEntities[]> {
-		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getAllTimelineEventEntities&user_id=` + user_id;
-		return this.http.get<TimelineEventEntities[]>(apiURL);
-
-	}
-
-	addTimelineEventEntities(timelineevententities: TimelineEventEntities): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		timelineevententities.procedureName = "addTimelineEventEntities";
-		
-		var jsonData = timelineevententities;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	deleteTimelineEventEntities(timelineevententities: TimelineEventEntities): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		timelineevententities.procedureName = "deleteTimelineEventEntities";
-		
-		var jsonData = timelineevententities;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	updateTimelineEventEntities(timelineevententities: TimelineEventEntities): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		timelineevententities.procedureName = "updateTimelineEventEntities";
-		
-		var jsonData = timelineevententities;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	getTimelineEvents(user_id: any,id: any): Observable<TimelineEvents> {
-		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getTimelineEvents&user_id=` + user_id + `&id=` + id;
-		return this.http.get<TimelineEvents>(apiURL);
-
-	}
-
-	getAllTimelineEvents(user_id: any): Observable<TimelineEvents[]> {
-		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getAllTimelineEvents&user_id=` + user_id;
-		return this.http.get<TimelineEvents[]>(apiURL);
-
-	}
-
-	addTimelineEvents(timelineevents: TimelineEvents): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		timelineevents.procedureName = "addTimelineEvents";
-		
-		var jsonData = timelineevents;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	deleteTimelineEvents(timelineevents: TimelineEvents): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		timelineevents.procedureName = "deleteTimelineEvents";
-		
-		var jsonData = timelineevents;
-		
-		const httpOptions = {
-		  headers: new HttpHeaders({
-			'Content-Type': 'application/json'
-		  })
-		};
-		
-		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
-
-	}
-
-	updateTimelineEvents(timelineevents: TimelineEvents): Observable<ResponseModel> {
-		let apiURL = `${environment.serviceUrl}api_content.php`;
-		
-		
-		timelineevents.procedureName = "updateTimelineEvents";
-		
-		var jsonData = timelineevents;
 		
 		const httpOptions = {
 		  headers: new HttpHeaders({
@@ -1930,11 +1742,11 @@ export class ContentService {
 
 	}
 
-	addTimelines(timelines: Timelines): Observable<ResponseModel> {
+	addTimeline(timelines: Timelines): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		timelines.procedureName = "addTimelines";
+		timelines.procedureName = "addTimeline";
 		
 		var jsonData = timelines;
 		
@@ -1948,11 +1760,11 @@ export class ContentService {
 
 	}
 
-	deleteTimelines(timelines: Timelines): Observable<ResponseModel> {
+	deleteTimeline(timelines: Timelines): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		timelines.procedureName = "deleteTimelines";
+		timelines.procedureName = "deleteTimeline";
 		
 		var jsonData = timelines;
 		
@@ -1966,11 +1778,11 @@ export class ContentService {
 
 	}
 
-	updateTimelines(timelines: Timelines): Observable<ResponseModel> {
+	updateTimeline(timelines: Timelines): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		timelines.procedureName = "updateTimelines";
+		timelines.procedureName = "updateTimeline";
 		
 		var jsonData = timelines;
 		
@@ -1996,11 +1808,11 @@ export class ContentService {
 
 	}
 
-	addTowns(towns: Towns): Observable<ResponseModel> {
+	addTown(towns: Towns): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		towns.procedureName = "addTowns";
+		towns.procedureName = "addTown";
 		
 		var jsonData = towns;
 		
@@ -2014,11 +1826,11 @@ export class ContentService {
 
 	}
 
-	deleteTowns(towns: Towns): Observable<ResponseModel> {
+	deleteTown(towns: Towns): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		towns.procedureName = "deleteTowns";
+		towns.procedureName = "deleteTown";
 		
 		var jsonData = towns;
 		
@@ -2032,11 +1844,11 @@ export class ContentService {
 
 	}
 
-	updateTowns(towns: Towns): Observable<ResponseModel> {
+	updateTown(towns: Towns): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		towns.procedureName = "updateTowns";
+		towns.procedureName = "updateTown";
 		
 		var jsonData = towns;
 		
@@ -2062,11 +1874,11 @@ export class ContentService {
 
 	}
 
-	addTraditions(traditions: Traditions): Observable<ResponseModel> {
+	addTradition(traditions: Traditions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		traditions.procedureName = "addTraditions";
+		traditions.procedureName = "addTradition";
 		
 		var jsonData = traditions;
 		
@@ -2080,11 +1892,11 @@ export class ContentService {
 
 	}
 
-	deleteTraditions(traditions: Traditions): Observable<ResponseModel> {
+	deleteTradition(traditions: Traditions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		traditions.procedureName = "deleteTraditions";
+		traditions.procedureName = "deleteTradition";
 		
 		var jsonData = traditions;
 		
@@ -2098,11 +1910,11 @@ export class ContentService {
 
 	}
 
-	updateTraditions(traditions: Traditions): Observable<ResponseModel> {
+	updateTradition(traditions: Traditions): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		traditions.procedureName = "updateTraditions";
+		traditions.procedureName = "updateTradition";
 		
 		var jsonData = traditions;
 		
@@ -2128,11 +1940,11 @@ export class ContentService {
 
 	}
 
-	addUniverses(universes: Universes): Observable<ResponseModel> {
+	addUniverse(universes: Universes): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		universes.procedureName = "addUniverses";
+		universes.procedureName = "addUniverse";
 		
 		var jsonData = universes;
 		
@@ -2146,11 +1958,11 @@ export class ContentService {
 
 	}
 
-	deleteUniverses(universes: Universes): Observable<ResponseModel> {
+	deleteUniverse(universes: Universes): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		universes.procedureName = "deleteUniverses";
+		universes.procedureName = "deleteUniverse";
 		
 		var jsonData = universes;
 		
@@ -2164,11 +1976,11 @@ export class ContentService {
 
 	}
 
-	updateUniverses(universes: Universes): Observable<ResponseModel> {
+	updateUniverse(universes: Universes): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		universes.procedureName = "updateUniverses";
+		universes.procedureName = "updateUniverse";
 		
 		var jsonData = universes;
 		
@@ -2194,11 +2006,11 @@ export class ContentService {
 
 	}
 
-	addVehicles(vehicles: Vehicles): Observable<ResponseModel> {
+	addVehicle(vehicles: Vehicles): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		vehicles.procedureName = "addVehicles";
+		vehicles.procedureName = "addVehicle";
 		
 		var jsonData = vehicles;
 		
@@ -2212,11 +2024,11 @@ export class ContentService {
 
 	}
 
-	deleteVehicles(vehicles: Vehicles): Observable<ResponseModel> {
+	deleteVehicle(vehicles: Vehicles): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		vehicles.procedureName = "deleteVehicles";
+		vehicles.procedureName = "deleteVehicle";
 		
 		var jsonData = vehicles;
 		
@@ -2230,11 +2042,11 @@ export class ContentService {
 
 	}
 
-	updateVehicles(vehicles: Vehicles): Observable<ResponseModel> {
+	updateVehicle(vehicles: Vehicles): Observable<ResponseModel> {
 		let apiURL = `${environment.serviceUrl}api_content.php`;
 		
 		
-		vehicles.procedureName = "updateVehicles";
+		vehicles.procedureName = "updateVehicle";
 		
 		var jsonData = vehicles;
 		
@@ -2247,5 +2059,4 @@ export class ContentService {
 		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
 
 	}
-
 }

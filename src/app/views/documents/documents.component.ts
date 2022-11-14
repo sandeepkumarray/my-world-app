@@ -15,14 +15,14 @@ import { utility } from 'src/app/utility/utility';
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent implements OnInit {
-  //documents: Array<Documents> = new Array<Documents>();
-  //folders: Folders[] = [];
+
   selectedDocument: Documents = new Documents();
   universes: Universes[] = [];
   viewModel: FolderDocumentsViewModel = new FolderDocumentsViewModel;
 
   constructor(private authService: AuthenticationService,
-    private documentService: DocumentService, private contentService: ContentService,
+    private documentService: DocumentService,
+    private contentService: ContentService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -78,7 +78,6 @@ export class DocumentsComponent implements OnInit {
   selectDocument(doc: Documents) {
     this.selectedDocument = doc;
   }
-
 
   onBlur($event: any, field_name: string) {
     console.log('blur', $event)

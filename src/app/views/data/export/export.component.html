@@ -1,0 +1,83 @@
+<c-row>
+    <c-col lg="12">
+        <div class="d-flex">
+            <a style="cursor:pointer;" (click)="back()">
+                <i class="material-icons left tooltipped" data-tooltip="Go up a folder: back to Documents"
+                    translate="no">arrow_upward</i>
+            </a>
+            <span class="text-value-xl">&nbsp; Download your world...</span>
+        </div>
+    </c-col>
+</c-row>
+
+<c-row [gutter]="4" class="mb-3" [md]="3" [xs]="1">
+    <c-col>
+        <c-card>
+            <c-card-body>
+                <h5 cCardTitle>Export as plain text</h5>
+                <p cCardText>
+                    A human-readable format useful for turning your entire notebook into a text outline.
+                </p>
+                <a style="text-decoration: none; cursor: pointer;color: #0d6efd;" (click)="downloadTXTData()" >myworld.txt</a>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    <c-col>
+        <c-card>
+            <c-card-body>
+                <h5 cCardTitle>Export as excel</h5>
+                <p cCardText>
+                    A basic spreadsheet format that you can import into Excel, Google Sheets, or any other spreadsheet
+                    application.
+                </p>
+                <ul style="list-style: none;">
+                    <li cdropdownitem *ngFor="let content of content_type_list; let index = index">
+                        <a style="text-decoration: none; cursor: pointer;color: #0d6efd;" (click)="downloadExcelData(content.name.toLowerCase())" >{{content.name.toLowerCase()}}.csv</a>
+                    </li>
+                </ul>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    <c-col>
+        <c-card>
+            <c-card-body>
+                <h5 cCardTitle>Export as json</h5>
+                <p cCardText>
+                    JSON exports are recommended for developers and those looking to import their data into
+                    JSON-compatible software.
+                </p>
+                <a style="text-decoration: none; cursor: pointer;color: #0d6efd;" (click)="downloadJsonData()" >myworld.json</a>
+
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+    <c-col>
+        <c-card>
+            <c-card-body>
+                <h5 cCardTitle>Export as xml</h5>
+                <p cCardText>
+                    XML exports are recommended for those looking to import their data into XML-compatible software.
+                </p>
+                <a style="text-decoration: none; cursor: pointer;color: #0d6efd;" (click)="downloadXMLData()" >myworld.xml</a>
+
+            </c-card-body>
+        </c-card>
+    </c-col>
+    
+    <c-col>
+        <c-card>
+            <c-card-body>
+                <h5 cCardTitle>Export All Documents</h5>
+                <p cCardText>
+                    All documents are exported in word format.
+                </p>
+                <a style="text-decoration: none; cursor: pointer;color: #0d6efd;" (click)="downloadDocumentsData()" >documents.zip</a>
+
+            </c-card-body>
+        </c-card>
+    </c-col>
+    
+</c-row>

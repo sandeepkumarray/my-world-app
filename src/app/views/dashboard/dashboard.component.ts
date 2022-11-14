@@ -7,6 +7,7 @@ import { DashboardRecentModel } from 'src/app/model/DashboardRecentModel';
 import { PlanTemplateModel } from 'src/app/model/PlanTemplateModel';
 import { AppdataService } from 'src/app/service/appdata.service';
 import { AuthenticationService } from 'src/app/service/authentication.service';
+import { ContentPlanService } from 'src/app/service/content-plan.service';
 import { ContentService } from 'src/app/service/content.service';
 import { MyworldService } from 'src/app/service/myworld.service';
 import { utility } from 'src/app/utility/utility';
@@ -33,15 +34,17 @@ export class DashboardComponent implements OnInit {
     private contentService: ContentService,
     private sanitized: DomSanitizer,
     private router: Router,
+    private contentPlanService: ContentPlanService,
     private changeDetection: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     let accountId = (this.authService.getUser() as (Users)).id;
-
+    console.log("accountId", accountId);
     this.myworldService.getAllContentTypes().subscribe({
       next: (res) => {
         this.content_type_list = res;
+        console.log("content_type_list", res);
         res.map(cnfg => {
           this.authService.setValue(cnfg.name, cnfg);
         });
@@ -77,6 +80,10 @@ export class DashboardComponent implements OnInit {
             (objA, objB) => new Date(objB.updated_at!).getTime()! - new Date(objA.updated_at!).getTime()!).slice(0, 5);
           this.DashboardRecentList.forEach(r => {
             r.timeSince = utility.timeSince(new Date(r.updated_at!));
+            r.url = '#/content/' + r.content_type + '/' + r.id;
+            if (r.content_type == 'documents') {
+              r.url = '#/documents/' + r.id;
+            }
           });
           this.changeDetection.detectChanges();
         }
@@ -104,4 +111,21 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  createContent(content_type: string) {
+    var accountId = (this.authService.getUser() as (Users)).id;
+    this.contentPlanService.check_create_content_plan(content_type.toLowerCase()).subscribe({
+      next: (res) => {
+        if (res != null) {
+          if (res) {
+            this.myworldService.createContentForUser(accountId!, content_type.toLowerCase());
+          }
+          else {
+            this.router.navigate(["plan/subscription"]);
+          }
+        }
+      }
+    });
+  }
+
 }

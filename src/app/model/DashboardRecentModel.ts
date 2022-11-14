@@ -6,4 +6,5 @@ export class DashboardRecentModel extends MentionsModel{
     public icon? : string;
     public primary_color? : string;
     public timeSince?:string;
+    public url?:string;
 }

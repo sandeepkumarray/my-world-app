@@ -19,7 +19,7 @@ export class AppdataService {
   public ContentTypesList!: ContentTypes[];
 
   constructor(private myworldService: MyworldService, private http: HttpClient, private router: Router) {
-    this.myworldService.getAllContentPlans(1).subscribe(plans => {
+    this.myworldService.getAllContentPlans().subscribe(plans => {
       this.ContentPlansList = plans as ContentPlans[]
     });
 

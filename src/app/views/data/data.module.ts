@@ -6,6 +6,7 @@ import { ImportComponent } from './import/import.component';
 import { FormsModule } from '@angular/forms';
 import { DataRoutingModule } from './data-routing.module';
 import { DataComponent } from './data.component';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 import {
   AccordionModule,
@@ -34,9 +35,12 @@ import {
   UtilitiesModule,
   AlertModule
 } from '@coreui/angular';
+import { ExportComponent } from './export/export.component';
+import { ImagesManageComponent } from './images-manage/images-manage.component';
+import { UsageComponent } from './usage/usage.component';
 
 @NgModule({
-  declarations: [ImportComponent, DataComponent],
+  declarations: [ImportComponent, DataComponent, ExportComponent, ImagesManageComponent, UsageComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -66,7 +70,7 @@ import {
     TooltipModule,
     ModalModule,
     UtilitiesModule,
-    AlertModule
+    AlertModule,ComponentsModule
   ]
 })
 export class DataModule { }
