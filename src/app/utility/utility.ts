@@ -22,7 +22,6 @@ export class utility {
         let iv = CryptoJS.enc.Hex.parse(hexKeyAndIv.substring(64, hexKeyAndIv.length));
         let encryptedStr = CryptoJS.AES.encrypt(CryptoJS.enc.Utf16LE.parse(value), key, { iv: iv }).toString();
 
-        //console.log(encryptedStr)
         return encryptedStr;
     }
 
@@ -44,7 +43,6 @@ export class utility {
 
         let decrypted = CryptoJS.AES.decrypt(value, key, { iv: iv });
         let decryptedStr = CryptoJS.enc.Utf16LE.stringify(decrypted);
-        //console.log(decryptedStr)
         return decryptedStr;
     }
 

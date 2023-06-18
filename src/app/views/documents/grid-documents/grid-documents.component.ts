@@ -53,7 +53,6 @@ export class GridDocumentsComponent implements OnInit {
     this.universes.push(noUniverse);
     this.contentService.getAllUniverses(accountId).subscribe({
       next: (res) => {
-        console.log("getAllUniverses", res);
         this.universes.push(...res);
       }
     });
@@ -69,7 +68,6 @@ export class GridDocumentsComponent implements OnInit {
 
     this.documentService.addDocuments(document).subscribe({
       next: (res) => {
-        console.log(res);
         this.router.navigate(["documents/" + res + "/edit"]);
       }
     });
@@ -89,9 +87,6 @@ export class GridDocumentsComponent implements OnInit {
 
 
   onBlur($event: any, field_name: string) {
-    console.log('blur', $event)
-    console.log('blur', field_name)
-
     let model: BaseModel = new BaseModel();
     model._id = this.selectedDocument.id!;
     model.column_type = field_name;
@@ -99,23 +94,18 @@ export class GridDocumentsComponent implements OnInit {
     model.content_type = "documents";
     this.contentService.saveData(model).subscribe({
       next: response => {
-        console.log(response);
       }
     });
   }
 
   onModalChange($event: any) {
     if ($event == true) {
-      console.log("true");
     }
     else {
-      console.log("false");
     }
   }
 
   folderChanged($event: any) {
-    console.log("$event", $event.target.value);
-
     let model: BaseModel = new BaseModel();
     model._id = this.selectedDocument.id!;
     model.column_type = "folder_id";
@@ -123,15 +113,11 @@ export class GridDocumentsComponent implements OnInit {
     model.content_type = "documents";
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }
 
   universeChanged($event: any) {
-    console.log("$event", $event.target.value);
-
     let model: BaseModel = new BaseModel();
     model._id = this.selectedDocument.id!;
     model.column_type = "universe_id";
@@ -139,8 +125,6 @@ export class GridDocumentsComponent implements OnInit {
     model.content_type = "documents";
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }

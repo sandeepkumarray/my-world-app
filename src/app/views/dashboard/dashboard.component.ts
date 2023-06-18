@@ -40,11 +40,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     let accountId = (this.authService.getUser() as (Users)).id;
-    console.log("accountId", accountId);
     this.myworldService.getAllContentTypes().subscribe({
       next: (res) => {
         this.content_type_list = res;
-        console.log("content_type_list", res);
         res.map(cnfg => {
           this.authService.setValue(cnfg.name, cnfg);
         });
@@ -75,7 +73,6 @@ export class DashboardComponent implements OnInit {
     this.myworldService.getRecents(accountId).subscribe({
       next: (res) => {
         if (res != null) {
-          console.log(res);
           this.DashboardRecentList = res.filter(r => r.updated_at != null).sort(
             (objA, objB) => new Date(objB.updated_at!).getTime()! - new Date(objA.updated_at!).getTime()!).slice(0, 5);
           this.DashboardRecentList.forEach(r => {

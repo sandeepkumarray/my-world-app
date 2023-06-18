@@ -39,7 +39,6 @@ export class ExportComponent implements OnInit {
     this.myworldService.getAllContentTypes().subscribe({
       next: (res) => {
         this.content_type_list = res;
-        console.log("content_type_list", res);
       }
     });
 
@@ -52,7 +51,6 @@ export class ExportComponent implements OnInit {
       next: async (res) => {
         if (res != null) {
           res.forEach(async (_value: Documents, i: any) => {
-            console.log("downloadDocumentsData 2");
             await asBlob(_value.body).then((dblob) => {
               _value.docblob = dblob;
             });
@@ -72,7 +70,6 @@ export class ExportComponent implements OnInit {
           const myworkbook: XLSX.WorkBook = { Sheets: { 'data': myworksheet }, SheetNames: ['data'] };
           /* save to file */
           XLSX.writeFile(myworkbook, contentType + ".xlsx", { bookType: 'xlsx', type: 'array' });
-          console.log("getAllContentTypeDataForUser", res);
         }
       }
     });
@@ -153,7 +150,6 @@ export class ExportComponent implements OnInit {
     let accountId = (this.authService.getUser() as (Users)).id;
     this.contentService.getAllContentDataForUser(accountId).subscribe({
       next: (res) => {
-        console.log("getAllContentDataForUser", res);
         var TXTResult = "";
         if (res != null) {
 
@@ -162,7 +158,6 @@ export class ExportComponent implements OnInit {
             contentData.push(c);
           });
 
-          console.log("contentData", contentData);
           const myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(res);
           TXTResult = XLSX.utils.sheet_to_txt(myworksheet);
         }
@@ -181,7 +176,6 @@ export class ExportComponent implements OnInit {
     const name = 'documents.zip';
     var zip = new JSZip();
 
-    console.log("downloadDocumentsData this.documents", this.documents);
     this.documents.forEach((_value: Documents, i: any) => {
       zip!.file(_value.title! + ".docx", _value.docblob!, { binary: true });
     });

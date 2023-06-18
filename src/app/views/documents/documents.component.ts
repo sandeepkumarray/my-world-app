@@ -61,7 +61,6 @@ export class DocumentsComponent implements OnInit {
 
     this.documentService.addDocuments(document).subscribe({
       next: (res) => {
-        console.log(res);
         this.router.navigate(["documents/" + res + "/edit"]);
       }
     });
@@ -80,8 +79,6 @@ export class DocumentsComponent implements OnInit {
   }
 
   onBlur($event: any, field_name: string) {
-    console.log('blur', $event)
-    console.log('blur', field_name)
 
     let model: BaseModel = new BaseModel();
     model._id = this.selectedDocument.id!;
@@ -90,18 +87,14 @@ export class DocumentsComponent implements OnInit {
     model.content_type = "documents";
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }
 
   onModalChange($event: any) {
     if ($event == true) {
-      console.log("true");
     }
     else {
-      console.log("false");
     }
   }
 
@@ -115,8 +108,6 @@ export class DocumentsComponent implements OnInit {
     folder.user_id =accountId;
     this.documentService.addFolders(folder).subscribe({
       next: response => {
-
-        console.log(response);
         this.router.navigate(["folders/"+response]);
       }
     });

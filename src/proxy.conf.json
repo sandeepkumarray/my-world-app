@@ -4,5 +4,11 @@
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
+    },
+    "/*": {
+        "target": "http://localhost/code_drops/my-world-app",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
     }
 }

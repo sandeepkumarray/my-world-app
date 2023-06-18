@@ -59,7 +59,7 @@ function getAllContentTypeDataForUser(){
     global $log;
     global $link;
 
-    $sql = "SELECT * FROM $contentType Where user_id = '$user_id'";
+    $sql = "SELECT * FROM `$contentType` Where user_id = '$user_id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);
@@ -92,7 +92,7 @@ function getContentDetailsFromTypeID(){
     global $log;
     global $link;
 
-    $sql = "SELECT *, Name as content_name FROM $contentType Where id = '$id'";
+    $sql = "SELECT *, Name as content_name FROM `$contentType` Where id = '$id'";
 
     $log->info("sql = ".$sql);
     $result = mysqli_query($link, $sql);

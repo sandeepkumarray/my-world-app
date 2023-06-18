@@ -70,9 +70,7 @@ export class ImportComponent implements OnInit {
 
     this.myworldService.getUserContentPlans(accountId).subscribe({
       next: (res) => {
-        console.log(res);
         this.userContentPlans = res;
-        console.log("userContentPlans", res);
       }
     });
 
@@ -91,8 +89,6 @@ export class ImportComponent implements OnInit {
       ContentTemplate.categories.map(c => {
         this.SelectedContentTypeAttributes.push(...c.attributes);
       });
-      console.log("Attributes", this.SelectedContentTypeAttributes);
-
       let headers: any[] = [];
       this.SelectedContentTypeAttributes.map(a => {
         headers.push(a.field_name);
@@ -124,7 +120,6 @@ export class ImportComponent implements OnInit {
           var worksheet = workbook.Sheets[first_sheet_name];
           var excelJsondata = XLSX.utils.sheet_to_json(worksheet, { raw: true, defval: null });
 
-          console.log("exceljsondata", excelJsondata);
           if (this.validateExcelData(excelJsondata)) {
             //this.uploadExcelData(excelJsondata);
           }

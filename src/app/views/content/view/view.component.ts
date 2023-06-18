@@ -54,7 +54,6 @@ export class ViewComponent implements OnInit {
             dictionary[(key)] = jsonObject[key];
           });
           this.ContentDic = dictionary;
-          console.log("dictionary", dictionary);
           this.contentAvailable = true;
         }
         else {
@@ -82,7 +81,7 @@ export class ViewComponent implements OnInit {
     this.myworldService.getUsersContentTemplate(this.accountId).subscribe(res => {
       let contentTemplateModel = JSON.parse(res.template) as ContentTemplateModel;
       this.ContentTemplate = contentTemplateModel.contents.find(c => c.content_type!.toLowerCase() == this.content_type.toLowerCase())!;
-      console.log(this.ContentTemplate);
+
       this.ContentTemplate.categories.map(c => {
         let attributes_with_values_count = 0;
         c.attributes.map(a => {

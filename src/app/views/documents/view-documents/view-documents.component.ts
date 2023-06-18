@@ -31,7 +31,6 @@ export class ViewDocumentsComponent implements OnInit {
     this.router.events.pipe(filter((event):
       event is NavigationEnd =>
       event instanceof NavigationEnd)).forEach(next => {
-        console.log("NavigationEnd", next);
         if (next.url.includes('plaintext')) {
           this.isReadonly = true;
         }
@@ -75,7 +74,6 @@ export class ViewDocumentsComponent implements OnInit {
                   if (this.isReadonly) {
                     finalString = htmlToText(parsedHtml.outerHTML, options);
                   }
-                  console.log("finalString", finalString);
                   this.documentBody = finalString//parsedHtml.outerHTML;
                 }
               });
@@ -90,7 +88,6 @@ export class ViewDocumentsComponent implements OnInit {
           if (this.isReadonly) {
             finalString = htmlToText(parsedHtml.outerHTML, options);
           }
-          //console.log("finalString", finalString);
           this.documentBody = finalString//parsedHtml.outerHTML;
         }
       }

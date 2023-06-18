@@ -42,7 +42,6 @@ export class ContentSelectComponent implements OnInit {
   }
 
   valueChanged($event: any) {
-    console.log("$event", $event.target.value);
     let value = $event.target.value;
     this.select_value = Number(value);
     this.selected.emit(value);

@@ -63,7 +63,6 @@ export class PlanComponent implements OnInit {
     let userplan: UserPlan = new UserPlan();
     userplan.user_id = accountId;
     userplan.plan_id = plan_id;
-    console.log("userplan",userplan);
     this.myworldService.updateUserPlan(userplan).subscribe({
       next: response => {
         window.location.reload();

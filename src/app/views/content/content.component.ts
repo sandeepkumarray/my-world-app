@@ -30,7 +30,6 @@ export class ContentComponent implements OnInit {
     private contentPlanService: ContentPlanService) {
 
     this.content_type = this.activatedRoute.snapshot.paramMap.get('content_type');
-    console.log("this.content_type", this.content_type);
     this.accountId = (this.authService.getUser() as (Users)).id!;
 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -41,7 +40,6 @@ export class ContentComponent implements OnInit {
     this.content_type_details.fa_icon = this.content_type_details.fa_icon! + " " + this.content_type_details.name.toLowerCase() + "-pri";
     this.content_type_details.name_singular = this.content_type_details.name.toUpperCase().slice(0, -1);
 
-    console.log("content_type_details", this.content_type_details);
     this.contentPlanService.check_content_plan(this.content_type.toLowerCase()).subscribe({
       next: (res) => {
         if (res != null) {
@@ -60,7 +58,6 @@ export class ContentComponent implements OnInit {
                       }
                       else {
                         b.image_url = "assets/img/cards/" + utility.titleTransform(this.content_type) + ".png";
-                        console.log(b);
                       }
 
                       b.content_name = b.Name;
@@ -100,13 +97,11 @@ export class ContentComponent implements OnInit {
   }
 
   onDelete(id: any): void {
-    console.log("on delete for id " + id);
     this.currentDeleteId = id;
   }
 
   deleteContent(option: string) {
     if (option == "YES") {
-      console.log("this.currentDeleteId", this.currentDeleteId);
       this.myworldService.deleteContent(this.currentDeleteId, this.content_type.toLowerCase()).subscribe({
         next: (res) => {
           window.location.reload();

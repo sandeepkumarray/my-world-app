@@ -75,6 +75,14 @@ const routes: Routes = [
           title: 'content',
         },
         canActivate: [AuthGuard]
+      },
+      {
+        path: 'universe',
+        loadChildren: () => import('./views/universe/universe.module').then((m) => m.UniverseModule),
+        data: {
+          title: 'universe',
+        },
+        canActivate: [AuthGuard]
       }
     ]
   },

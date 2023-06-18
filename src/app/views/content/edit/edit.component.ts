@@ -36,6 +36,8 @@ export class EditComponent implements OnInit {
   focus: boolean = false;
   content_select_value = -1;
   NumberType = Number;
+  showURL = true;
+  showFile = false;
 
   constructor(private activatedRoute: ActivatedRoute,
     private appdataService: AppdataService,
@@ -66,7 +68,6 @@ export class EditComponent implements OnInit {
             dictionary[(key)] = jsonObject[key];
           });
           this.ContentDic = dictionary;
-          console.log(dictionary);
         }
         else {
           this.router.navigate(["404"]);
@@ -83,7 +84,6 @@ export class EditComponent implements OnInit {
     this.myworldService.getUsersContentTemplate(this.accountId).subscribe(res => {
       let contentTemplateModel = JSON.parse(res.template) as ContentTemplateModel;
       this.ContentTemplate = contentTemplateModel.contents.find(c => c.content_type!.toLowerCase() == this.content_type.toLowerCase())!;
-      console.log(this.ContentTemplate);
 
       this.ContentTemplate.categories = this.ContentTemplate.categories.filter(c=> c.is_hidden == false && c.attributes.length > 0)
       .sort((a, b) => a.order - b.order);
@@ -129,7 +129,6 @@ export class EditComponent implements OnInit {
         });
 
         this.remainingSize = utility.SizeSuffix(allowedTotalContentSize - existing_total_size);
-        console.log(this.remainingSize);
       }
     });
 
@@ -180,7 +179,6 @@ export class EditComponent implements OnInit {
       this.ContentTemplate.categories.forEach(category => {
         var elem = document.getElementById(category.label + "_panel");
         var elemTabPane = document.getElementById(category.label + "_tabpane");
-        console.log(elemTabPane);
         if (category.index == 0) {
           if (!elem?.classList.contains("active")) {
             elem?.classList.add("active");
@@ -194,11 +192,8 @@ export class EditComponent implements OnInit {
   }
 
   checkValue($event: any, field_name: string) {
-    console.log('checkValue', $event.target.checked)
-    console.log('checkValue', field_name)
 
     let value = Number($event.target.checked);
-    console.log('checkValue value', value)
 
     let model: BaseModel = new BaseModel();
     model._id = this.id;
@@ -207,15 +202,11 @@ export class EditComponent implements OnInit {
     model.content_type = this.content_type.toLowerCase();
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }
 
   onBlur($event: any, field_name: string) {
-    console.log('blur', $event)
-    console.log('blur', field_name)
     this.focus = false;
 
     let model: BaseModel = new BaseModel();
@@ -228,15 +219,11 @@ export class EditComponent implements OnInit {
         if(field_name.toLowerCase() == 'name'){
           this.myworldService.updateContentAttribute(model._id, 'name', model.column_value,model.content_type).subscribe({});
         }
-        console.log(response);
       }
     });
   }
 
   onQuillBlur($event: any, field_name: string) {
-    console.log('blur', $event)
-    console.log('blur', field_name)
-
     let model: BaseModel = new BaseModel();
     model._id = this.id;
     model.column_type = field_name;
@@ -244,14 +231,11 @@ export class EditComponent implements OnInit {
     model.content_type = this.content_type.toLowerCase();
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }
 
   addImage(event: any) {
-    console.log(event);
     let accountId = (this.authService.getUser() as (Users)).id;
     this.allAttachments = [];
     let files: FileList = event.target.files;
@@ -276,14 +260,11 @@ export class EditComponent implements OnInit {
     let existing_total_size: number = 0;
     this.ContentObjectList.forEach(a => existing_total_size += a.object_size!);
     if (this.allAttachments != null) {
-
       let upload_file_size: number = 0;
       this.allAttachments.forEach(a => upload_file_size += a.object_size!);
       var total_size = upload_file_size + existing_total_size;
       if (total_size <= allowedTotalContentSize) {
-
         for (let i = 0; i < this.allAttachments.length; i++) {
-
           this.myworldService.addImageToContent(this.allAttachments[i])
             .subscribe(
               event => {
@@ -303,7 +284,6 @@ export class EditComponent implements OnInit {
               }
             )
         }
-
       }
     }
     else {
@@ -313,7 +293,6 @@ export class EditComponent implements OnInit {
 
   deleteContentObject(object_id: any) {
     this.myworldService.deleteContentBlobObject(object_id).subscribe(res => {
-      console.log(res);
       window.location.reload();
     });
   }
@@ -329,8 +308,45 @@ export class EditComponent implements OnInit {
         if(field_name.toLowerCase() == 'universe'){
           this.myworldService.updateContentAttribute(model._id, 'universe_id', model.column_value,model.content_type).subscribe({});
         }
-        console.log(response);
       }
     });
+  }
+
+  onImageBlur($event:any){
+
+    let accountId = (this.authService.getUser() as (Users)).id;
+    this.allAttachments = [];
+    let url : string = $event.target.value;
+    let urlName = url;
+    if(url.includes('?')){
+      urlName = url.split("?")[0];
+    }
+    urlName = urlName.split('/').pop() as string;
+
+     this.myworldService.getImage(url).subscribe(res => {
+      let imageblob = res;
+      let aFile: ContentBlobObject = new ContentBlobObject();
+      aFile.object_blob = imageblob;
+      aFile.inProgress = false;
+      aFile.progress = 0;
+      aFile.object_type = imageblob.type;
+      aFile.object_name = urlName;
+      aFile.object_size = imageblob.size;
+      aFile.content_id = this.id;
+      aFile.user_id = Number(accountId!);
+      aFile.content_type = this.content_type.toLowerCase();
+      this.allAttachments.push(aFile);
+    });
+  }
+
+  onImageRadioChange($event:any){
+    if($event.target.value == "URL"){
+      this.showURL = true;
+      this.showFile = false;
+    }
+    else{
+      this.showURL = false;
+      this.showFile = true;
+    }
   }
 }

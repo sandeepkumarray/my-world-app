@@ -10,6 +10,100 @@ require "logWriter.php";
 $response = new dbResponse;
 $log = new logWriter;
 
+
+
+function createItemForUniverse($data){
+    global $response;
+    global $log;
+    global $link;
+
+	$content_type = trim($data->content_type);
+	$user_id = trim($data->user_id);
+	$universeId = trim($data->universeId);
+	$name = trim($data->name);
+    
+    $sql = "INSERT INTO `$content_type`(name,created_at,user_id, universe) VALUES('$name',sysdate(), $user_id, $universeId)";
+
+    $log->info("sql".$sql."");
+                
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            {                
+                $sql = "INSERT INTO `user_content_attributes` (`universe_id`,`user_id`,`content_id`,`name`,`content_type`)
+                 VALUES($universeId, $user_id, $stmt->insert_id, '$name','$content_type')";
+
+                $log->info("sql".$sql."");
+                
+                if($stmt2 = mysqli_prepare($link, $sql)){
+                    
+                    // Attempt to execute the prepared statement
+                    if(mysqli_stmt_execute($stmt2)){                       
+                      
+                    } 
+                    else{
+                        $dberror= "DB Error: ".mysqli_stmt_error($stmt2);
+                        $log->info("".$dberror."");
+                        $response->success = false;
+                        $response->message = "Something went wrong.Please try again later.";
+                    }
+                }
+            
+            }
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Created successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed update function.");
+}
+
+
+
+
+function getContentsForUniverse(){
+    $user_id = $_GET['user_id']; 
+    $id = $_GET['id']; 
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "CALL get_universe_content('$user_id', '$id')"; 
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $myArray[] = $row;
+            }
+
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
+
 function deleteContent($data){
     global $response;
     global $log;
@@ -397,7 +491,7 @@ function createItem($data){
 	$user_id = trim($data->user_id);
 	$name = trim($data->name);
     
-    $sql = "INSERT INTO $content_type(name,created_at,user_id) VALUES('$name',sysdate(), $user_id)";
+    $sql = "INSERT INTO `$content_type`(name,created_at,user_id) VALUES('$name',sysdate(), $user_id)";
 
     $log->info("sql".$sql."");
                 
@@ -458,7 +552,6 @@ function getDashboard(){
     $sql = "CALL get_dashboard('$user_id')"; 
    
     $log->info("sql".$sql."");
-                
     if($stmt = mysqli_prepare($link, $sql)){
         //mysqli_stmt_bind_param($stmt, 'i', $id);
         if(mysqli_stmt_execute($stmt)){            
@@ -4441,6 +4534,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$data = $request->data;
 	$procedureName = $data->procedureName;
     
+	if ($procedureName == "createItemForUniverse") {
+		createItemForUniverse($data);
+	}
 	if ($procedureName == "updateContentAttribute") {
 		updateContentAttribute($data);
 	}
@@ -4753,6 +4849,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$procedureName = $_GET['procedureName'];
     
+    if ($procedureName == "getContentsForUniverse") {
+		getContentsForUniverse();
+	}
+
 	if ($procedureName == "getAllContentBlobObject") {
 		getAllContentBlobObject();
 	}

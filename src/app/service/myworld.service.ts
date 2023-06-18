@@ -45,6 +45,19 @@ export class MyworldService {
 
 	}
 
+	getContentsForUniverse(user_id: any, id: any): Observable<DashboardRecentModel[]> {
+		let apiURL = `${environment.serviceUrl}api_myworld.php?procedureName=getContentsForUniverse&user_id=` + user_id + `&id=` + id;
+
+		return this.http.get<DashboardRecentModel[]>(apiURL);
+	}
+
+	getImage(imageUrl: string): Observable<Blob> {
+		var headers = new HttpHeaders({
+			'Access-Control-Allow-Origin': '*'
+		});
+		return this.http.get(imageUrl, { responseType: 'blob' });
+	}
+
 	getUserBlob(user_id: any, blob_type: any): Observable<UserBlob> {
 		let apiURL = `${environment.serviceUrl}api_myworld.php?procedureName=getUserBlob&user_id=` + user_id + `&blob_type=` + blob_type;
 		return this.http.get<UserBlob>(apiURL);
@@ -129,6 +142,25 @@ export class MyworldService {
 		return this.http.post<ResponseModel>(apiURL, { data: json_object }, httpOptions);
 	}
 
+	createItemForUniverse(content_type: string, user_id: string | undefined, universeId: string,) {
+		let apiURL = `${environment.serviceUrl}api_myworld.php`;
+		let json_object: any = {};
+
+		json_object.procedureName = "createItemForUniverse";
+		json_object.content_type = content_type.toLowerCase();
+		json_object.user_id = user_id;
+		json_object.universeId = universeId;
+		json_object.name = "New " + content_type;
+
+		const httpOptions = {
+			headers: new HttpHeaders({
+				'Content-Type': 'application/json'
+			})
+		};
+
+		return this.http.post<ResponseModel>(apiURL, { data: json_object }, httpOptions);
+	}
+
 	getDashboard(user_id: any): Observable<any> {
 		let apiURL = `${environment.serviceUrl}api_myworld.php?procedureName=getDashboard&user_id=` + user_id;
 
@@ -175,9 +207,6 @@ export class MyworldService {
 		formData.append('content_id', file.content_id!);
 		formData.append('content_type', file.content_type!);
 		formData.append('user_id', file.user_id!.toString());
-
-		console.log(file.content_type);
-
 		let headers = new Headers();
 		headers.append('enctype', 'multipart/form-data');
 		headers.append('Accept', 'application/json');
@@ -1675,8 +1704,6 @@ export class MyworldService {
 		formData.append('tableName', file.tableName!);
 		formData.append('tableColumns', file.tableColumns!);
 
-		console.log(file.type);
-
 		let headers = new Headers();
 		headers.append('enctype', 'multipart/form-data');
 		headers.append('Accept', 'application/json');
@@ -1698,7 +1725,6 @@ export class MyworldService {
 
 		this.getUserContentPlans(accountId).subscribe({
 			next: (res) => {
-				console.log(res);
 				userContentPlans = res;
 				let plan_template = JSON.parse(userContentPlans.plan_template);
 			}
@@ -1706,18 +1732,13 @@ export class MyworldService {
 
 		this.getDashboard(accountId).subscribe({
 			next: (res) => {
-				console.log(res);
 				dashboardModel = res;
 				var content_item_count = dashboardModel[content_type.toLowerCase() + '_total'];
 				var planItemCount = userContentPlans[content_type.toLowerCase() + '_count'];
-				console.log("user content count : " + content_item_count);
-				console.log("plan content count : " + planItemCount);
 
 				if (content_item_count < planItemCount || userContentPlans.name == "Unlimited") {
-					console.log("call create proc");
 					this.createItem(content_type, accountId).subscribe({
 						next: (res) => {
-							console.log("createItem", res);
 							this.router.navigate(["content/" + content_type.toLowerCase() + "/" + res + "/edit"]);
 						}
 					});
@@ -1757,7 +1778,6 @@ export class MyworldService {
 		json_object.name = name;
 		json_object.user_id = user_id;
 
-		console.log("addUserContentAttributes json_object", json_object);
 		const httpOptions = {
 			headers: new HttpHeaders({
 				'Content-Type': 'application/json'
@@ -1767,7 +1787,7 @@ export class MyworldService {
 		return this.http.post<ResponseModel>(apiURL, { data: json_object }, httpOptions);
 	}
 
-	updateContentAttribute(content_id: any, attributeType: string,attributeValue: string, content_type: string){
+	updateContentAttribute(content_id: any, attributeType: string, attributeValue: string, content_type: string) {
 		let apiURL = `${environment.serviceUrl}api_myworld.php`;
 		let json_object: any = {};
 
@@ -1785,4 +1805,38 @@ export class MyworldService {
 
 		return this.http.post<ResponseModel>(apiURL, { data: json_object }, httpOptions);
 	}
+
+	
+	createContentInUniverseForUser(universeId: string, accountId: string, content_type: string): void {
+		let userContentPlans: any;
+		let dashboardModel: any;
+
+		this.getUserContentPlans(accountId).subscribe({
+			next: (res) => {
+				userContentPlans = res;
+				let plan_template = JSON.parse(userContentPlans.plan_template);
+			}
+		});
+
+		this.getDashboard(accountId).subscribe({
+			next: (res) => {
+				dashboardModel = res;
+				var content_item_count = dashboardModel[content_type.toLowerCase() + '_total'];
+				var planItemCount = userContentPlans[content_type.toLowerCase() + '_count'];
+
+				if (content_item_count < planItemCount || userContentPlans.name == "Unlimited") {
+					this.createItemForUniverse(content_type, accountId, universeId).subscribe({
+						next: (res) => {
+							this.router.navigate(["content/" + content_type.toLowerCase() + "/" + res + "/edit"]);
+						}
+					});
+					//return RedirectToAction("View" + content_type, content_type, new { id = id });
+				}
+				else {
+					var Message = "You have Exceeded the maximum allowed content for " + content_type + ".";
+				}
+			}
+		});
+	}
+
 }

@@ -151,6 +151,15 @@
                                             </div>
                                         </a>
                                     </li>
+                                    <li class="nav-item collection-item tab" *ngIf="content_type == 'universes'">
+                                        <a class="d-flex justify-content-between align-items-center"
+                                        [routerLink]="['/universe',id]">
+                                            <div><span>
+                                                    <i class="material-icons left" translate="no">language</i></span>
+                                                <span style="margin-left:20px">View Contents</span>
+                                            </div>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

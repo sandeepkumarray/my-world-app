@@ -34,18 +34,15 @@ export class ContentCustomizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("this.content_type", this.content_type);
     this.content_type_details = this.authService.getValue(utility.titleTransform(this.content_type)) as ContentTypes;
     this.content_type_details.fa_icon = this.content_type_details.fa_icon! + " " + this.content_type_details.name.toLowerCase() + "-pri";
     this.content_type_details.name_singular = this.content_type_details.name.toUpperCase().slice(0, -1);
 
     this.myworldService.getUsersContentTemplate(this.accountId).subscribe(res => {
-      console.log("getUsersContentTemplate", res);
       this.UserContentTemplate = res as UserContentTemplate;
       this.contentTemplateModel = JSON.parse(res.template) as ContentTemplateModel;
       this.ContentTemplate = this.contentTemplateModel.contents.find(c => c.content_type!.toLowerCase() == this.content_type.toLowerCase())!;
 
-      console.log("original this.ContentTemplate", this.ContentTemplate);
       this.ContentTemplate.categories.map(c => {
       });
 
@@ -64,26 +61,22 @@ export class ContentCustomizationComponent implements OnInit {
     
     this.UserContentTemplate.template = JSON.stringify(this.contentTemplateModel);
 
-    console.log("update contentTemplateModel", this.contentTemplateModel);
     this.myworldService.updateUserContentTemplate(this.UserContentTemplate).subscribe(res => {
 
     });
   }
 
   renameCategory(category: any) {
-    console.log("category", category);
     this.callUpdateUserContentTemplate(category);
   }
 
   hideCategory(category: any) {
     category.is_hidden = true;
-    console.log("category", category);
     this.callUpdateUserContentTemplate(category);
   }
 
   showCategory(category: any) {
     category.is_hidden = false;
-    console.log("category", category);
     this.callUpdateUserContentTemplate(category);
   }
 }

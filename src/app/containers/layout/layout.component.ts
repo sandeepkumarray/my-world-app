@@ -90,7 +90,6 @@ export class LayoutComponent implements OnInit {
       console.log(contents);
     });
 
-    console.log(this.appdataService.ContentPlansList);
     this.myworldService.getContentPlans(1, 1).subscribe({
       next: (plan) => {
         this.FreePlanContents = plan.contents.split(',');
@@ -142,6 +141,5 @@ export class LayoutComponent implements OnInit {
       }
     });
 
-    console.log(this.navItemsContents);
   }
 }

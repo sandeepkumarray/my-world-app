@@ -37,7 +37,6 @@ export class FoldersComponent implements OnInit {
           this.viewModel.title = res.title;
           this.viewModel.id = res.id;
           this.viewModel = Object.assign(this.viewModel, res);
-          console.log(this.viewModel);
         }
       }
     });
@@ -79,7 +78,6 @@ export class FoldersComponent implements OnInit {
 
     this.documentService.addDocuments(document).subscribe({
       next: (res) => {
-        console.log(res);
         this.router.navigate(["documents/" + res + "/edit"]);
       }
     });
@@ -103,14 +101,11 @@ export class FoldersComponent implements OnInit {
     model.content_type = "folders";
     this.contentService.saveData(model).subscribe({
       next: response => {
-        console.log(response);
       }
     });
   }
 
   folderChanged($event: any) {
-    console.log("$event", $event.target.value);
-
     let model: BaseModel = new BaseModel();
     model._id = this.viewModel.id!;
     model.column_type = "parent_folder_id";
@@ -118,8 +113,6 @@ export class FoldersComponent implements OnInit {
     model.content_type = "folders";
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }
@@ -129,38 +122,28 @@ export class FoldersComponent implements OnInit {
 
     let folder: Folders = new Folders();
     folder.title = "New Folder";
-    folder.context="";
+    folder.context = "";
     folder.parent_folder_id = this.id;
-    folder.user_id =accountId;
+    folder.user_id = accountId;
     this.documentService.addFolders(folder).subscribe({
       next: response => {
-
-        console.log(response);
-        this.router.navigate(["folders/"+response]);
+        this.router.navigate(["folders/" + response]);
       }
     });
   }
 
   deleteFolder(option: string) {
-
-    console.log("option", option);
-
-
     if (option == "YES") {
 
       //move child folders to top level    
       this.documentService.UpdateChildFoldersToTop(this.id).subscribe({
         next: response => {
-
-          console.log(response);
         }
       });
 
       //update documents with null folder_id
       this.documentService.updateDocumentsFolderToNull(this.id).subscribe({
         next: response => {
-
-          console.log(response);
         }
       });
 
@@ -169,8 +152,6 @@ export class FoldersComponent implements OnInit {
       folder.id = this.id;
       this.documentService.deleteFolders(folder).subscribe({
         next: response => {
-
-          console.log(response);
         }
       });
 

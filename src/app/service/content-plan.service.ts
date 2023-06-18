@@ -21,7 +21,6 @@ export class ContentPlanService {
     this.myworldService.getUserContentPlans(this.accountId).subscribe({
       next: (res) => {
         this.userContentPlans = res;
-        console.log("this.userContentPlans", this.userContentPlans);
       }
     });
   }
@@ -30,7 +29,6 @@ export class ContentPlanService {
     this.accountId = (this.authService.getUser() as (Users)).id!;
     return this.myworldService.getUserContentPlans(this.accountId).pipe(
       map((res) => {
-        console.log(res);
         return res;
       })
     );
@@ -41,16 +39,12 @@ export class ContentPlanService {
 
     return this.myworldService.getDashboard(this.accountId).pipe(
       map((res) => {
-        console.log(res);
         let dashboardModel = res;
         var content_item_count = dashboardModel[content_type.toLowerCase() + '_total'];
         var planItemCount = this.userContentPlans[content_type.toLowerCase() + '_count'];
-        console.log("user content count : " + content_item_count);
-        console.log("plan content count : " + planItemCount);
 
         planItemCount = Number(planItemCount);
         if (content_item_count < planItemCount || this.userContentPlans.name == "Unlimited") {
-          console.log("call create proc");
           return true;
         }
         else {
@@ -64,12 +58,9 @@ export class ContentPlanService {
 
     return this.myworldService.getDashboard(this.accountId).pipe(
       map((res) => {
-        console.log(res);
         let dashboardModel = res;
         var content_item_count = dashboardModel[content_type.toLowerCase() + '_total'];
         var planItemCount = this.userContentPlans[content_type.toLowerCase() + '_count'];
-        console.log("user content count : " + content_item_count);
-        console.log("plan content count : " + planItemCount);
 
         planItemCount = Number(planItemCount);
         if (this.userContentPlans.name == "Unlimited") {
@@ -88,4 +79,25 @@ export class ContentPlanService {
         }
       }));
   }
+
+  
+  check_create_user_content_plan(userContentPlans:any, content_type: string): Observable<any> {
+    var return_value = false;
+
+    return this.myworldService.getDashboard(this.accountId).pipe(
+      map((res) => {
+        let dashboardModel = res;
+        var content_item_count = dashboardModel[content_type.toLowerCase() + '_total'];
+        var planItemCount = userContentPlans[content_type.toLowerCase() + '_count'];
+
+        planItemCount = Number(planItemCount);
+        if (content_item_count < planItemCount || userContentPlans.name == "Unlimited") {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }));
+  }
+  
 }

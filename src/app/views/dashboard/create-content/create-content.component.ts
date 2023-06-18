@@ -29,7 +29,6 @@ export class CreateContentComponent implements OnInit {
 
     this.myworldService.getUserContentPlans(accountId).subscribe({
       next: (res) => {
-        console.log(res);
         this.userContentPlans = res;
         let plan_template = JSON.parse(this.userContentPlans.plan_template);
       }
@@ -37,18 +36,13 @@ export class CreateContentComponent implements OnInit {
 
     this.myworldService.getDashboard(accountId).subscribe({
       next: (res) => {
-        console.log(res);
         this.dashboardModel = res;
         var content_item_count = this.dashboardModel[this.content_type.toLowerCase() + '_total'];
         var planItemCount = this.userContentPlans[this.content_type.toLowerCase() + '_count'];
-        console.log("user content count : " + content_item_count);
-        console.log("plan content count : " + planItemCount);
 
         if (content_item_count < planItemCount || this.userContentPlans.name == "Unlimited") {
-          console.log("call create proc");
           this.myworldService.createItem(this.content_type, accountId).subscribe({
             next: (res) => {
-              console.log(res);
               this.router.navigate([this.content_type.toLowerCase() + "/" + res+ "/edit"]);
             }
           });

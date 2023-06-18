@@ -34,7 +34,6 @@ export class EditDocumentsComponent implements OnInit {
         let accountId = (this.authService.getUser() as (Users)).id;
         this.documentService.getAllMentions(accountId).subscribe({
           next: response => {
-            console.log(response);
             let matches: any[] = [];
             response.map(m => {
               let content: any = {};
@@ -51,7 +50,6 @@ export class EditDocumentsComponent implements OnInit {
         });
       },
       renderItem: (item: any, searchTerm: any) => {
-        console.log(item);
         return '<div class="d-flex justify-content-between align-items-center"><span style="font-size: 14px;">' + item.label + '</span><span style="margin-left:20px">' + item.icon + '</span></div>';
       }
     },
@@ -71,7 +69,6 @@ export class EditDocumentsComponent implements OnInit {
     this.documentService.getDocuments(accountId, this.id).subscribe({
       next: response => {
         this.document = response;
-        console.log("document", this.document);
       }
     });
   }

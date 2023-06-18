@@ -28,9 +28,7 @@ export class TimelinesComponent implements OnInit {
   index(): void {
     this.timelines = [];
     let accountId = (this.authService.getUser() as (Users)).id;
-    console.log(accountId);
     let imageFormat = this.authService.getValue(constants.ContentImageUrlFormat);
-    console.log(imageFormat);
     this.contentService.getAllTimelines(accountId).subscribe({
       next: (res) => {
         res.map(b => {

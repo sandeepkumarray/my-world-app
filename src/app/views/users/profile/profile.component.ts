@@ -100,7 +100,6 @@ export class ProfileComponent implements OnInit {
 
     this.myworldService.getUsers(accountId).subscribe({
       next: response => {
-        console.log("getUsers", response);
         this.user = response;
       }
     });
@@ -156,11 +155,8 @@ export class ProfileComponent implements OnInit {
   }
 
   checkValue($event: any, field_name: string) {
-    console.log('checkValue', $event.target.checked)
-    console.log('checkValue', field_name)
     let accountId = (this.authService.getUser() as (Users)).id;
     let value = Number($event.target.checked);
-    console.log('checkValue value', value)
 
     let model: BaseModel = new BaseModel();
     model._id = Number(accountId);
@@ -169,15 +165,11 @@ export class ProfileComponent implements OnInit {
     model.content_type = "users";
     this.contentService.saveData(model).subscribe({
       next: response => {
-
-        console.log(response);
       }
     });
   }
 
   onBlur($event: any, field_name: string) {
-    console.log('blur', $event)
-    console.log('blur', field_name)
 
     let accountId = (this.authService.getUser() as (Users)).id;
     let model: BaseModel = new BaseModel();
@@ -187,7 +179,6 @@ export class ProfileComponent implements OnInit {
     model.content_type = "users";
     this.contentService.saveData(model).subscribe({
       next: response => {
-        console.log(response);
       }
     });
   }
@@ -226,7 +217,6 @@ export class ProfileComponent implements OnInit {
       let password = this.passwordForm.controls['password'].value;
       let confirmPassword = this.passwordForm.controls['confirmPassword'].value;
       let encPassword = utility.encrypt(confirmPassword);
-      console.log('encPassword ', encPassword);
 
       let model: BaseModel = new BaseModel();
       model._id = Number(accountId);
@@ -235,7 +225,6 @@ export class ProfileComponent implements OnInit {
       model.content_type = "users";
       this.contentService.saveData(model).subscribe({
         next: response => {
-          console.log(response);
         }
       });
     }

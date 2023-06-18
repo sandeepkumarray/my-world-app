@@ -1,0 +1,75 @@
+<c-row>
+  <c-col sm="12">
+    <div
+      style="position: relative;overflow: hidden;height: 265px;background: linear-gradient( rgb(122 122 122 / 50%), rgb(122 122 122 / 50%) ),  url('{{universe_image_url}}');background-size: cover;">
+      <div class="text-white bordered-text" style="font-size: xxx-large;
+  position: absolute;
+  top: 30%;
+  left: 20%;
+  width: 70%;
+  text-align: center;">{{name}}
+      </div>
+    </div>
+  </c-col>
+</c-row>
+<c-row>
+  <c-col sm="12">
+    <div *ngFor="let content_type of content_type_list">
+      <c-row *ngIf="this.ContentDic[content_type.name.toLowerCase()] != undefined">
+        <c-row [style.background]="content_type.primary_color" style="margin:15px;">
+          <div class="d-flex justify-content-between align-items-center" style="margin:15px;padding:10px;">
+            <span>
+              <span [innerHTML]="content_type.icon"></span>
+              <span style="font-size: 4rem;">&nbsp; {{content_type.name}}</span>
+            </span>
+            <a style="font-size: 4rem;" (click)="createContent(content_type.name)"><span><i
+                  class="fas fa-plus fa-1x"></i></span></a>
+          </div>
+        </c-row>
+        <c-col sm="4" xl="3" *ngFor="let dItem of this.ContentDic[content_type.name.toLowerCase()]">
+          <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="{{dItem.url}}">
+            <c-card class="text-white" style="height:100px;width:250px" [style.background]="content_type.sec_color"
+              [title]="dItem.name">
+              <c-card-body>
+                <div>
+                  <span style="font-size: 2rem;">{{dItem.name.length > 23 ? dItem.name.substring(0, 23) + '...' :
+                    dItem.name}}</span>
+                  <p class="text-sm-left">{{(dItem.timeSince)}}</p>
+                </div>
+              </c-card-body>
+            </c-card>
+          </a>
+        </c-col>
+      </c-row>
+    </div>
+    
+    <c-row *ngIf="this.ContentDic['documents'] != undefined">
+      <c-row class="text-lighten-1 bg-success" style="margin:15px;">
+        <div class="d-flex justify-content-between align-items-center" style="margin:15px;padding:10px;">
+          <span>
+            <span>
+      <i translate="no" class="material-icons medium">description</i>
+      </span>
+            <span style="font-size: 4rem;">&nbsp; Documents</span>
+          </span>
+          <a style="font-size: 4rem;" (click)="createDocument()"><span><i
+                class="fas fa-plus fa-1x"></i></span></a>
+        </div>
+      </c-row>
+      <c-col sm="4" xl="3" *ngFor="let dItem of this.ContentDic['documents']">
+        <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="{{dItem.url}}">
+          <c-card class="text-white success bg-success card" style="height:100px;width:250px"
+            [title]="dItem.name">
+            <c-card-body>
+              <div>
+                <span style="font-size: 2rem;">{{dItem.name.length > 23 ? dItem.name.substring(0, 23) + '...' :
+                  dItem.name}}</span>
+                <p class="text-sm-left">{{(dItem.timeSince)}}</p>
+              </div>
+            </c-card-body>
+          </c-card>
+        </a>
+      </c-col>
+    </c-row>
+  </c-col>
+</c-row>

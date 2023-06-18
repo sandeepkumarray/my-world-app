@@ -29,7 +29,6 @@ export class ImagesManageComponent implements OnInit {
     this.myworldService.getAllContentBlobObject(accountId).subscribe(res => {
       if (res != null) {
         res.map(b => {
-          console.log("ContentBlobObject", b);
           let item: any = {};
           item.object_id = b.object_id;
           item.object_name = b.object_name;
