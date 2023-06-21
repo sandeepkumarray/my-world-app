@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/app/utility/AuthGuard';
 import { ContentComponent } from './content.component';
 import { EditComponent } from './edit/edit.component';
 import { ViewComponent } from './view/view.component';
+import { ChangelogComponent } from './changelog/changelog.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,14 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard]
       },
+      {
+        path: ':content_type/:id/changes',
+        component: ChangelogComponent,
+        data: {
+          title: 'Content changes',
+        },
+        canActivate: [AuthGuard]
+      }
     ]
   },
 ];

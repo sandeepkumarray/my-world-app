@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { TabContentComponent } from '@coreui/angular';
 import { Users } from 'src/app/model';
-import { Content, ContentTemplateModel } from 'src/app/model/ContentTemplateModel';
+import { Attribute, Category, Content, ContentTemplateModel } from 'src/app/model/ContentTemplateModel';
 import { BaseModel } from "src/app/model/BaseModel";
 import { ContentBlobObject } from 'src/app/model/ContentBlobObject';
 import { AppdataService } from 'src/app/service/appdata.service';
@@ -14,6 +14,7 @@ import { MyworldService } from 'src/app/service/myworld.service';
 import { DocumentService } from 'src/app/service/document.service';
 import { constants } from 'src/app/utility/constants';
 import { utility } from 'src/app/utility/utility';
+import { ContentChangeEvents } from 'src/app/model/ContentChangeEvents';
 
 @Component({
   selector: 'app-edit',
@@ -24,6 +25,7 @@ export class EditComponent implements OnInit {
   id: any = "";
   content_type: any = "";
   accountId: string = "";
+  username: string = "";
   Constants = constants;
   utility = utility;
   ContentDic: { [key: string]: string } = {};
@@ -39,6 +41,8 @@ export class EditComponent implements OnInit {
   showURL = true;
   showFile = false;
 
+  changelog: ContentChangeEvents = new ContentChangeEvents;
+
   constructor(private activatedRoute: ActivatedRoute,
     private appdataService: AppdataService,
     private authService: AuthenticationService,
@@ -49,13 +53,15 @@ export class EditComponent implements OnInit {
     private router: Router) {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.content_type = this.activatedRoute.snapshot.paramMap.get('content_type');
-    this.accountId = (this.authService.getUser() as (Users)).id!;
+    var user = (this.authService.getUser() as (Users));
+    this.accountId = user.id!;
+    this.username = user.name!;
 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   ngOnInit(): void {
-    
+
     let allowedTotalContentSize = this.authService.getValue(constants.AllowedTotalContentSize);
     this.remainingSize = utility.SizeSuffix(allowedTotalContentSize);
     this.contentService.getContentDetailsFromTypeID(this.content_type, this.id).subscribe({
@@ -85,19 +91,19 @@ export class EditComponent implements OnInit {
       let contentTemplateModel = JSON.parse(res.template) as ContentTemplateModel;
       this.ContentTemplate = contentTemplateModel.contents.find(c => c.content_type!.toLowerCase() == this.content_type.toLowerCase())!;
 
-      this.ContentTemplate.categories = this.ContentTemplate.categories.filter(c=> c.is_hidden == false && c.attributes.length > 0)
-      .sort((a, b) => a.order - b.order);
+      this.ContentTemplate.categories = this.ContentTemplate.categories.filter(c => c.is_hidden == false && c.attributes.length > 0)
+        .sort((a, b) => a.order - b.order);
 
-      this.ContentTemplate.references = this.ContentTemplate.references.filter(c=> c.is_hidden == false && c.attributes.length > 0)
-      .sort((a, b) => a.order - b.order);
+      this.ContentTemplate.references = this.ContentTemplate.references.filter(c => c.is_hidden == false && c.attributes.length > 0)
+        .sort((a, b) => a.order - b.order);
 
-      var categories_min_order=  this.ContentTemplate.categories.reduce(function(prev, current) {
+      var categories_min_order = this.ContentTemplate.categories.reduce(function (prev, current) {
         return (prev.order < current.order) ? prev : current
-    })
+      })
 
-    var references_min_order =  this.ContentTemplate.references.reduce(function(prev, current) {
-      return (prev.order < current.order) ? prev : current
-  })
+      var references_min_order = this.ContentTemplate.references.reduce(function (prev, current) {
+        return (prev.order < current.order) ? prev : current
+      })
 
       var catIndex = 0;
       this.ContentTemplate.categories.map(c => {
@@ -134,7 +140,7 @@ export class EditComponent implements OnInit {
 
   }
 
-  setActive(order: number, minactive : number): boolean {
+  setActive(order: number, minactive: number): boolean {
     if (order == minactive) {
       return true;
     }
@@ -191,42 +197,119 @@ export class EditComponent implements OnInit {
     }
   }
 
-  checkValue($event: any, field_name: string) {
+  checkValue($event: any, attr: Attribute, cat: Category) {
 
     let value = Number($event.target.checked);
+    this.changelog = new ContentChangeEvents;
+
+    let oldValue = this.ContentDic[attr.field_name];
+    let newValue = Number($event.target.checked);
+
+    if (oldValue == 'undefined' || oldValue == "" || oldValue == null) {
+      this.changelog.action = 'created';
+    }
+    else {
+      this.changelog.action = 'updated';
+    }
+
+    this.changelog.changed_fields = '<strong> ' + cat.label! + ' > ' + attr.field_name + '</strong> ' + this.changelog.action + ' by ' + this.username;
+    this.changelog.content_id = this.id;
+    this.changelog.content_type = this.content_type;
+    this.changelog.created_at = new Date;
+    this.changelog.updated_at = new Date;
+    this.changelog.user_id = this.accountId;
+    this.changelog.old_value = oldValue;
+    this.changelog.new_value = newValue;
+
+    console.log('changelog', this.changelog);
 
     let model: BaseModel = new BaseModel();
     model._id = this.id;
-    model.column_type = field_name;
+    model.column_type = attr.field_name;
     model.column_value = value;
     model.content_type = this.content_type.toLowerCase();
     this.contentService.saveData(model).subscribe({
       next: response => {
-      }
-    });
-  }
-
-  onBlur($event: any, field_name: string) {
-    this.focus = false;
-
-    let model: BaseModel = new BaseModel();
-    model._id = this.id;
-    model.column_type = field_name;
-    model.column_value = $event.target.value;
-    model.content_type = this.content_type.toLowerCase();
-    this.contentService.saveData(model).subscribe({
-      next: response => {
-        if(field_name.toLowerCase() == 'name'){
-          this.myworldService.updateContentAttribute(model._id, 'name', model.column_value,model.content_type).subscribe({});
+        if (this.changelog.old_value != this.changelog.new_value) {
+          this.contentService.addContentChangeEvent(this.changelog).subscribe({});
         }
       }
     });
   }
 
-  onQuillBlur($event: any, field_name: string) {
+  onBlur($event: any, attr: Attribute, cat: Category) {
+    this.focus = false;
+    this.changelog = new ContentChangeEvents;
+
+    let oldValue = this.ContentDic[attr.field_name];
+    let newValue = $event.target.value;
+
+    if (oldValue == 'undefined' || oldValue == "" || oldValue == null) {
+      this.changelog.action = 'created';
+    }
+    else {
+      this.changelog.action = 'updated';
+    }
+
+    this.changelog.changed_fields = '<strong> ' + cat.label! + ' > ' + attr.field_name + '</strong> ' + this.changelog.action + ' by ' + this.username;
+    this.changelog.content_id = this.id;
+    this.changelog.content_type = this.content_type;
+    this.changelog.created_at = new Date;
+    this.changelog.updated_at = new Date;
+    this.changelog.user_id = this.accountId;
+    this.changelog.old_value = oldValue;
+    this.changelog.new_value = newValue;
+
+    console.log('changelog', this.changelog);
+
     let model: BaseModel = new BaseModel();
     model._id = this.id;
-    model.column_type = field_name;
+    model.column_type = attr.field_name;
+    model.column_value = $event.target.value;
+    model.content_type = this.content_type.toLowerCase();
+    this.contentService.saveData(model).subscribe({
+      next: response => {
+        if (attr.field_name.toLowerCase() == 'name') {
+          this.myworldService.updateContentAttribute(model._id, 'name', model.column_value, model.content_type).subscribe({});
+        }
+
+        if (this.changelog.old_value != this.changelog.new_value) {
+
+          console.log('updating change ');
+          this.contentService.addContentChangeEvent(this.changelog).subscribe({});
+        }
+      }
+    });
+  }
+
+  onQuillBlur($event: any, attr: Attribute, cat: Category) {
+
+    this.changelog = new ContentChangeEvents;
+
+    let oldValue = this.ContentDic[attr.field_name];
+    let newValue = $event.editor.root.innerHTML;
+
+    if (oldValue == 'undefined' || oldValue == "" || oldValue == null) {
+      this.changelog.action = 'created';
+    }
+    else {
+      this.changelog.action = 'updated';
+    }
+
+    this.changelog.changed_fields = '<strong>' + cat.icon + ' ' + cat.label! + ' > ' + attr.field_name + '</strong> ' + this.changelog.action + ' by ' + this.username;
+    this.changelog.content_id = this.id;
+    this.changelog.content_type = this.content_type;
+    this.changelog.created_at = new Date;
+    this.changelog.updated_at = new Date;
+    this.changelog.user_id = this.accountId;
+    this.changelog.old_value = oldValue;
+    this.changelog.new_value = newValue;
+
+    console.log('changelog', this.changelog);
+
+    let model: BaseModel = new BaseModel();
+    model._id = this.id;
+    model.column_type = attr.field_name;
     model.column_value = $event.editor.root.innerHTML;
     model.content_type = this.content_type.toLowerCase();
     this.contentService.saveData(model).subscribe({
@@ -297,33 +380,63 @@ export class EditComponent implements OnInit {
     });
   }
 
-  getContentSelectValue($event:any, field_name: string){
+  getContentSelectValue($event: any, attr: Attribute, cat: Category) {
+    
+    this.changelog = new ContentChangeEvents;
+
+    let oldValue = this.ContentDic[attr.field_name];
+    let newValue = $event;
+
+    if (oldValue == 'undefined' || oldValue == "" || oldValue == null) {
+      this.changelog.action = 'created';
+    }
+    else {
+      this.changelog.action = 'updated';
+    }
+
+    this.changelog.changed_fields = '<strong> ' + cat.label! + ' > ' + attr.field_name + '</strong> ' + this.changelog.action + ' by ' + this.username;
+    this.changelog.content_id = this.id;
+    this.changelog.content_type = this.content_type;
+    this.changelog.created_at = new Date;
+    this.changelog.updated_at = new Date;
+    this.changelog.user_id = this.accountId;
+    this.changelog.old_value = oldValue;
+    this.changelog.new_value = newValue;
+
+    console.log('changelog', this.changelog);
+
     let model: BaseModel = new BaseModel();
     model._id = this.id;
-    model.column_type = field_name;
+    model.column_type = attr.field_name;
     model.column_value = $event;
     model.content_type = this.content_type.toLowerCase();
     this.contentService.saveData(model).subscribe({
       next: response => {
-        if(field_name.toLowerCase() == 'universe'){
-          this.myworldService.updateContentAttribute(model._id, 'universe_id', model.column_value,model.content_type).subscribe({});
+        if (attr.field_name.toLowerCase() == 'universe') {
+          this.myworldService.updateContentAttribute(model._id, 'universe_id', model.column_value, model.content_type).subscribe({});
+        }
+        
+        if (this.changelog.old_value != this.changelog.new_value) {
+
+          console.log('updating change ');
+          this.contentService.addContentChangeEvent(this.changelog).subscribe({});
         }
       }
     });
   }
 
-  onImageBlur($event:any){
+  onImageBlur($event: any) {
 
     let accountId = (this.authService.getUser() as (Users)).id;
     this.allAttachments = [];
-    let url : string = $event.target.value;
+    let url: string = $event.target.value;
     let urlName = url;
-    if(url.includes('?')){
+    if (url.includes('?')) {
       urlName = url.split("?")[0];
     }
     urlName = urlName.split('/').pop() as string;
 
-     this.myworldService.getImage(url).subscribe(res => {
+    this.myworldService.getImage(url).subscribe(res => {
       let imageblob = res;
       let aFile: ContentBlobObject = new ContentBlobObject();
       aFile.object_blob = imageblob;
@@ -339,12 +452,12 @@ export class EditComponent implements OnInit {
     });
   }
 
-  onImageRadioChange($event:any){
-    if($event.target.value == "URL"){
+  onImageRadioChange($event: any) {
+    if ($event.target.value == "URL") {
       this.showURL = true;
       this.showFile = false;
     }
-    else{
+    else {
       this.showURL = false;
       this.showFile = true;
     }

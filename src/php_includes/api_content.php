@@ -10,6 +10,86 @@ require "logWriter.php";
 $response = new dbResponse;
 $log = new logWriter;
 
+
+function getChangelogforContent(){
+    $contentType = $_GET['contentType'];
+    $id = $_GET['id'];
+
+
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT * FROM content_change_events Where content_type = '$contentType' and content_id = $id order by created_at desc";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $myArray[] = $row;
+            }
+
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
+
+function addContentChangeEvent($data){
+    global $response;
+    global $log;
+    global $link;
+
+    $log->info("Started save function.");
+
+	$content_id = $data->content_id == null ? "NULL" : $data->content_id; 
+	$changed_fields = $data->changed_fields == null ? NULL : $data->changed_fields; 
+	$content_type = $data->content_type == null ? NULL : $data->content_type; 
+	$action = $data->action == null ? NULL : $data->action; 
+	$old_value = $data->old_value == null ? NULL : $data->old_value; 
+	$new_value = $data->new_value == null ? NULL : $data->new_value; 
+	$user_id = $data->user_id == null ? "NULL" : $data->user_id; 
+
+
+    $sql = "INSERT INTO content_change_events(content_id,changed_fields,content_type,`action`,old_value,new_value,user_id) 
+VALUES($content_id,'$changed_fields','$content_type','$action','$old_value','$new_value',$user_id)"; 
+
+
+    $log->info("sql".$sql."");
+                
+    if($stmt = mysqli_prepare($link, $sql)){
+          
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt)){
+            $response->success = true;
+            $priority_id = $stmt->insert_id;
+            $response->data = $stmt->insert_id;
+            $response->message = "Updated successfully!!!";
+        } 
+        else{
+            $dberror= "DB Error: ".mysqli_stmt_error($stmt);
+            $log->info("".$dberror."");
+            $response->success = false;
+            $response->message = "Something went wrong.Please try again later.";
+        }
+    }
+            
+    // Close statement
+    mysqli_stmt_close($stmt);
+            
+    $log->info("Completed update function.");
+}
+
 function getAllContentDataForUser(){
     $user_id = $_GET['user_id'];
 	
@@ -7248,6 +7328,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$data = $request->data;
 	$procedureName = $data->procedureName;
 
+	if ($procedureName == "addContentChangeEvent") {
+		addContentChangeEvent($data);
+	}
+
     if($procedureName == "saveData"){
         saveData($data);
     }
@@ -7286,18 +7370,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	if ($procedureName == "deleteCondition") {
 		deleteCondition($data);
-	}
-
-	if ($procedureName == "addContentchangeevent") {
-		addContentchangeevent($data);
-	}
-
-	if ($procedureName == "updateContentchangeevent") {
-		updateContentchangeevent($data);
-	}
-
-	if ($procedureName == "deleteContentchangeevent") {
-		deleteContentchangeevent($data);
 	}
 
 	if ($procedureName == "addContinent") {
@@ -7656,6 +7728,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$procedureName = $_GET['procedureName'];
     
+	if ($procedureName == "getChangelogforContent") {
+		getChangelogforContent();
+	}
+
 	if ($procedureName == "getAllContentDataForUser") {
 		getAllContentDataForUser();
 	}

@@ -81,7 +81,7 @@
                                                                             [content_type]="att.reference_table"
                                                                             [id_column]="'id'" [display_column]="'name'"
                                                                             [select_value]="NumberType(ContentDic[att.field_name])"
-                                                                            (selected)="getContentSelectValue($event, att.field_name)">
+                                                                            (selected)="getContentSelectValue($event, att, category)">
                                                                         </app-content-select>
                                                                         <!-- <quill-editor
                                                                             *ngIf="Constants.VarcharList.indexOf(att.field_type) > -1 && att.field_name.toLowerCase() != 'name'"
@@ -98,9 +98,9 @@
                                                                             *ngIf="Constants.VarcharList.indexOf(att.field_type) > -1 && att.field_name.toLowerCase() != 'name'"
                                                                             class="content-editor materialize-textarea"
                                                                             (focus)="focus=true"
-                                                                            (blur)="onBlur($event, att.field_name)"
+                                                                            (blur)="onBlur($event, att, category)"
                                                                             [placeholder]="att.help_text"
-                                                                            [(ngModel)]="ContentDic[att.field_name]"
+                                                                            [ngModel]="ContentDic[att.field_name]"
                                                                             [id]="att.field_name"
                                                                             style="max-height: 400px;"
                                                                             [ngClass]="focus ? 'focused' : ''">
@@ -108,19 +108,19 @@
                                                                         <input id="contentsModel_{{att.field_name}}"
                                                                             [value]="ContentDic[att.field_name]"
                                                                             class="form-control" type="number"
-                                                                            (blur)="onBlur($event, att.field_name)"
+                                                                            (blur)="onBlur($event, att, category)"
                                                                             *ngIf="att.control_type != 'select' && Constants.IntList.indexOf(att.field_type) > -1" />
                                                                         <input id="contentsModel_{{att.field_name}}"
                                                                             [ngModel]="Constants.convertStringToNNumber(ContentDic[att.field_name]) == 1 ? true : Constants.convertStringToNNumber(ContentDic[att.field_name]) == 0 ? false : null"
                                                                             class="form-check-input mt-0"
                                                                             type="checkbox"
                                                                             style="margin: 15px ;padding: 15px;"
-                                                                            (change)="checkValue($event, att.field_name)"
+                                                                            (change)="checkValue($event, att, category)"
                                                                             *ngIf="Constants.TinyintList.indexOf(att.field_type) > -1" />
                                                                         <input id="contentsModel_{{att.field_name}}"
                                                                             [value]="ContentDic[att.field_name]"
                                                                             class="form-control"
-                                                                            (blur)="onBlur($event, att.field_name)"
+                                                                            (blur)="onBlur($event, att, category)"
                                                                             *ngIf="att.control_type != 'select' && Constants.TinyintList.indexOf(att.field_type) < 0 && Constants.IntList.indexOf(att.field_type) < 0 && Constants.VarcharList.indexOf(att.field_type) < 0 || att.field_name.toLowerCase() == 'name'" />
                                                                     </div>
                                                                 </div>
@@ -242,7 +242,8 @@
                                                         </a>
                                                     </li>
                                                     <li class="nav-item collection-item tab">
-                                                        <a class="d-flex justify-content-between align-items-center">
+                                                        <a class="d-flex justify-content-between align-items-center"
+                                                        [routerLink]="['/content',content_type,id,'changes']">
                                                             <div><span>
                                                                     <i class="material-icons left"
                                                                         translate="no">history</i></span>

@@ -14,62 +14,103 @@
 </c-row>
 <c-row>
   <c-col sm="12">
-    <div *ngFor="let content_type of content_type_list">
-      <c-row *ngIf="this.ContentDic[content_type.name.toLowerCase()] != undefined">
-        <c-row [style.background]="content_type.primary_color" style="margin:15px;">
-          <div class="d-flex justify-content-between align-items-center" style="margin:15px;padding:10px;">
-            <span>
-              <span [innerHTML]="content_type.icon"></span>
-              <span style="font-size: 4rem;">&nbsp; {{content_type.name}}</span>
-            </span>
-            <a style="font-size: 4rem;" (click)="createContent(content_type.name)"><span><i
-                  class="fas fa-plus fa-1x"></i></span></a>
+    <c-accordion>
+      <c-accordion-item #item0="cAccordionItem" [hidden]="this.ContentDic[content_type.name.toLowerCase()] == undefined"
+        *ngFor="let content_type of content_type_list" style="margin:15px;">
+        <ng-template cTemplateId="accordionHeaderTemplate">
+          <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton
+            [style.background]="content_type.primary_color" class="d-flex justify-content-between  align-items-center">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+              <span>
+                <span [innerHTML]="content_type.icon"></span>
+                <span class="text-white" style="font-size: 2rem;">&nbsp; {{content_type.name}} </span>
+              </span>
+            </div>
+          </button>
+        </ng-template>
+        <ng-template cTemplateId="accordionBodyTemplate">
+          <div class="accordion-body">
+            <c-row>
+              <c-col sm="4" xl="3" *ngFor="let dItem of this.ContentDic[content_type.name.toLowerCase()]">
+                <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;"
+                  href="{{dItem.url}}">
+                  <c-card class="text-white" style="height:100px;width:250px"
+                    [style.background]="content_type.sec_color" [title]="dItem.name">
+                    <c-card-body>
+                      <div>
+                        <span style="font-size: 2rem;">{{dItem.name.length > 23 ? dItem.name.substring(0, 23) + '...' :
+                          dItem.name}}</span>
+                        <p class="text-sm-left">{{(dItem.timeSince)}}</p>
+                      </div>
+                    </c-card-body>
+                  </c-card>
+                </a>
+              </c-col>              
+              <c-col sm="4" xl="3">
+                <a class="card-img" style="text-decoration: none;margin-right: 1.5rem;" (click)="createContent(content_type.name)">
+                  <c-card class="text-white" style="height:100px;width:100px" [title]="'Add New ' + content_type.name"
+                    [style.background]="content_type.sec_color">
+                    <c-card-body>
+                      <div>
+                        <span><i
+                          class="fas fa-plus fa-5x"></i></span>
+                      </div>
+                    </c-card-body>
+                  </c-card>
+                </a>
+              </c-col>
+            </c-row>
           </div>
-        </c-row>
-        <c-col sm="4" xl="3" *ngFor="let dItem of this.ContentDic[content_type.name.toLowerCase()]">
-          <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="{{dItem.url}}">
-            <c-card class="text-white" style="height:100px;width:250px" [style.background]="content_type.sec_color"
-              [title]="dItem.name">
-              <c-card-body>
-                <div>
-                  <span style="font-size: 2rem;">{{dItem.name.length > 23 ? dItem.name.substring(0, 23) + '...' :
-                    dItem.name}}</span>
-                  <p class="text-sm-left">{{(dItem.timeSince)}}</p>
-                </div>
-              </c-card-body>
-            </c-card>
-          </a>
-        </c-col>
-      </c-row>
-    </div>
-    
-    <c-row *ngIf="this.ContentDic['documents'] != undefined">
-      <c-row class="text-lighten-1 bg-success" style="margin:15px;">
-        <div class="d-flex justify-content-between align-items-center" style="margin:15px;padding:10px;">
-          <span>
-            <span>
-      <i translate="no" class="material-icons medium">description</i>
-      </span>
-            <span style="font-size: 4rem;">&nbsp; Documents</span>
-          </span>
-          <a style="font-size: 4rem;" (click)="createDocument()"><span><i
-                class="fas fa-plus fa-1x"></i></span></a>
-        </div>
-      </c-row>
-      <c-col sm="4" xl="3" *ngFor="let dItem of this.ContentDic['documents']">
-        <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;" href="{{dItem.url}}">
-          <c-card class="text-white success bg-success card" style="height:100px;width:250px"
-            [title]="dItem.name">
-            <c-card-body>
-              <div>
-                <span style="font-size: 2rem;">{{dItem.name.length > 23 ? dItem.name.substring(0, 23) + '...' :
-                  dItem.name}}</span>
-                <p class="text-sm-left">{{(dItem.timeSince)}}</p>
-              </div>
-            </c-card-body>
-          </c-card>
-        </a>
-      </c-col>
-    </c-row>
+        </ng-template>
+      </c-accordion-item>
+      <c-accordion-item #item0="cAccordionItem" [hidden]="this.ContentDic['documents'] == undefined"
+        style="margin:15px;">
+        <ng-template cTemplateId="accordionHeaderTemplate">
+          <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton
+            class="d-flex justify-content-between bg-success align-items-center">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+              <span>
+                <span><i translate="no" class="material-icons small">description</i></span>
+                <span class="text-white" style="font-size: 2rem;">&nbsp; Documents </span>
+              </span>
+            </div>
+          </button>
+        </ng-template>
+        <ng-template cTemplateId="accordionBodyTemplate">
+          <div class="accordion-body">
+            <c-row>
+              <c-col sm="4" xl="3" *ngFor="let dItem of this.ContentDic['documents']">
+                <a class="card-img" style="text-decoration: none;width: 18rem;margin-right: 1.5rem;"
+                  href="{{dItem.url}}">
+                  <c-card class="text-white success bg-success card" style="height:100px;width:250px"
+                    [title]="dItem.name">
+                    <c-card-body>
+                      <div>
+                        <span style="font-size: 2rem;">{{dItem.name.length > 23 ? dItem.name.substring(0, 23) + '...' :
+                          dItem.name}}</span>
+                        <p class="text-sm-left">{{(dItem.timeSince)}}</p>
+                      </div>
+                    </c-card-body>
+                  </c-card>
+                </a>
+              </c-col>
+              <c-col sm="4" xl="3">
+                <a class="card-img" style="text-decoration: none;margin-right: 1.5rem;" (click)="createDocument()">
+                  <c-card class="text-white success bg-success card align-items-center" style="height:100px;width:100px"
+                  [title]="'Add New Document'">
+                    <c-card-body>
+                      <div>
+                        <span><i
+                          class="fas fa-plus fa-5x"></i></span>
+                      </div>
+                    </c-card-body>
+                  </c-card>
+                </a>
+              </c-col>
+            </c-row>
+          </div>
+        </ng-template>
+      </c-accordion-item>
+    </c-accordion>
   </c-col>
 </c-row>

@@ -1,0 +1,39 @@
+<div class="c-body">
+    <main class="c-main">
+        <div class="container-fluid" style="width:70%;">
+            <div class="fade-in">
+                <div class="row">
+                    <div class="col-md-12">
+                        <c-row>
+                            <h1>Recent changes for {{this.content_name}}</h1>
+                        </c-row>
+                        <div *ngFor="let change of changes" style="margin-bottom: 4em">
+                            <c-row style="margin-bottom: 1.2em">
+                                <c-col><span [innerHTML]=" this.contentTypeData.icon"></span><span
+                                        [innerHTML]="change.changed_fields"></span>
+                                </c-col>
+                                <c-col>{{change.timeSince}} {{change.created_at}}</c-col>
+                            </c-row>
+                            <c-row>
+                                <c-col class="red lighten-4">
+                                    <p></p>
+                                    <p>
+                                        {{change.old_value}}
+                                    </p>
+                                    <p></p>
+                                </c-col>
+                                <c-col class="green lighten-4">
+                                    <p></p>
+                                    <p>
+                                        {{change.new_value}}
+                                    </p>
+                                    <p></p>
+                                </c-col>
+                            </c-row>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

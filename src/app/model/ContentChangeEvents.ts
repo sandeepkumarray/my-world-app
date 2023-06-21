@@ -6,6 +6,9 @@ export class ContentChangeEvents {
 		public content_id? : string;
 		public content_type? : string;
 		public action? : string;
-		public created_at? : string;
-		public updated_at? : string;
+		public old_value? : any;
+		public new_value? : any;
+		public created_at? : Date;
+		public updated_at? : Date;
+		public timeSince?:string;
 }

@@ -35,12 +35,14 @@ import {
 } from '@coreui/angular';
 import { QuillModule } from 'ngx-quill';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { ChangelogComponent } from './changelog/changelog.component';
 
 @NgModule({
   declarations: [
     ContentComponent,
     ViewComponent,
     EditComponent,
+    ChangelogComponent,
   ],
   imports: [
     CommonModule,

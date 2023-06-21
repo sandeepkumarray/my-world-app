@@ -49,6 +49,28 @@ export class ContentService {
 	constructor(private http: HttpClient, private router: Router) {
 
 	}
+
+	addContentChangeEvent(contentChange: ContentChangeEvents): Observable<ResponseModel> {
+		let apiURL = `${environment.serviceUrl}api_content.php`;
+		
+		contentChange.procedureName = "addContentChangeEvent";
+		
+		var jsonData = contentChange;
+		
+		const httpOptions = {
+		  headers: new HttpHeaders({
+			'Content-Type': 'application/json'
+		  })
+		};
+		
+		return this.http.post<ResponseModel>(apiURL, { data: jsonData }, httpOptions);
+
+	}
+
+	getChangelogforContent(contentType: any, id: any): Observable<ContentChangeEvents[]> {
+		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getChangelogforContent&contentType=` + contentType + `&id=` + id;
+		return this.http.get<ContentChangeEvents[]>(apiURL);
+	}
 	
 	getAllContentDataForUser(user_id: any){
 		let apiURL = `${environment.serviceUrl}api_content.php?procedureName=getAllContentDataForUser&user_id=` + user_id;

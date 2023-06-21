@@ -10,7 +10,38 @@ require "logWriter.php";
 $response = new dbResponse;
 $log = new logWriter;
 
+function getContentAttributes(){
+    $contentType = $_GET['contentType'];
+    $id = $_GET['id'];
 
+    global $response;
+    global $log;
+    global $link;
+
+    $sql = "SELECT * FROM user_content_attributes Where content_type = '$contentType' and content_id =$id";
+
+    $log->info("sql = ".$sql);
+    $result = mysqli_query($link, $sql);
+    $row_cnt = $result->num_rows;
+
+    if ($result) {
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_object()) {
+                $myArray = $row;
+            }
+
+            $response->success = true;
+            $response->data = $myArray;
+            $result->close();
+        } else {
+            $response->success = false;
+            $response->message = "No data available in table";
+        }
+    } else {
+        $response->success = false;
+        $response->message = "Error: " . $sql . " < br > " . mysqli_error($link);
+    }
+}
 
 function createItemForUniverse($data){
     global $response;
@@ -69,9 +100,6 @@ function createItemForUniverse($data){
             
     $log->info("Completed update function.");
 }
-
-
-
 
 function getContentsForUniverse(){
     $user_id = $_GET['user_id']; 
@@ -4849,6 +4877,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$procedureName = $_GET['procedureName'];
     
+    if ($procedureName == "getContentAttributes") {
+		getContentAttributes();
+	}
+
     if ($procedureName == "getContentsForUniverse") {
 		getContentsForUniverse();
 	}

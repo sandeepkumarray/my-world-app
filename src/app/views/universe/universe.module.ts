@@ -4,13 +4,14 @@ import { UniverseRoutingModule } from './universe-routing.module';
 import { UniverseComponent } from './universe.component';
 import { IconModule } from '@coreui/icons-angular';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule, CardModule, DropdownModule, FormModule, GridModule, SharedModule, WidgetModule, ProgressModule } from '@coreui/angular';
+import { AccordionModule, ButtonModule, CardModule, DropdownModule, FormModule, GridModule, SharedModule, WidgetModule, ProgressModule } from '@coreui/angular';
 
 @NgModule({
   declarations: [
     UniverseComponent
   ],
-  imports: [
+  imports: [    
+  AccordionModule,
     CommonModule,
     UniverseRoutingModule,
     FormModule,

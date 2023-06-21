@@ -34,6 +34,7 @@ import { ContentBlobObject } from '../model/ContentBlobObject';
 import { DashboardRecentModel } from '../model/DashboardRecentModel';
 import { UserBlob } from '../model/UserBlob';
 import { FileUploadModel } from '../usermodels/FileUploadModel';
+import { UserContentAttributes } from '../model/UserContentAttributes';
 
 @Injectable({
 	providedIn: 'root'
@@ -45,6 +46,11 @@ export class MyworldService {
 
 	}
 
+	getContentAttributes(contentType: any, id: any): Observable<UserContentAttributes> {
+		let apiURL = `${environment.serviceUrl}api_myworld.php?procedureName=getContentAttributes&contentType=` + contentType + `&id=` + id;
+		return this.http.get<UserContentAttributes>(apiURL);
+	}
+	
 	getContentsForUniverse(user_id: any, id: any): Observable<DashboardRecentModel[]> {
 		let apiURL = `${environment.serviceUrl}api_myworld.php?procedureName=getContentsForUniverse&user_id=` + user_id + `&id=` + id;
 
