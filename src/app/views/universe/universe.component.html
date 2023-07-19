@@ -9,6 +9,8 @@
   width: 70%;
   text-align: center;">{{name}}
       </div>
+
+      <app-content-speed-dial [universeId]="id" [contentTypes]="dialContentTypes" ></app-content-speed-dial>
     </div>
   </c-col>
 </c-row>
@@ -45,15 +47,15 @@
                     </c-card-body>
                   </c-card>
                 </a>
-              </c-col>              
+              </c-col>
               <c-col sm="4" xl="3">
-                <a class="card-img" style="text-decoration: none;margin-right: 1.5rem;" (click)="createContent(content_type.name)">
+                <a class="card-img" style="text-decoration: none;margin-right: 1.5rem;"
+                  (click)="createContent(content_type.name)">
                   <c-card class="text-white" style="height:100px;width:100px" [title]="'Add New ' + content_type.name"
                     [style.background]="content_type.sec_color">
                     <c-card-body>
                       <div>
-                        <span><i
-                          class="fas fa-plus fa-5x"></i></span>
+                        <span><i class="fas fa-plus fa-5x"></i></span>
                       </div>
                     </c-card-body>
                   </c-card>
@@ -97,11 +99,10 @@
               <c-col sm="4" xl="3">
                 <a class="card-img" style="text-decoration: none;margin-right: 1.5rem;" (click)="createDocument()">
                   <c-card class="text-white success bg-success card align-items-center" style="height:100px;width:100px"
-                  [title]="'Add New Document'">
+                    [title]="'Add New Document'">
                     <c-card-body>
                       <div>
-                        <span><i
-                          class="fas fa-plus fa-5x"></i></span>
+                        <span><i class="fas fa-plus fa-5x"></i></span>
                       </div>
                     </c-card-body>
                   </c-card>

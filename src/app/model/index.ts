@@ -79,3 +79,4 @@ export { Vehicles } from '../model/Vehicles'
 
 export { Organizations } from '../model/Organizations'
 
+export { SpeedDialOptionModel } from '../model/speed-dial-option-model'

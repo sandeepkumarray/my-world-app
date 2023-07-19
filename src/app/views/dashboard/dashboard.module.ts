@@ -6,6 +6,7 @@ import { CreateContentComponent } from './create-content/create-content.componen
 import { ButtonModule, CardModule, DropdownModule, FormModule, GridModule, SharedModule, WidgetModule, ProgressModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 
 
@@ -28,7 +29,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ButtonModule,
     CardModule,
     DashboardRoutingModule,
-    ProgressModule
+    ProgressModule,
+    ComponentsModule
   ]
 })
 export class DashboardModule { }

@@ -13,7 +13,7 @@
             <c-nav-item>
                 <a cNavLink routerLink="/users" routerLinkActive="active">Users</a>
             </c-nav-item>
-            <c-nav-item>
+            <c-nav-item *ngIf="siteAdmin">
                 <a cNavLink routerLink="/users/settings" routerLinkActive="active">
                     Admin Settings
                 </a>

@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   customStylesValidated = false;
 
   public LoginForm!: FormGroup;
-  
+
   errorMessage = '';
 
   constructor(private myworldService: MyworldService,
@@ -54,6 +54,8 @@ export class LoginComponent implements OnInit {
           if (response.success) {
             this.authService.setUser(response.data);
             let user = response.data as Users;
+
+            console.log("login user", user);
             // this.myworldService.getObjectStorageKeys(1, 1).subscribe({
             //   next: response => {
             //     this.myworldService.getUserContentBucket(user.id).subscribe({
