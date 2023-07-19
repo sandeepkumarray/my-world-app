@@ -5,6 +5,7 @@ import { UniverseComponent } from './universe.component';
 import { IconModule } from '@coreui/icons-angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule, ButtonModule, CardModule, DropdownModule, FormModule, GridModule, SharedModule, WidgetModule, ProgressModule } from '@coreui/angular';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AccordionModule, ButtonModule, CardModule, DropdownModule, FormModule, 
     SharedModule,
     ButtonModule,
     CardModule,
-    ProgressModule
+    ProgressModule,
+    ComponentsModule
   ]
 })
 export class UniverseModule { }

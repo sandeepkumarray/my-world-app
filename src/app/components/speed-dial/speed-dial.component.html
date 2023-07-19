@@ -1,0 +1,13 @@
+<div class="speed-dial-container" [class.open]="isOpen" [ngClass]="direction" (mouseenter)="mouseenter()"
+  (mouseleave)="mouseleave()" (click)="mouseleave()">
+  <button type="button" class="btn btn-brand btn-lg speed-dial-main-button mr-1" style="transition-delay: 150ms;">
+    <i class="fas fa-plus fa-3x {{rotate}}" style="--fa-rotate-angle: -45deg;"></i>
+  </button>
+  <div class="speed-dial-options">
+    <button type="button" cButton class="btn btn-brand speed-dial-option-btn mr-1"
+     *ngFor="let option of options"
+      (click)="onOptionClick(option)">     
+      <i class="{{option.iconClass}}"></i>
+  </button>
+  </div>
+</div>

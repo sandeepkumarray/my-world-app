@@ -31,15 +31,21 @@ import {
   AlertModule
 } from '@coreui/angular';
 import { ContentSelectComponent } from './content-select/content-select.component';
+import { SpeedDialComponent } from './speed-dial/speed-dial.component';
+import { ContentSpeedDialComponent } from './content-speed-dial/content-speed-dial.component';
 
 @NgModule({
   declarations: [
     ComingSoonComponent,
-    ContentSelectComponent
+    ContentSelectComponent,
+    SpeedDialComponent,
+    ContentSpeedDialComponent,
   ],
   exports:[    
     ComingSoonComponent,
-    ContentSelectComponent
+    ContentSelectComponent,
+    SpeedDialComponent,
+    ContentSpeedDialComponent,
   ],
   imports: [
     CommonModule,

@@ -18,6 +18,7 @@ export class AppHeaderComponent extends HeaderComponent implements OnInit {
   public newMessages = new Array(4)
   public newTasks = new Array(5)
   public newNotifications = new Array(5)
+  siteAdmin:boolean = false;
 
   profilePhoto: any = "./assets/img/avatars/6.jpg";
   
@@ -30,7 +31,12 @@ export class AppHeaderComponent extends HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    let usr = (this.authService.getUser() as (Users));
+    console.log("user",usr);
     let accountId = (this.authService.getUser() as (Users)).id;
+    //this.siteAdmin = (this.authService.getUser() as (Users)).site_administrator! !== 0;
+    console.log("this.siteAdmin",this.siteAdmin);
+
     this.myworldService.getUserBlob(accountId, 'ProfilePhoto').subscribe({
       next: response => {
         this.profilePhoto = this.sanitized.bypassSecurityTrustResourceUrl('data:' + response.file_type + ';base64,' + response.blob);

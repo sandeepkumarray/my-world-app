@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppdataService } from 'src/app/service/appdata.service';
 import { AuthenticationService } from 'src/app/service/authentication.service';
-import { ContentTypes, Documents, Users } from 'src/app/model';
+import { ContentTypes, Documents, SpeedDialOptionModel, Users } from 'src/app/model';
 import { DashboardItem } from 'src/app/model/DashboardItem';
 import { ContentService } from 'src/app/service/content.service';
 import { MyworldService } from 'src/app/service/myworld.service';
@@ -25,6 +25,7 @@ export class UniverseComponent implements OnInit {
   name: string = "";
   content_type_list: ContentTypes[] = [];
   ContentDic: { [key: string]: any[] } = {};
+  dialContentTypes: string[] = ['characters', 'items', 'buildings', 'planets'];
 
   constructor(private activatedRoute: ActivatedRoute,
     private appdataService: AppdataService,

@@ -27,7 +27,7 @@ export class Users {
 		public username? : string;
 		public forum_administrator? : string;
 		public deleted_at? : string;
-		public site_administrator? : string;
+		public site_administrator? : number;
 		public forum_moderator? : string;
 		public bio? : string;
 		public favorite_author? : string;
